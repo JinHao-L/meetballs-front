@@ -1,9 +1,22 @@
-import { Button, Row, Col, Card, CloseButton, Form } from "react-bootstrap";
+import {
+	Button,
+	Row,
+	Col,
+	Card,
+	CloseButton,
+	Form,
+	Modal,
+} from "react-bootstrap";
 import { useState } from "react";
 
 export default function ParticipantItem({ setMeeting, meeting, position }) {
 	const [editing, setEditing] = useState(false);
 	const participant = meeting.participant_lists[position];
+	const [showModal, setShowModal] = useState(false);
+
+	if (!editing && participant.user_email.length === 0) {
+		setEditing(true);
+	}
 
 	if (editing) {
 		// Editing
@@ -20,7 +33,15 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
 							<p className="Text__card-header">
 								Editing Participant
 							</p>
-							<CloseButton onClick={() => setEditing(false)} />
+							<CloseButton
+								onClick={() => {
+									if (participant.user_email.length === 0) {
+										setShowModal(true);
+									} else {
+										setEditing(false);
+									}
+								}}
+							/>
 						</div>
 					</Card.Header>
 					<Card.Body>
@@ -43,6 +64,38 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
 						</Form.Group>
 					</Card.Body>
 				</Card>
+				<Modal
+					show={showModal}
+					onHide={() => setShowModal(false)}
+					centered
+				>
+					<Modal.Header>
+						<Modal.Title>Confirm?</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<p className="Text__paragraph">
+							You have not specified an email, so this participant
+							will be deleted if you choose to close. Would you
+							still like to close?
+						</p>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button
+							variant="outline-secondary"
+							onClick={() => setShowModal(false)}
+						>
+							Cancel
+						</Button>
+						<Button
+							variant="secondary"
+							onClick={() =>
+								removeParticipant(setMeeting, meeting, position)
+							}
+						>
+							Confirm
+						</Button>
+					</Modal.Footer>
+				</Modal>
 			</Col>
 		);
 	}
@@ -57,7 +110,11 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
 		>
 			<Card bg="light">
 				<Card.Body>
-					<Card.Title>{participant.user_name}</Card.Title>
+					<Card.Title>
+						{participant.user_name.length > 0
+							? participant.user_name
+							: "Guest"}
+					</Card.Title>
 					<Card.Text>{participant.user_email}</Card.Text>
 					<Row>
 						<Col>

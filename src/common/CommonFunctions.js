@@ -21,7 +21,7 @@ export function getFormattedDuration(duration) {
 	const minutes = Math.floor(remainingDuration / 60000);
 	remainingDuration -= minutes * 60000;
 	result += minutes + " m ";
-	if (remainingDuration != 0) {
+	if (remainingDuration !== 0) {
 		const seconds = Math.floor(remainingDuration / 1000);
 		result += seconds + " s";
 	}
