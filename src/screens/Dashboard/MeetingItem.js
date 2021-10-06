@@ -1,7 +1,7 @@
-import { Card } from "react-bootstrap";
+import { Card, Row, Button } from "react-bootstrap";
 import { getFormattedDuration } from "../../common/CommonFunctions";
 
-export default function MeetingItem({ meeting }) {
+export default function MeetingItem({ meeting, editMeeting, startMeeting }) {
     const topic = meeting.name;
     const desc = meeting.description;
 
@@ -18,6 +18,10 @@ export default function MeetingItem({ meeting }) {
                 <Card.Text>Description: {desc}</Card.Text>
                 <Card.Text>Date: {date}</Card.Text>
                 <Card.Text>Duration: {startTime} - {endTime} ({duration})</Card.Text>
+                <Row className="justify-content-end" xs="auto">
+                    <Button variant="primary" onClick={editMeeting}>Edit meeting</Button>
+                    <Button variant="primary" onClick={startMeeting}>Start meeting</Button>
+                </Row>
             </Card.Body>
         </Card>
     );
