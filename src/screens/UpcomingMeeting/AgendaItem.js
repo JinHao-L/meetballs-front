@@ -175,16 +175,16 @@ function removeAgendaItem(setMeeting, meeting, position) {
 }
 
 const durationMinutes = [
-	{ mils: 300000, display: "5 m" },
-	{ mils: 600000, display: "10 m" },
-	{ mils: 900000, display: "15 m" },
-	{ mils: 1200000, display: "20 m" },
-	{ mils: 1500000, display: "25 m" },
-	{ mils: 1800000, display: "30 m" },
-	{ mils: 2100000, display: "35 m" },
-	{ mils: 2400000, display: "40 m" },
-	{ mils: 2700000, display: "45 m" },
-	{ mils: 3000000, display: "50 m" },
-	{ mils: 3300000, display: "55 m" },
-	{ mils: 3600000, display: "1 h 0 m" },
+	{ mils: 300000, display: "5min" },
+	{ mils: 600000, display: "10min" },
+	{ mils: 900000, display: "15min" },
+	{ mils: 1200000, display: "20min" },
+	{ mils: 1500000, display: "25min" },
+	{ mils: 1800000, display: "30min" },
+	{ mils: 2100000, display: "35min" },
+	{ mils: 2400000, display: "40min" },
+	{ mils: 2700000, display: "45min" },
+	{ mils: 3000000, display: "50min" },
+	{ mils: 3300000, display: "55min" },
+	{ mils: 3600000, display: "1h 0min" },
 ];

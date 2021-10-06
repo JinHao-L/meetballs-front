@@ -16,14 +16,14 @@ export function getFormattedDuration(duration) {
 	if (remainingDuration >= 3600000) {
 		const hours = Math.floor(remainingDuration / 3600000);
 		remainingDuration -= hours * 3600000;
-		result += hours + " h ";
+		result += hours + "h ";
 	}
 	const minutes = Math.floor(remainingDuration / 60000);
 	remainingDuration -= minutes * 60000;
-	result += minutes + " m ";
+	result += minutes + "min ";
 	if (remainingDuration !== 0) {
 		const seconds = Math.floor(remainingDuration / 1000);
-		result += seconds + " s";
+		result += seconds + "s";
 	}
 	return result;
 }
