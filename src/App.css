@@ -6,8 +6,8 @@
 }
 
 .Container__padding--vertical {
-	padding-top: 40px;
-	padding-bottom: 40px;
+	padding-top: 30px;
+	padding-bottom: 30px;
 }
 
 .Container__padding--vertical-small {
@@ -31,6 +31,12 @@
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
+}
+
+.Container__alert {
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 10px;
 }
 
 /* Text */
@@ -72,16 +78,33 @@
 
 /* Miscs */
 
+.Fab {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	height: 60px;
+	width: 60px;
+	background-color: #0d6efd;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.Fab:hover {
+	background-color: #0b62e0;
+}
+
 .Line--horizontal {
 	width: 100%;
 	height: 0.5px;
-	background-color: grey;
+	background-color: rgb(228, 228, 228);
 }
 
 .Line--vertical {
 	width: 0.5px;
 	height: 100%;
-	background-color: grey;
+	background-color: rgb(228, 228, 228);
 }
 
 .Buffer--20px {
@@ -92,4 +115,9 @@
 .Buffer--5px {
 	width: 5px;
 	height: 5px;
+}
+
+.Buffer--100px {
+	width: 100px;
+	height: 100px;
 }
