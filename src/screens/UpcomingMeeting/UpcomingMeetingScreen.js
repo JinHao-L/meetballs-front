@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button, Row, Col, Container, Nav } from "react-bootstrap";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { getFormattedDateTime } from "../../common/CommonFunctions";
+import AgendaItemList from "./AgendaItemList";
+import ParticipantItemList from "./ParticipantItemList";
 
 export default function UpcomingMeetingScreen() {
 	const [meeting, setMeeting] = useState(blankMeeting);
@@ -20,6 +22,19 @@ export default function UpcomingMeetingScreen() {
 
 	function startZoom() {
 		window.open(meeting.start_url, "_blank");
+	}
+
+	function Content() {
+		if (currentTab === "participants") {
+			return (
+				<ParticipantItemList
+					meeting={meeting}
+					setMeeting={setMeeting}
+				/>
+			);
+		} else {
+			return <AgendaItemList meeting={meeting} setMeeting={setMeeting} />;
+		}
 	}
 
 	return (
@@ -89,121 +104,11 @@ export default function UpcomingMeetingScreen() {
 						</Nav.Item>
 					</Nav>
 					<div className="Buffer--20px" />
-					<Content
-						currentTab={currentTab}
-						meeting={meeting}
-						setMeeting={setMeeting}
-					/>
+					<Content />
 				</Col>
 			</Row>
 		</Container>
 	);
-}
-
-function getFormattedDateTime(isoDate) {
-	const date = new Date(isoDate);
-	const options = {
-		day: "numeric",
-		month: "long",
-		year: "numeric",
-		hour: "numeric",
-		minute: "numeric",
-	};
-	return date.toLocaleString("en-us", options);
-}
-
-function Content({ currentTab, meeting, setMeeting }) {
-	if (currentTab === "participants") {
-		return getParticipantList(meeting.participant_lists);
-	} else {
-		return getAgendaList(meeting, setMeeting);
-	}
-}
-
-function getParticipantList(participants) {
-	const items = [];
-	participants.forEach((participant) => {
-		items.push(
-			<Col
-				className="Container__item-box"
-				key={participant.user_email}
-				lg={8}
-				md={12}
-				sm={12}
-			>
-				<p className="Text__subsubheader">{participant.user_name}</p>
-				<p className="Text__paragraph">{participant.user_email}</p>
-			</Col>
-		);
-	});
-	return items;
-}
-
-function getAgendaList(meeting, setMeeting) {
-	const items = [];
-	for (let i = 0; i < meeting.agenda_items.length; i++) {
-		const item = meeting.agenda_items[i];
-		items.push(
-			<Draggable
-				key={"Item" + item.position}
-				draggableId={"Draggable" + item.position}
-				index={i}
-			>
-				{(provided) => (
-					<div
-						ref={provided.innerRef}
-						{...provided.draggableProps}
-						{...provided.dragHandleProps}
-					>
-						<Col
-							className="Container__item-box"
-							lg={8}
-							md={12}
-							sm={12}
-						>
-							<p className="Text__subsubheader">
-								{item.item_name}
-							</p>
-
-							<p className="Text__paragraph">
-								{item.item_description}
-							</p>
-						</Col>
-					</div>
-				)}
-			</Draggable>
-		);
-	}
-	return (
-		<DragDropContext
-			onDragEnd={(result) => onDragEnd(result, meeting, setMeeting)}
-		>
-			<Droppable droppableId="Agenda">
-				{(provided) => (
-					<div ref={provided.innerRef} {...provided.droppableProps}>
-						{items}
-						{provided.placeholder}
-					</div>
-				)}
-			</Droppable>
-		</DragDropContext>
-	);
-}
-
-function onDragEnd(result, meeting, setMeeting) {
-	const { destination, source } = result;
-	if (destination === null) return;
-	if (
-		destination.droppableId === source.droppableId &&
-		destination.index === source.index
-	)
-		return;
-	const newMeeting = Object.assign({}, meeting);
-	const newAgenda = newMeeting.agenda_items;
-	const item = newAgenda.splice(source.index, 1);
-	newAgenda.splice(destination.index, 0, item[0]);
-	newMeeting.agenda_items = newAgenda;
-	setMeeting(newMeeting);
 }
 
 const blankMeeting = {
@@ -249,7 +154,7 @@ const testMeeting = {
 				"Integer egestas gravida gravida. Suspendisse potenti. Curabitur id accumsan velit. Nulla volutpat tellus et erat scelerisque tincidunt. Proin ac semper nunc. Quisque tempus elit ut sem laoreet, sed semper mauris imperdiet. Sed consequat bibendum elementum. Nullam scelerisque, mi vel malesuada blandit, mauris odio pulvinar leo, eu finibus nisl ligula ut massa.",
 			start_time: null,
 			actual_duration: null,
-			expected_duration: 600000,
+			expected_duration: 3600000,
 			isCurrent: false,
 		},
 		{

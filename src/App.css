@@ -1,3 +1,5 @@
+/* Containers */
+
 .Container__padding--horizontal {
 	padding-left: 20px;
 	padding-right: 20px;
@@ -8,16 +10,27 @@
 	padding-bottom: 40px;
 }
 
-.Container__item-box {
-	padding-left: 20px;
-	padding-right: 20px;
-	margin-top: 10px;
-	margin-bottom: 10px;
-	border-radius: 5px;
-	border-color: grey;
-	border-width: 1px;
-	border-style: solid;
-	background-color: white;
+.Container__padding--vertical-small {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.Container__row--space-between {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+}
+
+.Container__center--horizontal {
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+}
+
+.Container__center--vertical {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
 }
 
 /* Text */
@@ -53,6 +66,10 @@
 	-webkit-line-clamp: 5;
 }
 
+.Text__card-header {
+	margin: 0px;
+}
+
 /* Miscs */
 
 .Line--horizontal {
@@ -61,7 +78,18 @@
 	background-color: grey;
 }
 
+.Line--vertical {
+	width: 0.5px;
+	height: 100%;
+	background-color: grey;
+}
+
 .Buffer--20px {
 	width: 20px;
 	height: 20px;
+}
+
+.Buffer--5px {
+	width: 5px;
+	height: 5px;
 }
