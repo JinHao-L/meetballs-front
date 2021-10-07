@@ -13,7 +13,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-		console.log(accessToken)
+    console.log(accessToken);
     const socket = subscribe("10c7e0a8-120b-45e0-a37f-be92170bfb8d");
     return () => {
       socket.disconnect();
@@ -22,10 +22,10 @@ export default function App() {
 
   const login = (email, password) => {
     return fetch(`${apiUrl}/auth/login`, {
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
       method: "POST",
       body: JSON.stringify({
         email,
@@ -33,39 +33,40 @@ export default function App() {
       }),
     }).then(async (res) => {
       if (res.status === 201) {
-				const data = await res.json();
-				setAccessToken(data.access_token || null);
-				if (data.expires_in) setTimeout(refresh, data.expires_in);
-				localStorage.setItem("ref", data.refresh_token);
-				return;
-			}
-			throw res.err;
+        const data = await res.json();
+        setAccessToken(data.access_token || null);
+        if (data.expires_in) setTimeout(refresh, data.expires_in*1000);
+        localStorage.setItem("ref", data.refresh_token);
+        return;
+      }
+      throw res.err;
     });
   };
 
   const refresh = () => {
     const refToken = localStorage.getItem("ref");
-    return fetch(`${apiUrl}/auth/refresh`, {
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-      method: "POST",
-      body: JSON.stringify({
-        refresh_token: refToken,
-        grant_type: "refresh_token",
-      }),
+    console.log(refToken)
+
+    const params = new URLSearchParams({
+      refresh_token: refToken,
+      grant_type: "refresh_token",
     })
-      .then(async (res) => {
-				if (res.status === 201) {
-					const data = await res.json();
-					setAccessToken(data.access_token || null);
-					if (data.expires_in) setTimeout(refresh, data.expires_in);
-					localStorage.setItem("ref", data.refresh_token);
-					return;
-				}
-				throw res.err;
-      });
+    return fetch(`${apiUrl}/auth/refresh?${params.toString()}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    }).then(async (res) => {
+      if (res.status === 201) {
+        const data = await res.json();
+        setAccessToken(data.access_token || null);
+        if (data.expires_in) setTimeout(refresh, data.expires_in*1000);
+        localStorage.setItem("ref", data.refresh_token);
+        return;
+      }
+      throw res.err;
+    });
   };
 
   const subscribe = (meetingId) => {
@@ -81,15 +82,18 @@ export default function App() {
     });
     socket.on("meetingUpdated", function (data) {
       console.log("meetingUpdated", data);
-			// data is full meeting details
+      // data is full meeting details
     });
     socket.on("participantUpdated", function () {
-      console.log("participantUpdated")
-			// make call to get participant list?
+      console.log("participantUpdated");
+      // make call to get participant list?
     });
     socket.on("agendaUpdated", function (data) {
       console.log("agendaUpdated", data);
-			// make call to get updated agenda list?
+      // make call to get updated agenda list?
+    });
+    socket.on("userConnected", function (msg) {
+      console.log("userConnected", msg);
     });
     socket.on("disconnect", function () {
       console.log("Disconnected");
