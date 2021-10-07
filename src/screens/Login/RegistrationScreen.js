@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 
-export default function LoginScreen() {
+export default function RegistrationScreen() {
 
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
+    const [ confirmationPassword, setConfirmationPassword ] = useState("");
 
     function readyToSubmit() {
-        return email.length > 0 && password.length > 0;
+        return email.length > 0 && password.length > 0
+            && password === confirmationPassword;
     }
 
     function onSubmit() {
-        console.log("pressed login");
+        console.log("pressed register");
     }
 
     return (
@@ -32,6 +34,14 @@ export default function LoginScreen() {
                         value={password}
                         type="password"
                         onChange={setPassword}
+                    />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Control
+                        value={confirmationPassword}
+                        type="password"
+                        onChange={setConfirmationPassword}
                     />
                 </Form.Group>
                 <Button
