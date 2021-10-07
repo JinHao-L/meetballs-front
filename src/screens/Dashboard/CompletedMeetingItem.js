@@ -1,17 +1,16 @@
-import { Card, Row, Button } from "react-bootstrap";
-import { getDateInfo, openLinkInNewTab } from "../../common/CommonFunctions";
+import { Card, Row, Button } from "react-bootstrap"
+import { getDateInfo } from "../../common/CommonFunctions";
 
-export default function UpcomingMeetingItem({ key, meeting, editMeeting }) {
+export default function CompletedMeetingItem({ key, meeting, viewMeeting }) {
     const topic = meeting.name;
     const desc = meeting.description;
-    const startUrl = meeting.start_url;
 
     const dateInfo = getDateInfo(meeting.start_time, meeting.duration);
     const date = dateInfo.date;
     const startTime = dateInfo.startTime;
     const endTime = dateInfo.endTime;
     const duration = dateInfo.duration;
-    
+
     return (
         <Card bg={"light"} key={key}>
             <Card.Body>
@@ -22,18 +21,13 @@ export default function UpcomingMeetingItem({ key, meeting, editMeeting }) {
                 <Row className="justify-content-end" xs="auto">
                     <Button
                         variant="primary"
-                        onClick={editMeeting}
+                        onClick={viewMeeting}
                     >
-                        Edit meeting
-                    </Button>
-                    <Button
-                        variant="primary"
-                        onClick={() => openLinkInNewTab(startUrl)}
-                    >
-                        Start meeting
+                        View meeting report
                     </Button>
                 </Row>
             </Card.Body>
         </Card>
     );
+
 }
