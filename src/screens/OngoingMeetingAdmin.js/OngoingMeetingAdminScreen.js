@@ -1,16 +1,20 @@
 import { Container, Row, Col, Button, Nav } from "react-bootstrap";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
-import { getFormattedDateTime } from "../../common/CommonFunctions";
+import {
+	getFormattedDateTime,
+	getFormattedTime,
+} from "../../common/CommonFunctions";
 import AgendaList from "./AgendaList";
 import { blankMeeting } from "../../common/ObjectTemplates";
 import { testMeeting } from "../../common/TestData";
+import ParticipantList from "./ParticipantList";
 
 var position = -1;
 
 export default function OngoingMeetingAdminScreen() {
 	const [meeting, setMeeting] = useState(blankMeeting);
-	const [currentTab, setCurrentTab] = useState("participants");
+	const [currentTab, setCurrentTab] = useState("agenda");
 	const [time, setTime] = useState(new Date().getTime());
 	const { id } = useParams();
 
@@ -21,6 +25,10 @@ export default function OngoingMeetingAdminScreen() {
 		}, 1000);
 	}, []);
 
+	function startZoom() {
+		window.open(meeting.start_url, "_blank");
+	}
+
 	function getMeeting() {
 		const pulledMeeting = testMeeting;
 		pulledMeeting.participant_lists.sort((p1, p2) => {
@@ -30,17 +38,23 @@ export default function OngoingMeetingAdminScreen() {
 			return p1.position - p2.position;
 		});
 		setMeeting(pulledMeeting);
-		getPosition(pulledMeeting);
+		getCurrentPosition(pulledMeeting);
 	}
 
 	function Content() {
-		if (currentTab === "participants") {
-			return <></>;
-		} else {
+		if (currentTab === "agenda") {
 			return (
 				<AgendaList
 					time={time}
 					agenda={meeting.agenda_items}
+					position={position}
+				/>
+			);
+		} else {
+			return (
+				<ParticipantList
+					meeting={meeting}
+					setMeeting={setMeeting}
 					position={position}
 				/>
 			);
@@ -64,7 +78,10 @@ export default function OngoingMeetingAdminScreen() {
 							{getFormattedDateTime(meeting.start_time)}
 						</p>
 						<div className="d-grid gap-2">
-							<Button variant="outline-secondary">
+							<Button
+								variant="outline-secondary"
+								onClick={startZoom}
+							>
 								Reopen Zoom
 							</Button>
 						</div>
@@ -89,25 +106,25 @@ export default function OngoingMeetingAdminScreen() {
 					</Col>
 					<Col lg={1} md={12} sm={12} />
 					<Col
-						lg={8}
+						lg={6}
 						md={12}
 						sm={12}
 						className="Container__padding--horizontal"
 					>
 						<Nav
 							variant="tabs"
-							defaultActiveKey="participants"
+							defaultActiveKey="agenda"
 							onSelect={(selectedKey) =>
 								setCurrentTab(selectedKey)
 							}
 						>
 							<Nav.Item>
+								<Nav.Link eventKey="agenda">Agenda</Nav.Link>
+							</Nav.Item>
+							<Nav.Item>
 								<Nav.Link eventKey="participants">
 									Participants
 								</Nav.Link>
-							</Nav.Item>
-							<Nav.Item>
-								<Nav.Link eventKey="agenda">Agenda</Nav.Link>
 							</Nav.Item>
 						</Nav>
 						<div className="Buffer--20px" />
@@ -188,7 +205,7 @@ function updateAgenda(agenda) {
 	}
 }
 
-function getPosition(meeting) {
+function getCurrentPosition(meeting) {
 	const agenda = meeting.agenda_items;
 	for (let i = 0; i < agenda.length; i++) {
 		if (agenda[i].isCurrent) {
@@ -204,12 +221,12 @@ function getEndTime(time, agenda) {
 		agenda.forEach((item) => {
 			duration += item.expected_duration;
 		});
-		return new Date(time + duration).toLocaleTimeString();
+		return getFormattedTime(new Date(time + duration));
 	} else {
 		var lastAgendaItem = agenda[agenda.length - 1];
-		return new Date(
-			lastAgendaItem.start_time + lastAgendaItem.actual_duration
-		).toLocaleTimeString();
+		return getFormattedTime(
+			new Date(lastAgendaItem.start_time + lastAgendaItem.actual_duration)
+		);
 	}
 }
 

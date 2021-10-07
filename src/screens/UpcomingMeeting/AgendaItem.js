@@ -47,12 +47,7 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 						{...provided.draggableProps}
 						{...provided.dragHandleProps}
 					>
-						<Col
-							className="Container__padding--vertical-small"
-							lg={8}
-							md={12}
-							sm={12}
-						>
+						<Col className="Container__padding--vertical-small">
 							<Card bg="light">
 								<Card.Header>
 									<div className="Container__row--space-between">
@@ -113,12 +108,7 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 					{...provided.draggableProps}
 					{...provided.dragHandleProps}
 				>
-					<Col
-						className="Container__padding--vertical-small"
-						lg={8}
-						md={12}
-						sm={12}
-					>
+					<Col className="Container__padding--vertical-small">
 						<Card bg="light">
 							<Card.Header>
 								{getFormattedDuration(item.expected_duration)}

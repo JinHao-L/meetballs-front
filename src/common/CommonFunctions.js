@@ -10,6 +10,14 @@ export function getFormattedDateTime(isoDate) {
 	return date.toLocaleString("en-us", options);
 }
 
+export function getFormattedTime(date) {
+	const options = {
+		hour: "numeric",
+		minute: "numeric",
+	};
+	return date.toLocaleString("en-us", options);
+}
+
 export function getFormattedDuration(duration) {
 	var remainingDuration = duration;
 	var result = "";

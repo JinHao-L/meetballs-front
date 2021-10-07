@@ -21,12 +21,7 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
 	if (editing) {
 		// Editing
 		return (
-			<Col
-				className="Container__padding--vertical-small"
-				lg={8}
-				md={12}
-				sm={12}
-			>
+			<Col className="Container__padding--vertical-small">
 				<Card bg="light">
 					<Card.Header>
 						<div className="Container__row--space-between">
@@ -102,12 +97,7 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
 
 	// Not editing
 	return (
-		<Col
-			className="Container__padding--vertical-small"
-			lg={8}
-			md={12}
-			sm={12}
-		>
+		<Col className="Container__padding--vertical-small">
 			<Card bg="light">
 				<Card.Body>
 					<Card.Title>
