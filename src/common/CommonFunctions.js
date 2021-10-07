@@ -37,3 +37,8 @@ export function getFormattedDuration(duration) {
 	}
 	return result;
 }
+
+export function openLinkInNewTab(link) {
+	const newWindow = window.open(link, '_blank', 'noopener,noreferer');
+	if (newWindow) newWindow = null;
+}
