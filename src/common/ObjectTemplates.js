@@ -7,7 +7,7 @@ export const blankMeeting = {
 	uuid: "",
 	start_url: "",
 	join_url: "",
-	status: "",
+	status: "waiting",
 	start_time: "1999-24-06T22:00:00Z",
 	enable_transcription: false,
 	transcription: "",

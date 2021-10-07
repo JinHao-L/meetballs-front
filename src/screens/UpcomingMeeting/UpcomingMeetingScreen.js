@@ -76,16 +76,6 @@ export default function UpcomingMeetingScreen() {
 
 	return (
 		<>
-			<div className="Container__alert">
-				<div className="Container__center--horizontal">
-					<Alert variant="danger">
-						Made changes? Save them before leaving:&nbsp;&nbsp;
-						<Button variant="danger" onClick={uploadChanges}>
-							Save
-						</Button>
-					</Alert>
-				</div>
-			</div>
 			<Container className="Container__padding--vertical">
 				<Row>
 					<Col
@@ -94,6 +84,21 @@ export default function UpcomingMeetingScreen() {
 						sm={12}
 						className="Container__padding--horizontal"
 					>
+						<Alert
+							variant="danger"
+							className="Container__row--space-between"
+						>
+							<p
+								className="Text__paragraph"
+								style={{ margin: 0, paddingTop: 8 }}
+							>
+								Made changes?
+							</p>
+							&nbsp;&nbsp;
+							<Button variant="danger" onClick={uploadChanges}>
+								Save
+							</Button>
+						</Alert>
 						<p className="Text__header">{meeting.name}</p>
 						<p className="Text__subheader">
 							{getFormattedDateTime(meeting.start_time)}
