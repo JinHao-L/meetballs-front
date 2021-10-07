@@ -16,7 +16,7 @@ import { useHistory, Redirect, useParams } from "react-router";
 export default function UpcomingMeetingScreen() {
 	const [meeting, setMeeting] = useState(blankMeeting);
 	const [restrictDescription, setRestrictDescription] = useState(true);
-	const [currentTab, setCurrentTab] = useState("participants");
+	const [currentTab, setCurrentTab] = useState("agenda");
 	const [showEditMeeting, setShowEditMeeting] = useState(false);
 	const history = useHistory();
 
@@ -24,9 +24,6 @@ export default function UpcomingMeetingScreen() {
 
 	useEffect(() => {
 		const pulledMeeting = testMeeting;
-		// pulledMeeting.participant_lists.sort((p1, p2) => {
-		// 	return (" " + p1.user_name).localeCompare(p2.user_name);
-		// });
 		pulledMeeting.agenda_items.sort((p1, p2) => {
 			return p1.position - p2.position;
 		});
@@ -43,15 +40,15 @@ export default function UpcomingMeetingScreen() {
 	function uploadChanges() {}
 
 	function Content() {
-		if (currentTab === "participants") {
+		if (currentTab === "agenda") {
+			return <AgendaItemList meeting={meeting} setMeeting={setMeeting} />;
+		} else {
 			return (
 				<ParticipantItemList
 					meeting={meeting}
 					setMeeting={setMeeting}
 				/>
 			);
-		} else {
-			return <AgendaItemList meeting={meeting} setMeeting={setMeeting} />;
 		}
 	}
 
@@ -140,25 +137,25 @@ export default function UpcomingMeetingScreen() {
 					</Col>
 					<Col lg={1} md={12} sm={12} />
 					<Col
-						lg={8}
+						lg={6}
 						md={12}
 						sm={12}
 						className="Container__padding--horizontal"
 					>
 						<Nav
 							variant="tabs"
-							defaultActiveKey="participants"
+							defaultActiveKey="agenda"
 							onSelect={(selectedKey) =>
 								setCurrentTab(selectedKey)
 							}
 						>
 							<Nav.Item>
+								<Nav.Link eventKey="agenda">Agenda</Nav.Link>
+							</Nav.Item>
+							<Nav.Item>
 								<Nav.Link eventKey="participants">
 									Participants
 								</Nav.Link>
-							</Nav.Item>
-							<Nav.Item>
-								<Nav.Link eventKey="agenda">Agenda</Nav.Link>
 							</Nav.Item>
 						</Nav>
 						<div className="Buffer--20px" />

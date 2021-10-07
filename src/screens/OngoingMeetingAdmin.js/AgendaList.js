@@ -31,12 +31,7 @@ export default function AgendaList({ time, agenda, position }) {
 
 function NotStartedItem({ item }) {
 	return (
-		<Col
-			className="Container__padding--vertical-small"
-			lg={8}
-			md={12}
-			sm={12}
-		>
+		<Col className="Container__padding--vertical-small">
 			<Card bg="light">
 				<Card.Body>
 					<Card.Title>{item.item_name}</Card.Title>
@@ -54,13 +49,8 @@ function CurrentItem({ item, time }) {
 	const currentDuration = time - item.start_time;
 	const timeRemaining = item.actual_duration - currentDuration;
 	return (
-		<Col
-			className="Container__padding--vertical-small"
-			lg={8}
-			md={12}
-			sm={12}
-		>
-			<Card bg={timeRemaining > 0 ? "success" : "danger"} text="light">
+		<Col className="Container__padding--vertical-small">
+			<Card bg={timeRemaining > 0 ? "primary" : "danger"} text="light">
 				<Card.Body>
 					<Card.Title>{item.item_name}</Card.Title>
 					<Card.Text>
@@ -77,12 +67,7 @@ function CurrentItem({ item, time }) {
 
 function ActiveItem({ item }) {
 	return (
-		<Col
-			className="Container__padding--vertical-small"
-			lg={8}
-			md={12}
-			sm={12}
-		>
+		<Col className="Container__padding--vertical-small">
 			<Card bg="light">
 				<Card.Body>
 					<Card.Title>{item.item_name}</Card.Title>
