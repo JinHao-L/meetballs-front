@@ -3,7 +3,7 @@ export const testMeeting = {
 	description:
 		"Pellentesque vestibulum dolor in tortor scelerisque, eu laoreet felis mattis. Duis ac mauris a ligula scelerisque commodo in sit amet est. Proin ac semper neque. Integer a sagittis velit, ac finibus risus. Curabitur blandit, nulla ut scelerisque interdum, tortor elit tristique quam, eu tempus ipsum tortor eu neque. Cras molestie eget enim vitae fringilla. In eget nibh tristique nunc porttitor eleifend ut in felis. Nam egestas mauris in augue suscipit cursus. Vivamus eget ornare ante, finibus pulvinar justo. Fusce sit amet dapibus neque, non euismod massa. Nunc elementum purus pretium elit luctus finibus. Nunc eu augue quis purus posuere sollicitudin quis non eros. Curabitur rutrum faucibus ipsum non tristique. Maecenas mattis eget diam at gravida.",
 	created_at: "//Zoom date",
-	duration: "//Zoom duration",
+	duration: 180000,
 	host_id: "//Zoom host id",
 	uuid: "//Meeting id",
 	start_url: "https://zoom.us/",
