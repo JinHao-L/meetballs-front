@@ -18,6 +18,16 @@ export function getFormattedTime(date) {
 	return date.toLocaleString("en-us", options);
 }
 
+export function getFormattedDate(isoDate) {
+	const date = new Date(isoDate);
+	const options = {
+		day: "numeric",
+		month: "long",
+		year: "numeric",
+	};
+	return date.toLocaleString("en-US", options)
+}
+
 export function getFormattedDuration(duration) {
 	var remainingDuration = duration;
 	var result = "";
@@ -34,4 +44,36 @@ export function getFormattedDuration(duration) {
 		result += seconds + "s";
 	}
 	return result;
+}
+
+export function openLinkInNewTab(link) {
+	const newWindow = window.open(link, '_blank', 'noopener,noreferer');
+	if (newWindow) newWindow = null;
+}
+
+export function getDateInfo(isoDate, durationInMilli) {
+    const date = new Date(isoDate);
+    let options = {
+        day: "numeric",
+		month: "long",
+		year: "numeric",
+    }
+    const dateStr = date.toLocaleString('en-US', options);
+
+    options = {
+		hour: "numeric",
+		minute: "numeric",
+    };
+    const startTime = date.toLocaleString('en-US', options);
+    date.setMilliseconds(date.getMilliseconds() + durationInMilli);
+    const endTime = date.toLocaleString('en-US', options);
+
+    const durationStr = getFormattedDuration(durationInMilli);
+
+    return Object.freeze({
+        date: dateStr,
+        startTime: startTime,
+        endTime: endTime,
+        duration: durationStr
+    });
 }

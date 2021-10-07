@@ -2,7 +2,7 @@ export const blankMeeting = {
 	name: "",
 	description: "",
 	created_at: "",
-	duration: "",
+	duration: 3600000,
 	host_id: "",
 	uuid: "",
 	start_url: "",
