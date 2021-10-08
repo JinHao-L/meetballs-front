@@ -9,7 +9,7 @@ import {
 	blankMeeting,
 	blankParticipant,
 } from "../../common/ObjectTemplates";
-import { apiUrl } from "../../common/CommonValues";
+import { accessTokenKey, apiUrl } from "../../common/CommonValues";
 import EditMeetingOverlay from "./EditMeetingOverlay";
 import { useHistory, Redirect, useParams } from "react-router";
 
@@ -181,12 +181,42 @@ function addParticipant(meeting, setMeeting) {
 	setMeeting(newMeeting);
 }
 
-function addAgenda(meeting, setMeeting) {
+async function addAgenda(meeting, setMeeting) {
 	const newMeeting = Object.assign({}, meeting);
 	const newAgenda = Object.assign({}, blankAgenda);
 	newAgenda.meetingId = newMeeting.id;
-	newAgenda.position = newMeeting.agendaItems.length;
+	const size = newMeeting.agendaItems.length;
+	if (size > 0) {
+		const lastItem = newMeeting.agendaItems[size - 1];
+		newAgenda.position = lastItem.position + 1;
+	} else {
+		newAgenda.position = 0;
+	}
+	await addAgendaToDatabase(newAgenda);
 	newMeeting.agendaItems = [...newMeeting.agendaItems, newAgenda];
 	setMeeting(newMeeting);
-	console.log(newMeeting.agendaItems);
+}
+
+async function addAgendaToDatabase(newAgenda) {
+	const url =
+		apiUrl +
+		"/agenda-item/" +
+		newAgenda.meetingId +
+		"/" +
+		newAgenda.position;
+	const accessToken = window.sessionStorage.getItem(accessTokenKey);
+	await fetch(url, {
+		method: "PUT",
+		headers: {
+			Authorization: accessToken,
+		},
+		body: {
+			name: newAgenda.name,
+			description: newAgenda.description,
+			startTime: null,
+			expectedDuration: newAgenda.expectedDuration,
+			actualDuration: null,
+			isCurrent: false,
+		},
+	});
 }
