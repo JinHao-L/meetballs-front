@@ -100,31 +100,32 @@ export default function EditParticipantItem({
 async function updateDatabase(meetingId, newEmail, newUsername, oldEmail) {
 	const url = apiUrl + "/participant";
 	const accessToken = window.sessionStorage.getItem(accessTokenKey);
-	await fetch(url, {
-		method: "DELETE",
+	if (oldEmail.length !== 0) {
+		await fetch(url, {
+			method: "DELETE",
+			headers: {
+				Authorization: "Bearer " + accessToken,
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				participants: [{ userEmail: oldEmail }],
+				meetingId: meetingId,
+			}),
+		});
+	}
+	const response = await fetch(url, {
+		method: "POST",
 		headers: {
-			Authorization: accessToken,
+			Authorization: "Bearer " + accessToken,
+			Accept: "application/json",
+			"Content-Type": "application/json",
 		},
-		body: {
-			participants: [{ userEmail: oldEmail }],
-			meetingId: meetingId,
-		},
+		body: JSON.stringify({
+			userEmail: newEmail,
+			timeJoined: null,
+		}),
 	});
-	await fetch(url, {
-		method: "PUT",
-		headers: {
-			Authorization: accessToken,
-		},
-		body: {
-			participants: [
-				{
-					userEmail: newEmail,
-					userName: newUsername,
-					role: 1,
-					timeJoined: null,
-				},
-			],
-			meetingId: meetingId,
-		},
-	});
+	const error = await response.text();
+	console.log(error);
 }

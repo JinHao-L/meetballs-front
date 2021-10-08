@@ -20,23 +20,6 @@ export default function EditMeetingOverlay({
 		updateDatabase(newMeeting);
 	}
 
-	async function updateDatabase(newMeeting) {
-		const url = apiUrl + "/meeting/" + newMeeting.id;
-		const accessToken = window.sessionStorage.getItem(accessTokenKey);
-		await fetch(url, {
-			method: "PUT",
-			headers: {
-				Authorization: accessToken,
-			},
-			body: {
-				name: newMeeting.name,
-				description: newMeeting.description,
-				duration: newMeeting.duration,
-				enableTranscription: newMeeting.enableTranscription,
-			},
-		});
-	}
-
 	return (
 		<Offcanvas show={show} onHide={() => setShow(false)}>
 			<Offcanvas.Header closeButton>
@@ -67,4 +50,23 @@ export default function EditMeetingOverlay({
 			</Offcanvas.Body>
 		</Offcanvas>
 	);
+}
+
+async function updateDatabase(newMeeting) {
+	const url = apiUrl + "/meeting/" + newMeeting.id;
+	const accessToken = window.sessionStorage.getItem(accessTokenKey);
+	await fetch(url, {
+		method: "PUT",
+		headers: {
+			Authorization: "Bearer " + accessToken,
+			Accept: "application/json",
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			name: newMeeting.name,
+			description: newMeeting.description,
+			duration: newMeeting.duration,
+			enableTranscription: newMeeting.enableTranscription,
+		}),
+	});
 }

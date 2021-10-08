@@ -15,6 +15,7 @@ export default function App() {
 
 	useEffect(() => {
 		console.log(accessToken);
+		window.sessionStorage.setItem(accessTokenKey, accessToken);
 		const socket = subscribe("10c7e0a8-120b-45e0-a37f-be92170bfb8d");
 		return () => {
 			socket.disconnect();
@@ -63,10 +64,6 @@ export default function App() {
 			if (res.status === 201) {
 				const data = await res.json();
 				setAccessToken(data.access_token || null);
-				window.sessionStorage.setItem(
-					accessTokenKey,
-					data.accessToken || null
-				);
 				if (data.expires_in)
 					setTimeout(refresh, data.expires_in * 1000);
 				localStorage.setItem("ref", data.refresh_token);

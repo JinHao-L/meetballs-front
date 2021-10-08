@@ -119,7 +119,9 @@ async function removeFromDatabase(meetingId, position) {
 	await fetch(url, {
 		method: "DELETE",
 		headers: {
-			Authorization: accessToken,
+			Authorization: "Bearer " + accessToken,
+			Accept: "application/json",
+			"Content-Type": "application/json",
 		},
 	});
 }
