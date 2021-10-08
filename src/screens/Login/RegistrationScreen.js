@@ -6,9 +6,14 @@ export default function RegistrationScreen() {
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
     const [ confirmationPassword, setConfirmationPassword ] = useState("");
+    const [ firstName, setFirstName ] = useState("");
+    const [ lastName, setLastName ] = useState("");
 
     function readyToSubmit() {
-        return email.length > 0 && password.length > 0
+        return email.trim().length > 0
+            && password.trim().length > 0
+            && firstName.trim().length > 0
+            && lastName.trim().length > 0
             && password === confirmationPassword;
     }
 
@@ -19,7 +24,7 @@ export default function RegistrationScreen() {
     return (
         <div>
             <Form onSubmit={onSubmit}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3" controlId="formEmail">
                     <Form.Label>Email</Form.Label>
                     <Form.Control
                         type="email"
@@ -29,7 +34,27 @@ export default function RegistrationScreen() {
                         placeholder="Please enter your email"
                     />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Group className="mb-3" controlId="formFirstName">
+                    <Form.Label>First Name</Form.Label>
+                    <Form.Control
+                        type="input"
+                        autoFocus
+                        value={firstName}
+                        onChange={setFirstName}
+                        placeholder="Please enter your first name"
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formLastName">
+                    <Form.Label>Last Name</Form.Label>
+                    <Form.Control
+                        type="input"
+                        autoFocus
+                        value={lastName}
+                        onChange={setLastName}
+                        placeholder="Please enter your last name"
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control
                         value={password}
@@ -37,7 +62,7 @@ export default function RegistrationScreen() {
                         onChange={setPassword}
                     />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicConfirmation">
+                <Form.Group className="mb-3" controlId="formConfirmation">
                     <Form.Label>Confirm Password</Form.Label>
                     <Form.Control
                         value={confirmationPassword}

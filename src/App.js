@@ -5,6 +5,7 @@ import UpcomingMeetingScreen from "./screens/UpcomingMeeting/UpcomingMeetingScre
 import OngoingMeetingAdminScreen from "./screens/OngoingMeetingAdmin.js/OngoingMeetingAdminScreen";
 import { io } from "socket.io-client";
 import { accessTokenKey } from "./common/CommonValues";
+import EmailConfirmationScreen from "./screens/Login/EmailConfirmationScreen";
 
 const apiUrl = "http://localhost:3001";
 export default function App() {
@@ -111,6 +112,9 @@ export default function App() {
 	return (
 		<Router>
 			<Switch>
+				<Route path="/confirm-email/:token">
+					<EmailConfirmationScreen />
+				</Route>
 				<Route path="/meeting/:id">
 					<UpcomingMeetingScreen />
 				</Route>

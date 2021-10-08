@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
+import axios from "axios";
 
 export default function LoginScreen() {
 
@@ -11,7 +12,12 @@ export default function LoginScreen() {
     }
 
     function onSubmit() {
-        console.log("pressed login");
+        axios.post('/auth/login', {
+            email: email,
+            password: password
+        }).then((response) => {
+            
+        });
     }
 
     return (
