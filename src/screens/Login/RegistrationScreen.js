@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 
@@ -9,6 +10,9 @@ export default function RegistrationScreen() {
     const [ firstName, setFirstName ] = useState("");
     const [ lastName, setLastName ] = useState("");
 
+    const [ response, setResponse ] = useState("");
+    const [ error, setError ] = useState(false);
+
     function readyToSubmit() {
         return email.trim().length > 0
             && password.trim().length > 0
@@ -17,8 +21,22 @@ export default function RegistrationScreen() {
             && password === confirmationPassword;
     }
 
-    function onSubmit() {
-        console.log("pressed register");
+    async function onSubmit() {
+        return axios.post('/auth/signup', {
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            password: password
+        }).then((res) => {
+            console.log("Registered user with " + email);
+            setResponse(res.data.message);
+        }).catch((e) => {
+            console.log(e)
+            if (e.response) {
+                setError(true);
+                setResponse(e.response.data.message);
+            }
+        });
     }
 
     return (
