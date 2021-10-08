@@ -1,4 +1,5 @@
 import { Card, Row, Button } from "react-bootstrap";
+import PropTypes from "prop-types";
 import { getDateInfo, openLinkInNewTab } from "../../common/CommonFunctions";
 
 export default function UpcomingMeetingItem({ key, meeting, editMeeting }) {
@@ -36,3 +37,15 @@ export default function UpcomingMeetingItem({ key, meeting, editMeeting }) {
 		</Card>
 	);
 }
+
+UpcomingMeetingItem.propTypes = {
+    key: PropTypes.number.isRequired,
+    meeting: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        start_url: PropTypes.string.isRequired,
+        start_time: PropTypes.string.isRequired,
+        duration: PropTypes.number.isRequired
+    }).isRequired,
+    editMeeting: PropTypes.func.isRequired
+};
