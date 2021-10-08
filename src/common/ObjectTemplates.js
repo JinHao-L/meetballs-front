@@ -20,7 +20,7 @@ export const blankMeeting = {
 
 export const blankParticipant = {
 	meetingId: "",
-	role: 0,
+	role: 1,
 	userName: "",
 	userEmail: "",
 	timeJoined: null,

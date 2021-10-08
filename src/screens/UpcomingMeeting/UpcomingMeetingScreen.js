@@ -40,12 +40,9 @@ export default function UpcomingMeetingScreen() {
 
 	function startZoom() {
 		meeting.type = 2;
-		uploadChanges();
 		window.open(meeting.startUrl, "_blank");
 		history.replace("/ongoing/" + id);
 	}
-
-	function uploadChanges() {}
 
 	function Content() {
 		if (currentTab === "agenda") {
@@ -93,21 +90,6 @@ export default function UpcomingMeetingScreen() {
 						sm={12}
 						className="Container__padding--horizontal"
 					>
-						<Alert
-							variant="danger"
-							className="Container__row--space-between"
-						>
-							<p
-								className="Text__paragraph"
-								style={{ margin: 0, paddingTop: 8 }}
-							>
-								Made changes?
-							</p>
-							&nbsp;&nbsp;
-							<Button variant="danger" onClick={uploadChanges}>
-								Save
-							</Button>
-						</Alert>
 						<p className="Text__header">{meeting.name}</p>
 						<p className="Text__subheader">
 							{getFormattedDateTime(meeting.startedAt)}

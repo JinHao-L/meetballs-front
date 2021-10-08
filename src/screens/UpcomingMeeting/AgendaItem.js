@@ -1,37 +1,25 @@
-import {
-	Button,
-	Row,
-	Col,
-	Card,
-	DropdownButton,
-	Dropdown,
-	Form,
-	CloseButton,
-} from "react-bootstrap";
+import { Button, Row, Col, Card } from "react-bootstrap";
 import { Draggable } from "react-beautiful-dnd";
 import { useState } from "react";
 import { getFormattedDuration } from "../../common/CommonFunctions";
+import { accessTokenKey, apiUrl } from "../../common/CommonValues";
+import EditAgendaItem from "./EditAgendaItem";
 
 export default function AgendaItem({ meeting, setMeeting, position }) {
 	const [editing, setEditing] = useState(false);
 	const item = meeting.agendaItems[position];
-	const [duration, setDuration] = useState(item.expectedDuration);
 
-	function DurationItems() {
-		const items = [];
-		durationMinutes.forEach((duration) =>
-			items.push(
-				<Dropdown.Item
-					onClick={() => {
-						item.expectedDuration = duration.mils;
-						setDuration(duration.mils);
-					}}
-				>
-					{duration.display}
-				</Dropdown.Item>
-			)
-		);
-		return items;
+	function removeAgendaItem() {
+		const newMeeting = Object.assign({}, meeting);
+		const newAgenda = newMeeting.agendaItems;
+		const actualPosition = newAgenda[position].position;
+		newAgenda.splice(position, 1);
+		for (let i = 0; i < newAgenda.length; i++) {
+			newAgenda[i].position = i;
+		}
+		newMeeting.agendaItems = newAgenda;
+		removeFromDatabase(meeting.id, actualPosition);
+		setMeeting(newMeeting);
 	}
 
 	if (editing) {
@@ -47,51 +35,12 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 						{...provided.draggableProps}
 						{...provided.dragHandleProps}
 					>
-						<Col className="Container__padding--vertical-small">
-							<Card bg="light">
-								<Card.Header>
-									<div className="Container__row--space-between">
-										<p className="Text__card-header">
-											Editing Agenda Item
-										</p>
-										<CloseButton
-											onClick={() => setEditing(false)}
-										/>
-									</div>
-								</Card.Header>
-								<Card.Body>
-									<Form.Group>
-										<Form.Label column>Name</Form.Label>
-										<Form.Control
-											defaultValue={item.name}
-											onChange={(event) =>
-												(item.name = event.target.value)
-											}
-										/>
-										<Form.Label column>Duration</Form.Label>
-										<DropdownButton
-											variant="outline-secondary"
-											title={getFormattedDuration(
-												duration
-											)}
-										>
-											{DurationItems()}
-										</DropdownButton>
-										<Form.Label column>
-											Description
-										</Form.Label>
-										<Form.Control
-											as="textarea"
-											defaultValue={item.description}
-											onChange={(event) =>
-												(item.description =
-													event.target.value)
-											}
-										/>
-									</Form.Group>
-								</Card.Body>
-							</Card>
-						</Col>
+						<EditAgendaItem
+							setEditing={setEditing}
+							setMeeting={setMeeting}
+							meeting={meeting}
+							position={position}
+						/>
 					</div>
 				)}
 			</Draggable>
@@ -120,13 +69,7 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 										<div className="d-grid gap-2">
 											<Button
 												variant="outline-danger"
-												onClick={() =>
-													removeAgendaItem(
-														setMeeting,
-														meeting,
-														position
-													)
-												}
+												onClick={removeAgendaItem}
 											>
 												Remove
 											</Button>
@@ -152,28 +95,13 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 	);
 }
 
-function removeAgendaItem(setMeeting, meeting, position) {
-	const newMeeting = Object.assign({}, meeting);
-	const newAgenda = newMeeting.agendaItems;
-	newAgenda.splice(position, 1);
-	for (let i = 0; i < newAgenda.length; i++) {
-		newAgenda[i].position = i;
-	}
-	newMeeting.agendaItems = newAgenda;
-	setMeeting(newMeeting);
+async function removeFromDatabase(meetingId, position) {
+	const url = apiUrl + "/agenda-item/" + meetingId + "/" + position;
+	const accessToken = window.sessionStorage.getItem(accessTokenKey);
+	await fetch(url, {
+		method: "DELETE",
+		headers: {
+			Authorization: accessToken,
+		},
+	});
 }
-
-const durationMinutes = [
-	{ mils: 300000, display: "5min" },
-	{ mils: 600000, display: "10min" },
-	{ mils: 900000, display: "15min" },
-	{ mils: 1200000, display: "20min" },
-	{ mils: 1500000, display: "25min" },
-	{ mils: 1800000, display: "30min" },
-	{ mils: 2100000, display: "35min" },
-	{ mils: 2400000, display: "40min" },
-	{ mils: 2700000, display: "45min" },
-	{ mils: 3000000, display: "50min" },
-	{ mils: 3300000, display: "55min" },
-	{ mils: 3600000, display: "1h 0min" },
-];

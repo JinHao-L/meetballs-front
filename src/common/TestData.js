@@ -40,14 +40,14 @@ export const testMeeting = {
 	participants: [
 		{
 			meetingId: "//Meeting id",
-			role: 0,
+			role: 1,
 			userName: "Meetball 2",
 			userEmail: "meetball2@meetmail.com",
 			timeJoined: null,
 		},
 		{
 			meetingId: "//Meeting id",
-			role: 0,
+			role: 1,
 			userName: "Meetball 1",
 			userEmail: "meetball1@meetmail.com",
 			timeJoined: null,
