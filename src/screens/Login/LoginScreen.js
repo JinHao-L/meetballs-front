@@ -17,7 +17,7 @@ export default function LoginScreen() {
     return (
         <div>
             <Form onSubmit={onSubmit}>
-                <Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email</Form.Label>
                     <Form.Control
                         type="email"
@@ -26,7 +26,7 @@ export default function LoginScreen() {
                         onChange={setEmail}
                     />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control
                         value={password}

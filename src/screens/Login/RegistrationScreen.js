@@ -19,16 +19,17 @@ export default function RegistrationScreen() {
     return (
         <div>
             <Form onSubmit={onSubmit}>
-                <Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email</Form.Label>
                     <Form.Control
                         type="email"
                         autoFocus
                         value={email}
                         onChange={setEmail}
+                        placeholder="Please enter your email"
                     />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
                     <Form.Control
                         value={password}
@@ -36,7 +37,7 @@ export default function RegistrationScreen() {
                         onChange={setPassword}
                     />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicConfirmation">
                     <Form.Label>Confirm Password</Form.Label>
                     <Form.Control
                         value={confirmationPassword}
@@ -45,7 +46,8 @@ export default function RegistrationScreen() {
                     />
                 </Form.Group>
                 <Button
-                    block size="lg"
+                    block="true"
+                    size="lg"
                     disabled={!readyToSubmit()}
                     type="submit"
                 >
