@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Spinner, Container, Col, Form, Toast, Button } from "react-bootstrap";
-import { useParams } from "react-router";
+import { useLocation } from "react-router";
 
 function ResendConfirmationForm() {
 
@@ -37,7 +37,8 @@ function ResendConfirmationForm() {
                         placeholder="Enter email here"
                     />
                     <Button
-                        block size="lg"
+                        block
+                        size="me"
                         disabled={!readyToSubmit()}
                         type="submit"
                     >
@@ -62,7 +63,10 @@ function ResendConfirmationForm() {
 }
 
 export default function EmailConfirmationScreen() {
-    const { token } = useParams();
+
+    const { search } = useLocation();
+    const query = new URLSearchParams(search);
+    const token = query.get('token');
 
     const [ responseMsg, setResponseMsg ] = useState('');
     const [ isLoading, setLoading ] = useState(true);
