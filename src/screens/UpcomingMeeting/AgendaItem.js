@@ -5,7 +5,12 @@ import { getFormattedDuration } from "../../common/CommonFunctions";
 import { accessTokenKey, apiUrl } from "../../common/CommonValues";
 import EditAgendaItem from "./EditAgendaItem";
 
-export default function AgendaItem({ meeting, setMeeting, position }) {
+export default function AgendaItem({
+	meeting,
+	setMeeting,
+	position,
+	isReordering,
+}) {
 	const [editing, setEditing] = useState(false);
 	const item = meeting.agendaItems[position];
 
@@ -22,12 +27,17 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 		setMeeting(newMeeting);
 	}
 
+	if (isReordering && editing) {
+		setEditing(false);
+	}
+
 	if (editing) {
 		// Editing
 		return (
 			<Draggable
 				draggableId={"Draggable" + item.position}
 				index={position}
+				isDragDisabled={true}
 			>
 				{(provided) => (
 					<div
@@ -49,7 +59,11 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 
 	// Not editing
 	return (
-		<Draggable draggableId={"Draggable" + item.position} index={position}>
+		<Draggable
+			draggableId={"Draggable" + item.position}
+			index={position}
+			isDragDisabled={!isReordering}
+		>
 			{(provided) => (
 				<div
 					ref={provided.innerRef}
@@ -64,28 +78,32 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 							<Card.Body>
 								<Card.Title>{item.name}</Card.Title>
 								<Card.Text>{item.description}</Card.Text>
-								<Row>
-									<Col>
-										<div className="d-grid gap-2">
-											<Button
-												variant="outline-danger"
-												onClick={removeAgendaItem}
-											>
-												Remove
-											</Button>
-										</div>
-									</Col>
-									<Col>
-										<div className="d-grid gap-2">
-											<Button
-												variant="outline-secondary"
-												onClick={() => setEditing(true)}
-											>
-												Edit
-											</Button>
-										</div>
-									</Col>
-								</Row>
+								{isReordering || (
+									<Row>
+										<Col>
+											<div className="d-grid gap-2">
+												<Button
+													variant="outline-danger"
+													onClick={removeAgendaItem}
+												>
+													Remove
+												</Button>
+											</div>
+										</Col>
+										<Col>
+											<div className="d-grid gap-2">
+												<Button
+													variant="outline-secondary"
+													onClick={() =>
+														setEditing(true)
+													}
+												>
+													Edit
+												</Button>
+											</div>
+										</Col>
+									</Row>
+								)}
 							</Card.Body>
 						</Card>
 					</Col>

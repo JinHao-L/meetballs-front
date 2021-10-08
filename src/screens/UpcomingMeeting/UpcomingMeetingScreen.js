@@ -18,6 +18,7 @@ export default function UpcomingMeetingScreen() {
 	const [restrictDescription, setRestrictDescription] = useState(true);
 	const [currentTab, setCurrentTab] = useState("agenda");
 	const [showEditMeeting, setShowEditMeeting] = useState(false);
+	const [isReordering, setReordering] = useState(false);
 	const history = useHistory();
 
 	const { id } = useParams();
@@ -46,7 +47,14 @@ export default function UpcomingMeetingScreen() {
 
 	function Content() {
 		if (currentTab === "agenda") {
-			return <AgendaItemList meeting={meeting} setMeeting={setMeeting} />;
+			return (
+				<AgendaItemList
+					meeting={meeting}
+					setMeeting={setMeeting}
+					isReordering={isReordering}
+					setReordering={setReordering}
+				/>
+			);
 		} else {
 			return (
 				<ParticipantItemList
@@ -192,6 +200,7 @@ async function addAgenda(meeting, setMeeting) {
 	} else {
 		newAgenda.position = 0;
 	}
+	newAgenda.prevPosition = newAgenda.position;
 	await addAgendaToDatabase(newAgenda);
 	newMeeting.agendaItems = [...newMeeting.agendaItems, newAgenda];
 	setMeeting(newMeeting);
