@@ -13,6 +13,7 @@ import { testMeeting } from "../../common/TestData";
 import EditMeetingOverlay from "./EditMeetingOverlay";
 import { useHistory, Redirect, useParams } from "react-router";
 
+const apiUrl = "http://localhost:3001";
 export default function UpcomingMeetingScreen() {
 	const [meeting, setMeeting] = useState(blankMeeting);
 	const [restrictDescription, setRestrictDescription] = useState(true);
@@ -24,16 +25,26 @@ export default function UpcomingMeetingScreen() {
 
 	useEffect(() => {
 		const pulledMeeting = testMeeting;
-		pulledMeeting.agenda_items.sort((p1, p2) => {
+		pullMeeting();
+		pulledMeeting.agendaItems.sort((p1, p2) => {
 			return p1.position - p2.position;
 		});
 		setMeeting(pulledMeeting);
 	}, []);
 
+	async function pullMeeting() {
+		const url = apiUrl + "/meeting/" + id;
+		const response = await fetch(url, {
+			method: "GET",
+		});
+		const result = await response.json();
+		console.log(result);
+	}
+
 	function startZoom() {
-		meeting.status = "started";
+		meeting.status = 1;
 		uploadChanges();
-		window.open(meeting.start_url, "_blank");
+		window.open(meeting.startUrl, "_blank");
 		history.replace("/ongoing/" + id);
 	}
 
@@ -70,7 +81,7 @@ export default function UpcomingMeetingScreen() {
 		);
 	}
 
-	if (meeting.status === "started") {
+	if (meeting.type !== 0) {
 		return <Redirect to={"/ongoing/" + id} />;
 	}
 
@@ -101,7 +112,7 @@ export default function UpcomingMeetingScreen() {
 						</Alert>
 						<p className="Text__header">{meeting.name}</p>
 						<p className="Text__subheader">
-							{getFormattedDateTime(meeting.start_time)}
+							{getFormattedDateTime(meeting.startedAt)}
 						</p>
 						<div className="d-grid gap-2">
 							<Button onClick={startZoom}>
@@ -181,27 +192,21 @@ export default function UpcomingMeetingScreen() {
 }
 
 function addParticipant(meeting, setMeeting) {
-	if (
-		meeting.participant_lists.findIndex((item) => item.user_email === "") >=
-		0
-	)
+	if (meeting.participants.findIndex((item) => item.userEmail === "") >= 0)
 		return;
 	const newMeeting = Object.assign({}, meeting);
 	const newParticipant = Object.assign({}, blankParticipant);
-	newParticipant.meeting_uuid = newMeeting.uuid;
-	newMeeting.participant_lists = [
-		...newMeeting.participant_lists,
-		newParticipant,
-	];
+	newParticipant.meetingId = newMeeting.id;
+	newMeeting.participants = [...newMeeting.participants, newParticipant];
 	setMeeting(newMeeting);
 }
 
 function addAgenda(meeting, setMeeting) {
 	const newMeeting = Object.assign({}, meeting);
 	const newAgenda = Object.assign({}, blankAgenda);
-	newAgenda.meeting_uuid = newMeeting.uuid;
-	newAgenda.position = newMeeting.agenda_items.length;
-	newMeeting.agenda_items = [...newMeeting.agenda_items, newAgenda];
+	newAgenda.meetingId = newMeeting.id;
+	newAgenda.position = newMeeting.agendaItems.length;
+	newMeeting.agendaItems = [...newMeeting.agendaItems, newAgenda];
 	setMeeting(newMeeting);
-	console.log(newMeeting.agenda_items);
+	console.log(newMeeting.agendaItems);
 }

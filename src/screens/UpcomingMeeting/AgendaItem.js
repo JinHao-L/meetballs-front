@@ -14,8 +14,8 @@ import { getFormattedDuration } from "../../common/CommonFunctions";
 
 export default function AgendaItem({ meeting, setMeeting, position }) {
 	const [editing, setEditing] = useState(false);
-	const item = meeting.agenda_items[position];
-	const [duration, setDuration] = useState(item.expected_duration);
+	const item = meeting.agendaItems[position];
+	const [duration, setDuration] = useState(item.expectedDuration);
 
 	function DurationItems() {
 		const items = [];
@@ -23,7 +23,7 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 			items.push(
 				<Dropdown.Item
 					onClick={() => {
-						item.expected_duration = duration.mils;
+						item.expectedDuration = duration.mils;
 						setDuration(duration.mils);
 					}}
 				>
@@ -63,10 +63,9 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 									<Form.Group>
 										<Form.Label column>Name</Form.Label>
 										<Form.Control
-											defaultValue={item.item_name}
+											defaultValue={item.name}
 											onChange={(event) =>
-												(item.item_name =
-													event.target.value)
+												(item.name = event.target.value)
 											}
 										/>
 										<Form.Label column>Duration</Form.Label>
@@ -83,9 +82,9 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 										</Form.Label>
 										<Form.Control
 											as="textarea"
-											defaultValue={item.item_description}
+											defaultValue={item.description}
 											onChange={(event) =>
-												(item.item_description =
+												(item.description =
 													event.target.value)
 											}
 										/>
@@ -111,11 +110,11 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 					<Col className="Container__padding--vertical-small">
 						<Card bg="light">
 							<Card.Header>
-								{getFormattedDuration(item.expected_duration)}
+								{getFormattedDuration(item.expectedDuration)}
 							</Card.Header>
 							<Card.Body>
-								<Card.Title>{item.item_name}</Card.Title>
-								<Card.Text>{item.item_description}</Card.Text>
+								<Card.Title>{item.name}</Card.Title>
+								<Card.Text>{item.description}</Card.Text>
 								<Row>
 									<Col>
 										<div className="d-grid gap-2">
@@ -155,12 +154,12 @@ export default function AgendaItem({ meeting, setMeeting, position }) {
 
 function removeAgendaItem(setMeeting, meeting, position) {
 	const newMeeting = Object.assign({}, meeting);
-	const newAgenda = newMeeting.agenda_items;
+	const newAgenda = newMeeting.agendaItems;
 	newAgenda.splice(position, 1);
 	for (let i = 0; i < newAgenda.length; i++) {
 		newAgenda[i].position = i;
 	}
-	newMeeting.agenda_items = newAgenda;
+	newMeeting.agendaItems = newAgenda;
 	setMeeting(newMeeting);
 }
 

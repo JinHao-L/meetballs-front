@@ -9,7 +9,7 @@ export default function AgendaList({ time, agenda, position }) {
 		}
 	} else {
 		for (let i = Math.max(0, position); i < agenda.length; i++) {
-			if (agenda[i].start_time === null) {
+			if (agenda[i].startTime === null) {
 				items.push(
 					<NotStartedItem item={agenda[i]} key={"Item " + i} />
 				);
@@ -34,10 +34,10 @@ function NotStartedItem({ item }) {
 		<Col className="Container__padding--vertical-small">
 			<Card bg="light">
 				<Card.Body>
-					<Card.Title>{item.item_name}</Card.Title>
+					<Card.Title>{item.name}</Card.Title>
 					<Card.Text>
 						Estimated Duration:{" "}
-						{getFormattedDuration(item.expected_duration)}
+						{getFormattedDuration(item.expectedDuration)}
 					</Card.Text>
 				</Card.Body>
 			</Card>
@@ -46,13 +46,13 @@ function NotStartedItem({ item }) {
 }
 
 function CurrentItem({ item, time }) {
-	const currentDuration = time - item.start_time;
-	const timeRemaining = item.actual_duration - currentDuration;
+	const currentDuration = time - item.startTime;
+	const timeRemaining = item.actualDuration - currentDuration;
 	return (
 		<Col className="Container__padding--vertical-small">
 			<Card bg={timeRemaining > 0 ? "primary" : "danger"} text="light">
 				<Card.Body>
-					<Card.Title>{item.item_name}</Card.Title>
+					<Card.Title>{item.name}</Card.Title>
 					<Card.Text>
 						Time Remaining:{" "}
 						{getFormattedDuration(
@@ -70,9 +70,9 @@ function ActiveItem({ item }) {
 		<Col className="Container__padding--vertical-small">
 			<Card bg="light">
 				<Card.Body>
-					<Card.Title>{item.item_name}</Card.Title>
+					<Card.Title>{item.name}</Card.Title>
 					<Card.Text>
-						Duration: {getFormattedDuration(item.actual_duration)}
+						Duration: {getFormattedDuration(item.actualDuration)}
 					</Card.Text>
 				</Card.Body>
 			</Card>

@@ -11,10 +11,10 @@ import { useState } from "react";
 
 export default function ParticipantItem({ setMeeting, meeting, position }) {
 	const [editing, setEditing] = useState(false);
-	const participant = meeting.participant_lists[position];
+	const participant = meeting.participants[position];
 	const [showModal, setShowModal] = useState(false);
 
-	if (!editing && participant.user_email.length === 0) {
+	if (!editing && participant.userEmail.length === 0) {
 		setEditing(true);
 	}
 
@@ -30,7 +30,7 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
 							</p>
 							<CloseButton
 								onClick={() => {
-									if (participant.user_email.length === 0) {
+									if (participant.userEmail.length === 0) {
 										setShowModal(true);
 									} else {
 										setEditing(false);
@@ -43,17 +43,16 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
 						<Form.Group>
 							<Form.Label column>Name</Form.Label>
 							<Form.Control
-								defaultValue={participant.user_name}
+								defaultValue={participant.userName}
 								onChange={(event) =>
-									(participant.user_name = event.target.value)
+									(participant.userName = event.target.value)
 								}
 							/>
 							<Form.Label column>Email</Form.Label>
 							<Form.Control
-								defaultValue={participant.user_email}
+								defaultValue={participant.userEmail}
 								onChange={(event) =>
-									(participant.user_email =
-										event.target.value)
+									(participant.userEmail = event.target.value)
 								}
 							/>
 						</Form.Group>
@@ -101,11 +100,11 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
 			<Card bg="light">
 				<Card.Body>
 					<Card.Title>
-						{participant.user_name.length > 0
-							? participant.user_name
+						{participant.userName.length > 0
+							? participant.userName
 							: "Guest"}
 					</Card.Title>
-					<Card.Text>{participant.user_email}</Card.Text>
+					<Card.Text>{participant.userEmail}</Card.Text>
 					<Row>
 						<Col>
 							<div className="d-grid gap-2">
@@ -142,8 +141,8 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
 
 function removeParticipant(setMeeting, meeting, position) {
 	const newMeeting = Object.assign({}, meeting);
-	const newParticipants = newMeeting.participant_lists;
+	const newParticipants = newMeeting.participants;
 	newParticipants.splice(position, 1);
-	newMeeting.participant_lists = newParticipants;
+	newMeeting.participants = newParticipants;
 	setMeeting(newMeeting);
 }

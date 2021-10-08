@@ -9,7 +9,7 @@ export default function CreateMeetingOverlay({ show, setShow }) {
 
 	function createMeeting() {
 		//Upload and go to upcoming meeting screen
-		newMeeting.created_at = new Date().toISOString();
+		newMeeting.createdAt = new Date().toISOString();
 	}
 
 	return (
