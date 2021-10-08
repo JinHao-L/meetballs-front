@@ -5,9 +5,9 @@ import {
 	getFormattedDateTime,
 	getFormattedTime,
 } from "../../common/CommonFunctions";
+import { apiUrl } from "../../common/CommonValues";
 import AgendaList from "./AgendaList";
 import { blankMeeting } from "../../common/ObjectTemplates";
-import { testMeeting } from "../../common/TestData";
 import ParticipantList from "./ParticipantList";
 
 var position = -1;
@@ -19,7 +19,7 @@ export default function OngoingMeetingAdminScreen() {
 	const { id } = useParams();
 
 	useEffect(() => {
-		getMeeting();
+		pullMeeting();
 		setInterval(() => {
 			setTime(new Date().getTime());
 		}, 1000);
@@ -29,16 +29,20 @@ export default function OngoingMeetingAdminScreen() {
 		window.open(meeting.startUrl, "_blank");
 	}
 
-	function getMeeting() {
-		const pulledMeeting = testMeeting;
-		pulledMeeting.participants.sort((p1, p2) => {
+	async function pullMeeting() {
+		const url = apiUrl + "/meeting/" + id;
+		const response = await fetch(url, {
+			method: "GET",
+		});
+		const result = await response.json();
+		result.participants.sort((p1, p2) => {
 			return (" " + p1.userName).localeCompare(p2.userName);
 		});
-		pulledMeeting.agendaItems.sort((p1, p2) => {
+		result.agendaItems.sort((p1, p2) => {
 			return p1.position - p2.position;
 		});
-		setMeeting(pulledMeeting);
-		getCurrentPosition(pulledMeeting);
+		setMeeting(result);
+		getCurrentPosition(result);
 	}
 
 	function Content() {

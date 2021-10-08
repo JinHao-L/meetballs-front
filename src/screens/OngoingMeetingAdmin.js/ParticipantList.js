@@ -12,6 +12,7 @@ export default function ParticipantList({ meeting, setMeeting, position }) {
 					setMeeting={setMeeting}
 					position={i}
 					ended={ended}
+					key={"Participant" + i}
 				/>
 			);
 		} else {
@@ -22,6 +23,7 @@ export default function ParticipantList({ meeting, setMeeting, position }) {
 					position={i}
 					started={position >= 0}
 					ended={ended}
+					key={"Participant" + i}
 				/>
 			);
 		}
@@ -38,7 +40,12 @@ function AwaitItem({ meeting, setMeeting, position, started, ended }) {
 				text={started ? "light" : "dark"}
 			>
 				<Card.Body>
-					<Card.Title>{participant.userName}</Card.Title>
+					<Card.Title>
+						{participant.userName != null &&
+						participant.userName.length > 0
+							? participant.userName
+							: "Guest"}
+					</Card.Title>
 					<Card.Text>{participant.userEmail}</Card.Text>
 					{!ended && (
 						<div className="d-grid gap-2">
@@ -68,7 +75,12 @@ function PresentItem({ meeting, setMeeting, position, ended }) {
 		<Col className="Container__padding--vertical-small">
 			<Card bg="success" text="light">
 				<Card.Body>
-					<Card.Title>{participant.userName}</Card.Title>
+					<Card.Title>
+						{participant.userName != null &&
+						participant.userName.length > 0
+							? participant.userName
+							: "Guest"}
+					</Card.Title>
 					<Card.Text>{participant.userEmail}</Card.Text>
 					{!ended && (
 						<div className="d-grid gap-2">

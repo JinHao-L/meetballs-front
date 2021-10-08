@@ -93,14 +93,14 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
 			</Col>
 		);
 	}
-
 	// Not editing
 	return (
 		<Col className="Container__padding--vertical-small">
 			<Card bg="light">
 				<Card.Body>
 					<Card.Title>
-						{participant.userName.length > 0
+						{participant.userName != null &&
+						participant.userName.length > 0
 							? participant.userName
 							: "Guest"}
 					</Card.Title>

@@ -9,11 +9,10 @@ import {
 	blankMeeting,
 	blankParticipant,
 } from "../../common/ObjectTemplates";
-import { testMeeting } from "../../common/TestData";
+import { apiUrl } from "../../common/CommonValues";
 import EditMeetingOverlay from "./EditMeetingOverlay";
 import { useHistory, Redirect, useParams } from "react-router";
 
-const apiUrl = "http://localhost:3001";
 export default function UpcomingMeetingScreen() {
 	const [meeting, setMeeting] = useState(blankMeeting);
 	const [restrictDescription, setRestrictDescription] = useState(true);
@@ -24,12 +23,7 @@ export default function UpcomingMeetingScreen() {
 	const { id } = useParams();
 
 	useEffect(() => {
-		const pulledMeeting = testMeeting;
 		pullMeeting();
-		pulledMeeting.agendaItems.sort((p1, p2) => {
-			return p1.position - p2.position;
-		});
-		setMeeting(pulledMeeting);
 	}, []);
 
 	async function pullMeeting() {
@@ -38,11 +32,14 @@ export default function UpcomingMeetingScreen() {
 			method: "GET",
 		});
 		const result = await response.json();
-		console.log(result);
+		result.agendaItems.sort((p1, p2) => {
+			return p1.position - p2.position;
+		});
+		setMeeting(result);
 	}
 
 	function startZoom() {
-		meeting.status = 1;
+		meeting.type = 2;
 		uploadChanges();
 		window.open(meeting.startUrl, "_blank");
 		history.replace("/ongoing/" + id);
@@ -81,7 +78,8 @@ export default function UpcomingMeetingScreen() {
 		);
 	}
 
-	if (meeting.type !== 0) {
+	if (meeting.type !== 1) {
+		console.log(meeting);
 		return <Redirect to={"/ongoing/" + id} />;
 	}
 
