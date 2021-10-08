@@ -1,5 +1,6 @@
 import { Offcanvas, Form, Button } from "react-bootstrap";
 import { useRef } from "react";
+import { accessTokenKey, apiUrl } from "../../common/CommonValues";
 
 export default function EditMeetingOverlay({
 	show,
@@ -10,12 +11,30 @@ export default function EditMeetingOverlay({
 	const nameRef = useRef();
 	const descriptionRef = useRef();
 
-	function update() {
+	async function update() {
 		const newMeeting = Object.assign({}, meeting);
 		newMeeting.name = nameRef.current.value;
 		newMeeting.description = descriptionRef.current.value;
 		setMeeting(newMeeting);
 		setShow(false);
+		updateDatabase(newMeeting);
+	}
+
+	async function updateDatabase(newMeeting) {
+		const url = apiUrl + "/meeting/" + newMeeting.id;
+		const accessToken = window.sessionStorage.getItem(accessTokenKey);
+		await fetch(url, {
+			method: "PUT",
+			headers: {
+				Authorization: accessToken,
+			},
+			body: {
+				name: newMeeting.name,
+				description: newMeeting.description,
+				duration: newMeeting.duration,
+				enableTranscription: newMeeting.enableTranscription,
+			},
+		});
 	}
 
 	return (

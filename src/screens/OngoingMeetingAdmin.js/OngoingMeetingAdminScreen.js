@@ -5,9 +5,9 @@ import {
 	getFormattedDateTime,
 	getFormattedTime,
 } from "../../common/CommonFunctions";
+import { apiUrl } from "../../common/CommonValues";
 import AgendaList from "./AgendaList";
 import { blankMeeting } from "../../common/ObjectTemplates";
-import { testMeeting } from "../../common/TestData";
 import ParticipantList from "./ParticipantList";
 
 var position = -1;
@@ -19,26 +19,30 @@ export default function OngoingMeetingAdminScreen() {
 	const { id } = useParams();
 
 	useEffect(() => {
-		getMeeting();
+		pullMeeting();
 		setInterval(() => {
 			setTime(new Date().getTime());
 		}, 1000);
 	}, []);
 
 	function startZoom() {
-		window.open(meeting.start_url, "_blank");
+		window.open(meeting.startUrl, "_blank");
 	}
 
-	function getMeeting() {
-		const pulledMeeting = testMeeting;
-		pulledMeeting.participant_lists.sort((p1, p2) => {
-			return (" " + p1.user_name).localeCompare(p2.user_name);
+	async function pullMeeting() {
+		const url = apiUrl + "/meeting/" + id;
+		const response = await fetch(url, {
+			method: "GET",
 		});
-		pulledMeeting.agenda_items.sort((p1, p2) => {
+		const result = await response.json();
+		result.participants.sort((p1, p2) => {
+			return (" " + p1.userName).localeCompare(p2.userName);
+		});
+		result.agendaItems.sort((p1, p2) => {
 			return p1.position - p2.position;
 		});
-		setMeeting(pulledMeeting);
-		getCurrentPosition(pulledMeeting);
+		setMeeting(result);
+		getCurrentPosition(result);
 	}
 
 	function Content() {
@@ -46,7 +50,7 @@ export default function OngoingMeetingAdminScreen() {
 			return (
 				<AgendaList
 					time={time}
-					agenda={meeting.agenda_items}
+					agenda={meeting.agendaItems}
 					position={position}
 				/>
 			);
@@ -61,7 +65,7 @@ export default function OngoingMeetingAdminScreen() {
 		}
 	}
 
-	updateDelay(meeting.agenda_items, time);
+	updateDelay(meeting.agendaItems, time);
 
 	return (
 		<>
@@ -75,7 +79,7 @@ export default function OngoingMeetingAdminScreen() {
 					>
 						<p className="Text__header">{meeting.name}</p>
 						<p className="Text__subheader">
-							{getFormattedDateTime(meeting.start_time)}
+							{getFormattedDateTime(meeting.startedAt)}
 						</p>
 						<div className="d-grid gap-2">
 							<Button
@@ -89,16 +93,16 @@ export default function OngoingMeetingAdminScreen() {
 						<div className="Line--horizontal" />
 						<div className="Buffer--20px" />
 						<p>
-							{position < meeting.agenda_items.length
+							{position < meeting.agendaItems.length
 								? "Estimated End Time:"
 								: "Time Ended:"}
 						</p>
 						<p className="Text__header">
-							{getEndTime(time, meeting.agenda_items)}
+							{getEndTime(time, meeting.agendaItems)}
 						</p>
 						<div className="d-grid gap-2">
 							<AgendaToggle
-								agenda={meeting.agenda_items}
+								agenda={meeting.agendaItems}
 								time={time}
 							/>
 						</div>
@@ -164,9 +168,9 @@ function startMeeting(time, agenda) {
 function initializeAgenda(time, agenda) {
 	var lastTiming = time;
 	for (let i = 0; i < agenda.length; i++) {
-		agenda[i].actual_duration = agenda[i].expected_duration;
-		agenda[i].start_time = lastTiming;
-		lastTiming += agenda[i].actual_duration;
+		agenda[i].actualDuration = agenda[i].expectedDuration;
+		agenda[i].startTime = lastTiming;
+		lastTiming += agenda[i].actualDuration;
 	}
 }
 
@@ -175,10 +179,10 @@ function nextItem(time, agenda) {
 		uploadChanges();
 		return;
 	}
-	agenda[position].actual_duration = time - agenda[position].start_time;
+	agenda[position].actualDuration = time - agenda[position].startTime;
 	position++;
 	if (position < agenda.length) {
-		agenda[position].start_time = time;
+		agenda[position].startTime = time;
 	}
 	uploadChanges();
 }
@@ -187,9 +191,9 @@ function updateDelay(agenda, time) {
 	if (position < 0 || position >= agenda.length) return;
 	const delay = Math.max(
 		0,
-		time - agenda[position].start_time - agenda[position].actual_duration
+		time - agenda[position].startTime - agenda[position].actualDuration
 	);
-	agenda[position].actual_duration += delay;
+	agenda[position].actualDuration += delay;
 	updateAgenda(agenda);
 }
 
@@ -198,15 +202,15 @@ function updateAgenda(agenda) {
 		agenda[i].isCurrent = i === position;
 	}
 	if (position >= agenda.length) return;
-	var lastTiming = agenda[position].start_time;
+	var lastTiming = agenda[position].startTime;
 	for (let i = position; i < agenda.length; i++) {
-		agenda[i].start_time = lastTiming;
-		lastTiming += agenda[i].actual_duration;
+		agenda[i].startTime = lastTiming;
+		lastTiming += agenda[i].actualDuration;
 	}
 }
 
 function getCurrentPosition(meeting) {
-	const agenda = meeting.agenda_items;
+	const agenda = meeting.agendaItems;
 	for (let i = 0; i < agenda.length; i++) {
 		if (agenda[i].isCurrent) {
 			position = i;
@@ -219,13 +223,13 @@ function getEndTime(time, agenda) {
 	if (position < 0) {
 		var duration = 0;
 		agenda.forEach((item) => {
-			duration += item.expected_duration;
+			duration += item.expectedDuration;
 		});
 		return getFormattedTime(new Date(time + duration));
 	} else {
 		var lastAgendaItem = agenda[agenda.length - 1];
 		return getFormattedTime(
-			new Date(lastAgendaItem.start_time + lastAgendaItem.actual_duration)
+			new Date(lastAgendaItem.startTime + lastAgendaItem.actualDuration)
 		);
 	}
 }

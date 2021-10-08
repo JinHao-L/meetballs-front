@@ -9,7 +9,7 @@ import {
 	blankMeeting,
 	blankParticipant,
 } from "../../common/ObjectTemplates";
-import { testMeeting } from "../../common/TestData";
+import { accessTokenKey, apiUrl } from "../../common/CommonValues";
 import EditMeetingOverlay from "./EditMeetingOverlay";
 import { useHistory, Redirect, useParams } from "react-router";
 
@@ -18,30 +18,43 @@ export default function UpcomingMeetingScreen() {
 	const [restrictDescription, setRestrictDescription] = useState(true);
 	const [currentTab, setCurrentTab] = useState("agenda");
 	const [showEditMeeting, setShowEditMeeting] = useState(false);
+	const [isReordering, setReordering] = useState(false);
 	const history = useHistory();
 
 	const { id } = useParams();
 
 	useEffect(() => {
-		const pulledMeeting = testMeeting;
-		pulledMeeting.agenda_items.sort((p1, p2) => {
-			return p1.position - p2.position;
-		});
-		setMeeting(pulledMeeting);
+		pullMeeting();
 	}, []);
 
+	async function pullMeeting() {
+		const url = apiUrl + "/meeting/" + id;
+		const response = await fetch(url, {
+			method: "GET",
+		});
+		const result = await response.json();
+		result.agendaItems.sort((p1, p2) => {
+			return p1.position - p2.position;
+		});
+		setMeeting(result);
+	}
+
 	function startZoom() {
-		meeting.status = "started";
-		uploadChanges();
-		window.open(meeting.start_url, "_blank");
+		meeting.type = 2;
+		window.open(meeting.startUrl, "_blank");
 		history.replace("/ongoing/" + id);
 	}
 
-	function uploadChanges() {}
-
 	function Content() {
 		if (currentTab === "agenda") {
-			return <AgendaItemList meeting={meeting} setMeeting={setMeeting} />;
+			return (
+				<AgendaItemList
+					meeting={meeting}
+					setMeeting={setMeeting}
+					isReordering={isReordering}
+					setReordering={setReordering}
+				/>
+			);
 		} else {
 			return (
 				<ParticipantItemList
@@ -70,7 +83,8 @@ export default function UpcomingMeetingScreen() {
 		);
 	}
 
-	if (meeting.status === "started") {
+	if (meeting.type !== 1) {
+		console.log(meeting);
 		return <Redirect to={"/ongoing/" + id} />;
 	}
 
@@ -84,24 +98,9 @@ export default function UpcomingMeetingScreen() {
 						sm={12}
 						className="Container__padding--horizontal"
 					>
-						<Alert
-							variant="danger"
-							className="Container__row--space-between"
-						>
-							<p
-								className="Text__paragraph"
-								style={{ margin: 0, paddingTop: 8 }}
-							>
-								Made changes?
-							</p>
-							&nbsp;&nbsp;
-							<Button variant="danger" onClick={uploadChanges}>
-								Save
-							</Button>
-						</Alert>
 						<p className="Text__header">{meeting.name}</p>
 						<p className="Text__subheader">
-							{getFormattedDateTime(meeting.start_time)}
+							{getFormattedDateTime(meeting.startedAt)}
 						</p>
 						<div className="d-grid gap-2">
 							<Button onClick={startZoom}>
@@ -181,27 +180,52 @@ export default function UpcomingMeetingScreen() {
 }
 
 function addParticipant(meeting, setMeeting) {
-	if (
-		meeting.participant_lists.findIndex((item) => item.user_email === "") >=
-		0
-	)
+	if (meeting.participants.findIndex((item) => item.userEmail === "") >= 0)
 		return;
 	const newMeeting = Object.assign({}, meeting);
 	const newParticipant = Object.assign({}, blankParticipant);
-	newParticipant.meeting_uuid = newMeeting.uuid;
-	newMeeting.participant_lists = [
-		...newMeeting.participant_lists,
-		newParticipant,
-	];
+	newParticipant.meetingId = newMeeting.id;
+	newMeeting.participants = [...newMeeting.participants, newParticipant];
 	setMeeting(newMeeting);
 }
 
-function addAgenda(meeting, setMeeting) {
+async function addAgenda(meeting, setMeeting) {
 	const newMeeting = Object.assign({}, meeting);
 	const newAgenda = Object.assign({}, blankAgenda);
-	newAgenda.meeting_uuid = newMeeting.uuid;
-	newAgenda.position = newMeeting.agenda_items.length;
-	newMeeting.agenda_items = [...newMeeting.agenda_items, newAgenda];
+	newAgenda.meetingId = newMeeting.id;
+	const size = newMeeting.agendaItems.length;
+	if (size > 0) {
+		const lastItem = newMeeting.agendaItems[size - 1];
+		newAgenda.position = lastItem.position + 1;
+	} else {
+		newAgenda.position = 0;
+	}
+	newAgenda.prevPosition = newAgenda.position;
+	await addAgendaToDatabase(newAgenda);
+	newMeeting.agendaItems = [...newMeeting.agendaItems, newAgenda];
 	setMeeting(newMeeting);
-	console.log(newMeeting.agenda_items);
+}
+
+async function addAgendaToDatabase(newAgenda) {
+	const url =
+		apiUrl +
+		"/agenda-item/" +
+		newAgenda.meetingId +
+		"/" +
+		newAgenda.position;
+	const accessToken = window.sessionStorage.getItem(accessTokenKey);
+	await fetch(url, {
+		method: "PUT",
+		headers: {
+			Authorization: accessToken,
+		},
+		body: {
+			name: newAgenda.name,
+			description: newAgenda.description,
+			startTime: null,
+			expectedDuration: newAgenda.expectedDuration,
+			actualDuration: null,
+			isCurrent: false,
+		},
+	});
 }
