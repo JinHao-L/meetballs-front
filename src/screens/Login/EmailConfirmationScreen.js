@@ -13,7 +13,7 @@ function ResendConfirmationForm() {
     const [ resent, setResent ] = useState(false);
     const [ success, setSuccess ] = useState(false);
 
-    async function submit() {
+    function submit() {
         return axios.post('/auth/resend-confirm', {
             email: email
         }).then((response) => {

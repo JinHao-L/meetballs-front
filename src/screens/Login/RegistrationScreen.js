@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Toast } from "react-bootstrap";
 
 export default function RegistrationScreen() {
 
@@ -9,6 +9,8 @@ export default function RegistrationScreen() {
     const [ confirmationPassword, setConfirmationPassword ] = useState("");
     const [ firstName, setFirstName ] = useState("");
     const [ lastName, setLastName ] = useState("");
+
+    const [ sending, setSending ] = useState(false);
 
     const [ response, setResponse ] = useState("");
     const [ error, setError ] = useState(false);
@@ -22,6 +24,7 @@ export default function RegistrationScreen() {
     }
 
     async function onSubmit() {
+        setSending(true);
         return axios.post('/auth/signup', {
             email: email,
             firstName: firstName,
@@ -36,7 +39,7 @@ export default function RegistrationScreen() {
                 setError(true);
                 setResponse(e.response.data.message);
             }
-        });
+        }).finally(() => setSending(false));
     }
 
     return (
@@ -91,12 +94,24 @@ export default function RegistrationScreen() {
                 <Button
                     block="true"
                     size="lg"
-                    disabled={!readyToSubmit()}
+                    disabled={!readyToSubmit() || sending}
                     type="submit"
                 >
-                    Login
+                    {sending ? "Please wait a moment" : "Login"}
                 </Button>
             </Form>
+            <Toast show={!sending && response !== ""}>
+                    <Toast.Header>
+                        <strong className="me-auto">Registration complete!</strong>
+                    </Toast.Header>
+                    <Toast.Body>{ response }</Toast.Body>
+            </Toast>
+            <Toast show={error && !sending}>
+                    <Toast.Header>
+                        <strong className="me-auto">Something went wrong!</strong>
+                    </Toast.Header>
+                    <Toast.Body>{ response }</Toast.Body>
+            </Toast>
         </div>
     );
 }

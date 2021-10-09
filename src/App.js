@@ -5,6 +5,7 @@ import UpcomingMeetingScreen from "./screens/UpcomingMeeting/UpcomingMeetingScre
 import OngoingMeetingAdminScreen from "./screens/OngoingMeetingAdmin.js/OngoingMeetingAdminScreen";
 import { io } from "socket.io-client";
 import { accessTokenKey } from "./common/CommonValues";
+import DashboardScreen from "./screens/Dashboard/DashboardScreen"
 import EmailConfirmationScreen from "./screens/Login/EmailConfirmationScreen";
 import LoginScreen from "./screens/Login/LoginScreen";
 import RegistrationScreen from "./screens/Login/RegistrationScreen";
@@ -118,8 +119,14 @@ export default function App() {
 				<Route path="/login">
 					<LoginScreen />
 				</Route>
+				<Route path="app/forgot-password">
+					
+				</Route>
 				<Route path="/signup">
 					<RegistrationScreen />
+				</Route>
+				<Route path="/home">
+					<DashboardScreen />
 				</Route>
 				<Route path="/meeting/:id">
 					<UpcomingMeetingScreen />
