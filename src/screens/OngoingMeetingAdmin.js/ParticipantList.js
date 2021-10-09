@@ -4,7 +4,7 @@ import {
   markParticipantAbsent,
 } from '../../services/participants';
 
-export default function ParticipantList({ meeting, setMeeting, position }) {
+export default function ParticipantList({ meeting, setMeeting, position, shouldShowButton }) {
   const items = [];
   const participants = meeting.participants;
   const ended = position >= meeting.agendaItems.length;
@@ -15,7 +15,7 @@ export default function ParticipantList({ meeting, setMeeting, position }) {
           meeting={meeting}
           setMeeting={setMeeting}
           position={i}
-          ended={ended}
+          showButton={!ended && shouldShowButton}
           key={'Participant' + i}
         />,
       );
@@ -26,7 +26,7 @@ export default function ParticipantList({ meeting, setMeeting, position }) {
           setMeeting={setMeeting}
           position={i}
           started={position >= 0}
-          ended={ended}
+          showButton={!ended && shouldShowButton}
           key={'Participant' + i}
         />,
       );
@@ -35,7 +35,7 @@ export default function ParticipantList({ meeting, setMeeting, position }) {
   return items;
 }
 
-function AwaitItem({ meeting, setMeeting, position, started, ended }) {
+function AwaitItem({ meeting, setMeeting, position, started, showButton }) {
   const participant = meeting.participants[position];
   return (
     <Col className="Container__padding--vertical-small">
@@ -47,7 +47,7 @@ function AwaitItem({ meeting, setMeeting, position, started, ended }) {
               : 'Guest'}
           </Card.Title>
           <Card.Text>{participant.userEmail}</Card.Text>
-          {!ended && (
+          {showButton && (
             <div className="d-grid gap-2">
               <Button
                 variant={started ? 'outline-light' : 'outline-secondary'}
@@ -63,7 +63,7 @@ function AwaitItem({ meeting, setMeeting, position, started, ended }) {
   );
 }
 
-function PresentItem({ meeting, setMeeting, position, ended }) {
+function PresentItem({ meeting, setMeeting, position, showButton }) {
   const participant = meeting.participants[position];
   return (
     <Col className="Container__padding--vertical-small">
@@ -75,7 +75,7 @@ function PresentItem({ meeting, setMeeting, position, ended }) {
               : 'Guest'}
           </Card.Title>
           <Card.Text>{participant.userEmail}</Card.Text>
-          {!ended && (
+          {showButton && (
             <div className="d-grid gap-2">
               <Button
                 variant="outline-light"
