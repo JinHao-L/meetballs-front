@@ -79,11 +79,13 @@ async function removeFromDatabase(email, meetingId) {
 	await fetch(url, {
 		method: "DELETE",
 		headers: {
-			Authorization: accessToken,
+			Authorization: "Bearer " + accessToken,
+			Accept: "application/json",
+			"Content-Type": "application/json",
 		},
-		body: {
+		body: JSON.stringify({
 			participants: [{ userEmail: email }],
 			meetingId: meetingId,
-		},
+		}),
 	});
 }

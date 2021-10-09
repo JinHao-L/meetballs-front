@@ -113,22 +113,26 @@ async function updateDatabase(
 	await fetch(url, {
 		method: "DELETE",
 		headers: {
-			Authorization: accessToken,
+			Authorization: "Bearer " + accessToken,
+			Accept: "application/json",
+			"Content-Type": "application/json",
 		},
 	});
 	await fetch(url, {
 		method: "PUT",
 		headers: {
-			Authorization: accessToken,
+			Authorization: "Bearer " + accessToken,
+			Accept: "application/json",
+			"Content-Type": "application/json",
 		},
-		body: {
+		body: JSON.stringify({
 			name: name,
 			description: description,
 			startTime: null,
 			expectedDuration: duration,
 			actualDuration: null,
 			isCurrent: false,
-		},
+		}),
 	});
 }
 

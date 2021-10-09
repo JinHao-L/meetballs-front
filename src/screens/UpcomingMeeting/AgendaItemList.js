@@ -16,8 +16,8 @@ export default function AgendaItemList({
 				className="d-grid gap-2"
 				onClick={() => {
 					setReordering(true);
-					setPrevPosition(meeting.agendaItems);
 				}}
+				key={"Button"}
 			>
 				<Button variant="outline-primary">Enable Reordering</Button>
 			</div>
@@ -30,13 +30,14 @@ export default function AgendaItemList({
 					setReordering(false);
 					updateDatabase(meeting.id, meeting.agendaItems);
 				}}
+				key={"Button"}
 			>
 				<Button variant="outline-danger">Save Order</Button>
 			</div>
 		);
 	}
 
-	items.push(<div className="Buffer--20px" />);
+	items.push(<div className="Buffer--20px" key={"Buffer"} />);
 	for (let i = 0; i < meeting.agendaItems.length; i++) {
 		items.push(
 			<AgendaItem
@@ -85,12 +86,6 @@ function onDragEnd(result, meeting, setMeeting) {
 	setMeeting(newMeeting);
 }
 
-function setPrevPosition(agendaItems) {
-	agendaItems.forEach((item) => {
-		item.prevPosition = item.position;
-	});
-}
-
 async function updateDatabase(meetingId, agendaItems) {
 	const changes = [];
 	agendaItems.forEach((item) => {
@@ -98,17 +93,20 @@ async function updateDatabase(meetingId, agendaItems) {
 			oldPosition: item.prevPosition,
 			newPosition: item.position,
 		});
+		item.prevPosition = item.position;
 	});
 	const url = apiUrl + "/agenda-item/positions";
 	const accessToken = window.sessionStorage.getItem(accessTokenKey);
 	await fetch(url, {
 		method: "PUT",
 		headers: {
-			Authorization: accessToken,
+			Authorization: "Bearer " + accessToken,
+			Accept: "application/json",
+			"Content-Type": "application/json",
 		},
-		body: {
+		body: JSON.stringify({
 			positions: changes,
 			meetingId: meetingId,
-		},
+		}),
 	});
 }

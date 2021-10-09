@@ -36,6 +36,10 @@ export default function UpcomingMeetingScreen() {
 		result.agendaItems.sort((p1, p2) => {
 			return p1.position - p2.position;
 		});
+		result.agendaItems.forEach((item) => {
+			item.prevPosition = item.position;
+		});
+		console.log(result);
 		setMeeting(result);
 	}
 
@@ -84,7 +88,6 @@ export default function UpcomingMeetingScreen() {
 	}
 
 	if (meeting.type !== 1) {
-		console.log(meeting);
 		return <Redirect to={"/ongoing/" + id} />;
 	}
 
@@ -207,25 +210,21 @@ async function addAgenda(meeting, setMeeting) {
 }
 
 async function addAgendaToDatabase(newAgenda) {
-	const url =
-		apiUrl +
-		"/agenda-item/" +
-		newAgenda.meetingId +
-		"/" +
-		newAgenda.position;
+	const url = apiUrl + "/agenda-item";
 	const accessToken = window.sessionStorage.getItem(accessTokenKey);
 	await fetch(url, {
-		method: "PUT",
+		method: "POST",
 		headers: {
-			Authorization: accessToken,
+			Authorization: "Bearer " + accessToken,
+			Accept: "application/json",
+			"Content-Type": "application/json",
 		},
-		body: {
+		body: JSON.stringify({
+			meetingId: newAgenda.meetingId,
+			position: newAgenda.position,
 			name: newAgenda.name,
 			description: newAgenda.description,
-			startTime: null,
 			expectedDuration: newAgenda.expectedDuration,
-			actualDuration: null,
-			isCurrent: false,
-		},
+		}),
 	});
 }
