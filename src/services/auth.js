@@ -8,8 +8,8 @@ export const login = async (email, password) => {
       email,
       password,
     };
-    const res = await server.get('auth/login', body, defaultHeaders);
-    const data = await res.json();
+    const res = await server.post('auth/login', body, defaultHeaders);
+    const data = res.data;
     // set token in the axios instance
     setAuthToken(data.access_token || null);
     if (data.expires_in) {
@@ -23,7 +23,7 @@ export const login = async (email, password) => {
   }
 };
 
-export const refresh = () => {
+export const refresh = async () => {
   const refToken = localStorage.getItem('ref');
   console.log(refToken);
 

@@ -1,21 +1,38 @@
 import { defaultHeaders } from '../utils/axiosConfig';
 import server from './server';
 
-export const deleteParticipants = async (meetingId, userEmail) => {
+export const deleteParticipants = (meetingId, userEmail) => {
   const body = {
+    meetingId,
     participants: [
       {
         userEmail,
       },
     ],
   };
-  await server.delete(`participant`, body);
+  return server.delete(`participant`, body);
 };
 
-export const createParticipant = async (userEmail) => {
+export const createParticipant = (meetingId, userEmail, userName) => {
   const body = {
+    meetingId,
     userEmail,
-    timeJoined: null,
+    userName,
   };
-  await server.post(`participant`, body, defaultHeaders);
+  return server.post(`participant`, body, defaultHeaders);
+};
+
+export const markParticipantPresent = (meetingId, userEmail) => {
+  const body = {
+    email: userEmail,
+  };
+  console.log(server.defaults.headers)
+  return server.put(`participant/${meetingId}/present`, body);
+};
+
+export const markParticipantAbsent = (meetingId, userEmail) => {
+  const body = {
+    email: userEmail,
+  };
+  return server.put(`participant/${meetingId}/absent`, body);
 };
