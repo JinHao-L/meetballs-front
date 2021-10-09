@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Form, Button, Col, Toast } from "react-bootstrap";
-import axios from "axios";
 import { useHistory } from "react-router";
 import { login } from "../../services/auth";
 
@@ -42,8 +41,8 @@ export default function LoginScreen() {
 
     return (
         <>
-            <div>
-                <Form onSubmit={onSubmit}>
+            <div className="Container__padding--horizontal">
+                <Form className="Container__padding--vertical" onSubmit={onSubmit}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Email</Form.Label>
                         <Form.Control
@@ -61,14 +60,14 @@ export default function LoginScreen() {
                             onChange={e => setPassword(e.target.value)}
                         />
                     </Form.Group>
-                    <Button
-                        block size="lg"
-                        disabled={!readyToSubmit() || sending}
-                        type="submit"
-                    >
-                        { sending ? "Please wait" : "Login" }
-                    </Button>
-                    <Col className="justify-content-end" xs="auto">
+                    <Col>
+                        <Button
+                            block size="lg"
+                            disabled={!readyToSubmit() || sending}
+                            type="submit"
+                        >
+                            { sending ? "Please wait" : "Login" }
+                        </Button>
                         <Button variant="link" onClick={toSignUp}>New user? Sign up here!</Button>
                         <Button variant="link" onClick={toPasswordReset}>Forgot password?</Button>
                     </Col>
