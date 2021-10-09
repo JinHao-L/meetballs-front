@@ -5,7 +5,6 @@ import { agendaReviver } from '../common/CommonFunctions'
 export const getMeeting = async (meetingId) => {
   const res = await server.get(`meeting/${meetingId}`, {transformResponse: []});
   res.data = JSON.parse(res.data, agendaReviver)
-  console.log(res)
   return res;
 }
 

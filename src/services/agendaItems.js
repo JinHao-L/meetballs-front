@@ -1,10 +1,10 @@
 import server from './server';
 
-export const deleteAgendaItem = async (meetingId, position) => {
-  await server.delete(`agenda-item/${meetingId}/${position}`);
+export const deleteAgendaItem = (meetingId, position) => {
+  return server.delete(`agenda-item/${meetingId}/${position}`);
 };
 
-export const reorderPositions = async (meetingId, agendaItems) => {
+export const reorderPositions = (meetingId, agendaItems) => {
   const changes = [];
   agendaItems.forEach((item) => {
     changes.push({
@@ -17,22 +17,19 @@ export const reorderPositions = async (meetingId, agendaItems) => {
     positions: changes,
     meetingId,
   };
-  await server.put(`agenda-item/positions`, body);
+  return server.put(`agenda-item/positions`, body);
 };
 
-export const deleteAgendaItem = async (meetingId, position) => {
-  await server.delete(`agenda-item/${meetingId}/${position}`);
-};
-
-export const updateAgendaItem = (
+export const updateAgendaItem = ({
   meetingId,
   position,
   name,
   description,
+  startTime,
   expectedDuration,
   isCurrent,
-  actualDuration,
-) => {
+  actualDuration
+}) => {
   const body = {
     ...(name && { name }),
     ...(description && { description }),
@@ -41,5 +38,5 @@ export const updateAgendaItem = (
     ...(actualDuration && { actualDuration }),
     ...(isCurrent && { isCurrent }),
   };
-  await server.put(`agenda-item/${meetingId}/${position}`, body);
+  return server.put(`agenda-item/${meetingId}/${position}`, body);
 };

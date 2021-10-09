@@ -1,14 +1,17 @@
 import { Container, Row, Col, Button, Nav } from "react-bootstrap";
 import { useParams } from "react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import {
 	getFormattedDateTime,
-	getFormattedTime
+	getFormattedTime,
+	agendaReviver
 } from "../../common/CommonFunctions";
 import AgendaList from "./AgendaList";
 import { blankMeeting } from "../../common/ObjectTemplates";
 import ParticipantList from "./ParticipantList";
 import { getMeeting, callStartMeeting, callEndMeeting, callNextMeeting } from '../../services/meeting'
+import { useSocket } from '../../hooks/useSocket'
+import { UserContext } from "../../context/UserContext";
 
 var position = -1;
 
@@ -16,7 +19,13 @@ export default function OngoingMeetingAdminScreen() {
 	const [meeting, setMeeting] = useState(blankMeeting);
 	const [currentTab, setCurrentTab] = useState("agenda");
 	const [time, setTime] = useState(new Date().getTime());
+	const {	socket } = useSocket(meeting.id)
+	const user = useContext(UserContext)
 	const { id } = useParams();
+  const isHost = useMemo(() => {
+		console.log(user)
+    return meeting?.hostId === user?.uuid;
+  }, [meeting.hostId, user]);
 
 	useEffect(() => {
 		pullMeeting();
@@ -25,45 +34,53 @@ export default function OngoingMeetingAdminScreen() {
 		}, 1000);
 	}, []);
 
+	useEffect(() => {
+		if (socket && !isHost) {
+			socket.on('meetingUpdated', function (data) {
+				const newMeeting = JSON.parse(data, agendaReviver)
+				updateMeeting({...meeting, ...newMeeting})
+			});
+			socket.on('participantUpdated', function (data) {
+				const update = JSON.parse(data)
+				setMeeting({
+					...meeting,
+					participants: updateParticipants(meeting.participants, update)
+				})
+			});
+			socket.on('agendaUpdated', function (data) {
+				console.log('agendaUpdated', data);
+				pullMeeting();
+			});
+			socket.on('userConnected', function (msg) {
+				console.log(msg);
+			});
+		} else {
+			socket && socket.removeAllListeners();
+		}
+	}, [socket, isHost]);
+
 	function startZoom() {
 		window.open(meeting.startUrl, "_blank");
+	}
+
+	const updateMeeting = (meetingObj) => {
+		meetingObj.participants.sort((p1, p2) => {
+			return (" " + p1.userName).localeCompare(p2.userName);
+		});
+		meetingObj.agendaItems.sort((p1, p2) => {
+			return p1.position - p2.position;
+		});
+		syncMeeting(meetingObj, time);
+		setMeeting(meetingObj);
 	}
 
 	async function pullMeeting() {
 		try {
 			const res = await getMeeting(id);
-			const meetingObj = res.data;
-			meetingObj.participants.sort((p1, p2) => {
-				return (" " + p1.userName).localeCompare(p2.userName);
-			});
-			meetingObj.agendaItems.sort((p1, p2) => {
-				return p1.position - p2.position;
-			});
-			syncMeeting(meetingObj, time);
-			setMeeting(meetingObj);
+			updateMeeting(res.data)
 		} catch (err) {
 			// invalid meeting
 			// TODO: Route to dashboard?
-		}
-	}
-
-	function Content() {
-		if (currentTab === "agenda") {
-			return (
-				<AgendaList
-					time={time}
-					agenda={meeting.agendaItems}
-					position={position}
-				/>
-			);
-		} else {
-			return (
-				<ParticipantList
-					meeting={meeting}
-					setMeeting={setMeeting}
-					position={position}
-				/>
-			);
 		}
 	}
 
@@ -102,13 +119,18 @@ export default function OngoingMeetingAdminScreen() {
 						<p className="Text__header">
 							{getEndTime(time, meeting.agendaItems)}
 						</p>
-						<div className="d-grid gap-2">
-							<AgendaToggle
-								agenda={meeting.agendaItems}
-								time={time}
-								id={meeting.id}
-							/>
-						</div>
+							<div className="d-grid gap-2">
+								{isHost ? (
+									<AgendaToggle
+										agenda={meeting.agendaItems}
+										time={time}
+										id={meeting.id}
+										isHost={isHost}
+									/>
+								) : (
+									<MeetingStatus agenda={meeting.agendaItems} />
+								)}
+							</div>
 						<div className="Buffer--20px" />
 					</Col>
 					<Col lg={1} md={12} sm={12} />
@@ -135,7 +157,20 @@ export default function OngoingMeetingAdminScreen() {
 							</Nav.Item>
 						</Nav>
 						<div className="Buffer--20px" />
-						<Content />
+            {currentTab === 'agenda' ? (
+              <AgendaList
+                time={time}
+                agenda={meeting.agendaItems}
+                position={position}
+              />
+            ) : (
+              <ParticipantList
+                meeting={meeting}
+                setMeeting={setMeeting}
+                position={position}
+                shouldShowButton={isHost}
+              />
+            )}
 						<div className="Buffer--100px" />
 					</Col>
 				</Row>
@@ -159,6 +194,28 @@ function AgendaToggle({ time, agenda, id }) {
 		);
 	} else {
 		return <Button disabled>Meeting Ended</Button>;
+	}
+}
+
+function MeetingStatus({ agenda }) {
+	if (position < 0) {
+		return (
+			<p className="Text__subheader">
+				Meeting Not Started
+			</p>
+		);
+	} else if (position < agenda.length) {
+		return (
+			<p className="Text__subheader">
+				Meeting Ongoing
+			</p>
+		);
+	} else {
+		return (
+			<p className="Text__subheader">
+				Meeting Ended
+			</p>
+		)
 	}
 }
 
@@ -262,4 +319,14 @@ function getEndTime(time, agenda) {
 			new Date(lastAgendaItem.startTime + lastAgendaItem.actualDuration)
 		);
 	}
+}
+
+function updateParticipants(participants, update) {
+	return participants.map((ppl) => {
+		if (ppl.userEmail === update.userEmail) {
+			return update;
+		} else {
+			return ppl
+		}
+	})
 }
