@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form, Button, Col, Toast } from "react-bootstrap";
 import axios from "axios";
 import { useHistory } from "react-router";
+import { login } from "../../services/auth";
 
 export default function LoginScreen() {
 
@@ -20,22 +21,14 @@ export default function LoginScreen() {
 
     function onSubmit() {
         setSending(true);
-        axios.post('/auth/login', {
-            email: email,
-            password: password
-        }).then((response) => {
-            const tokenDetails = JSON.stringify(response.data);
-            localStorage.setItem('authToken', tokenDetails);
-            history.push('/home');
-        }).catch((e) => {
-            console.error(e);
-            setError(true);
-            if (e.response) {
-                setErrMsg("Please check your username and passowrd again");
-            } else {
-                setErrMsg("Could not connect to server, please try again later");
-            }
-        }).finally(() => setSending(false));
+        return login()
+            .then(() => history.push('/home'))
+            .catch((e) => {
+                setError(true);
+                if (e.response) setErrMsg("Please check your username and passowrd again");
+                else setErrMsg("Could not connect to server, please try again later");
+            })
+            .finally(() => setSending(false));
     }
 
     function toPasswordReset() {
