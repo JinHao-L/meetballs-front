@@ -1,12 +1,13 @@
 import server from '../services/server';
+import { accessTokenKey } from '../common/CommonValues';
 
 const setAuthToken = (token) => {
   if (token) {
     server.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    localStorage.setItem('token', token);
+    window.sessionStorage.setItem(accessTokenKey, token);
   } else {
     delete server.defaults.headers.common['Authorization'];
-    localStorage.removeItem('token');
+    window.sessionStorage.removeItem(accessTokenKey);
   }
 };
 
