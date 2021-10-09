@@ -23,7 +23,8 @@ export default function RegistrationScreen() {
             && password === confirmationPassword;
     }
 
-    async function onSubmit() {
+    async function onSubmit(event) {
+        event.preventDefault();
         setSending(true);
         return axios.post('/auth/signup', {
             email: email,

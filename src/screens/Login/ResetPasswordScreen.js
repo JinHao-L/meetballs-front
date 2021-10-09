@@ -23,7 +23,8 @@ export default function ResetPasswordScreen() {
     const [ success, setSuccess ] = useState(false);
     const [ responseMsg, setResponseMsg ] = useState("");
 
-    function submit() {
+    function submit(event) {
+        event.preventDefault();
         setLoading(true);
         return axios.post('/auth/password-reset', {
             token, password

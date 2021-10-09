@@ -12,7 +12,8 @@ export default function ForgotPasswordScreen() {
     const [ sent, setSent ] = useState(false);
     const [ success, setSuccess ] = useState(false);
 
-    function submit() {
+    function submit(event) {
+        event.preventDefault();
         console.log(`submitting to email: ${email}`);
         return axios.post('/auth/forget-password', {
             email: email

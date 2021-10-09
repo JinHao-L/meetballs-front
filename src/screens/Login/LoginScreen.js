@@ -19,13 +19,14 @@ export default function LoginScreen() {
 
     const history = useHistory();
 
-    function onSubmit() {
+    function onSubmit(event) {
+        event.preventDefault();
         setSending(true);
-        return login()
-            .then(() => history.replace('/home'))
+        return login(email, password)
+            .then(() => history.push('/home'))
             .catch((e) => {
                 setError(true);
-                if (e.response) setErrMsg("Please check your username and passowrd again");
+                if (e.response) setErrMsg(e.response.message);
                 else setErrMsg("Could not connect to server, please try again later");
             })
             .finally(() => setSending(false));
