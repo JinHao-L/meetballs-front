@@ -71,7 +71,7 @@ export default function ResetPasswordScreen() {
                         disabled={!readyToSubmit() || loading}
                         type="submit"
                     >
-                        { loading ? "Please wait a moment" : "Resend confirmation email"}
+                        { loading ? "Please wait a moment" : "Submit"}
                     </Button>
                 </Form>
                 <Toast show={sent && success}>

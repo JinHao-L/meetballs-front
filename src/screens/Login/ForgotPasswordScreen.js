@@ -13,9 +13,11 @@ export default function ForgotPasswordScreen() {
     const [ success, setSuccess ] = useState(false);
 
     function submit() {
+        console.log(`submitting to email: ${email}`);
         return axios.post('/auth/forget-password', {
             email: email
         }).then((response) => {
+            console.log("email password reset success!");
             if (response.data.success) setSuccess(true);
         }).catch((error) => {
             console.error(error);
@@ -35,15 +37,15 @@ export default function ForgotPasswordScreen() {
                         onChange={event => setEmail(event.target.value)}
                         placeholder="Enter email here"
                     />
-                    <Button
-                        block
-                        size="me"
-                        disabled={!readyToSubmit()}
-                        type="submit"
-                    >
-                        Reset password
-                    </Button>
                 </Form.Group>
+                <Button
+                    block
+                    size="me"
+                    disabled={!readyToSubmit()}
+                    type="submit"
+                >
+                    Reset password
+                </Button>
             </Form>
             <Toast show={sent && success}>
                 <Toast.Header>

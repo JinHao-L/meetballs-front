@@ -22,7 +22,7 @@ export default function LoginScreen() {
     function onSubmit() {
         setSending(true);
         return login()
-            .then(() => history.push('/home'))
+            .then(() => history.replace('/home'))
             .catch((e) => {
                 setError(true);
                 if (e.response) setErrMsg("Please check your username and passowrd again");
