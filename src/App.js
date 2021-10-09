@@ -5,7 +5,7 @@ import UpcomingMeetingScreen from "./screens/UpcomingMeeting/UpcomingMeetingScre
 import OngoingMeetingAdminScreen from "./screens/OngoingMeetingAdmin.js/OngoingMeetingAdminScreen";
 import { io } from "socket.io-client";
 import { accessTokenKey } from "./common/CommonValues";
-import {login} from './services/auth'
+import { login } from './services/auth'
 
 const apiUrl = "http://localhost:3001";
 export default function App() {

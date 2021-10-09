@@ -5,10 +5,10 @@ import {
 	getFormattedDateTime,
 	getFormattedTime
 } from "../../common/CommonFunctions";
-import { accessTokenKey, apiUrl } from "../../common/CommonValues";
 import AgendaList from "./AgendaList";
 import { blankMeeting } from "../../common/ObjectTemplates";
 import ParticipantList from "./ParticipantList";
+import { getMeeting, callStartMeeting, callEndMeeting, callNextMeeting } from '../../services/meeting'
 
 var position = -1;
 
@@ -30,13 +30,9 @@ export default function OngoingMeetingAdminScreen() {
 	}
 
 	async function pullMeeting() {
-		const url = apiUrl + "/meeting/" + id;
-		const response = await fetch(url, {
-			method: "GET",
-		});
-		if (response.ok) {
-			const resultText = await response.text();
-			const meetingObj = JSON.parse(resultText, dateTimeReviver);
+		try {
+			const res = await getMeeting(id);
+			const meetingObj = res.data;
 			meetingObj.participants.sort((p1, p2) => {
 				return (" " + p1.userName).localeCompare(p2.userName);
 			});
@@ -45,9 +41,9 @@ export default function OngoingMeetingAdminScreen() {
 			});
 			syncMeeting(meetingObj, time);
 			setMeeting(meetingObj);
-		} else {
-			// invalid meeting id
-			// TODO: route to dashboard
+		} catch (err) {
+			// invalid meeting
+			// TODO: Route to dashboard?
 		}
 	}
 
@@ -167,10 +163,12 @@ function AgendaToggle({ time, agenda, id }) {
 }
 
 async function startMeeting(time, agenda, id) {
-	const ok = await callMeetingEndpoint('start', id)
-	if (ok) {
+	try {
+		await callStartMeeting(id)
 		position++;
 		initializeAgenda(time, agenda);
+	} catch (err) {
+		console.log(err)
 	}
 }
 
@@ -183,29 +181,17 @@ function initializeAgenda(time, agenda) {
 	}
 }
 
-async function callMeetingEndpoint(key, id) {
-	const url = `${apiUrl}/meeting/${key}/${id}`;
-	const accessToken = window.sessionStorage.getItem(accessTokenKey);
-	const response = await fetch(url, {
-		headers: {
-			Authorization: "Bearer " + accessToken,
-			Accept: "application/json",
-			"Content-Type": "application/json",
-		},
-		method: "POST",
-	});
-	return response.ok
-}
-
 async function nextItem(time, agenda, id) {
-	const key = position + 1 < agenda.length ? 'next' : 'end'
-	const ok = await callMeetingEndpoint(key, id);
-	if (ok) {
+	const apiCall = position + 1 < agenda.length ? callNextMeeting : callEndMeeting
+	try {
+		await apiCall(id)
 		agenda[position].actualDuration = time - agenda[position].startTime;
 		position++;
 		if (position < agenda.length) {
 			agenda[position].startTime = time;
 		}
+	} catch (err) {
+		console.log(err)
 	}
 }
 
@@ -276,13 +262,4 @@ function getEndTime(time, agenda) {
 			new Date(lastAgendaItem.startTime + lastAgendaItem.actualDuration)
 		);
 	}
-}
-
-function dateTimeReviver(key, value) {
-	if (typeof value === 'string' && key === 'startTime') {
-		if (value) {
-			return new Date(value).getTime();
-		}
-	}
-	return value;
 }

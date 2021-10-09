@@ -77,3 +77,12 @@ export function getDateInfo(isoDate, durationInMilli) {
         duration: durationStr
     });
 }
+
+export function agendaReviver(key, value) {
+	if (typeof value === 'string' && key === 'startTime') {
+		if (value) {
+			return new Date(value).getTime();
+		}
+	}
+	return value;
+}
