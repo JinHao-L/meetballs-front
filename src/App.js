@@ -1,6 +1,6 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import UpcomingMeetingScreen from "./screens/UpcomingMeeting/UpcomingMeetingScreen";
 import OngoingMeetingAdminScreen from "./screens/OngoingMeetingAdmin.js/OngoingMeetingAdminScreen";
 import { io } from "socket.io-client";
@@ -9,6 +9,8 @@ import DashboardScreen from "./screens/Dashboard/DashboardScreen"
 import EmailConfirmationScreen from "./screens/Login/EmailConfirmationScreen";
 import LoginScreen from "./screens/Login/LoginScreen";
 import RegistrationScreen from "./screens/Login/RegistrationScreen";
+import ForgotPasswordScreen from "./screens/Login/ForgotPasswordScreen"
+import ResetPasswordScreen from "./screens/Login/ResetPasswordScreen";
 import { login } from './services/auth'
 
 const apiUrl = "http://localhost:3001";
@@ -113,14 +115,20 @@ export default function App() {
 	return (
 		<Router>
 			<Switch>
+				<Route exact path="/">
+					<Redirect to="/login" />
+				</Route>
 				<Route path="/confirm-email">
 					<EmailConfirmationScreen />
 				</Route>
 				<Route path="/login">
 					<LoginScreen />
 				</Route>
-				<Route path="app/forgot-password">
-					
+				<Route path="/forgot-password">
+					<ForgotPasswordScreen />
+				</Route>
+				<Route path="/app/password-reset">
+					<ResetPasswordScreen />
 				</Route>
 				<Route path="/signup">
 					<RegistrationScreen />

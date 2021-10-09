@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Form, Button, Toast } from "react-bootstrap";
+import axios from "axios";
 
 export default function ForgotPasswordScreen() {
 
@@ -11,7 +12,7 @@ export default function ForgotPasswordScreen() {
     const [ sent, setSent ] = useState(false);
     const [ success, setSuccess ] = useState(false);
 
-    async function submit() {
+    function submit() {
         return axios.post('/auth/forget-password', {
             email: email
         }).then((response) => {
@@ -31,7 +32,7 @@ export default function ForgotPasswordScreen() {
                         type="email"
                         autoFocus
                         value={email}
-                        onChange={setEmail}
+                        onChange={event => setEmail(event.target.value)}
                         placeholder="Enter email here"
                     />
                     <Button

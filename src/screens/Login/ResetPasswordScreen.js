@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useLocation } from "react-router";
+import { Form, Toast, Button } from "react-bootstrap";
+import axios from "axios";
 
 export default function ResetPasswordScreen() {
+
+    console.log("I am at password reset screen!");
 
     const { search } = useLocation();
     const params = new URLSearchParams(search);
@@ -47,7 +51,7 @@ export default function ResetPasswordScreen() {
                             type="password"
                             autoFocus
                             value={password}
-                            onChange={setPassword}
+                            onChange={e => setPassword(e.target.value)}
                             placeholder="Enter password here"
                         />
                     </Form.Group>
@@ -57,7 +61,7 @@ export default function ResetPasswordScreen() {
                             type="password"
                             autoFocus
                             value={confirmation}
-                            onChange={setConfirmation}
+                            onChange={e => setConfirmation(e.target.value)}
                             placeholder="Retype your password here"
                         />
                     </Form.Group>

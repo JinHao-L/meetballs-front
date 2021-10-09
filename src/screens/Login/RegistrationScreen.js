@@ -51,7 +51,7 @@ export default function RegistrationScreen() {
                         type="email"
                         autoFocus
                         value={email}
-                        onChange={setEmail}
+                        onChange={e => setEmail(e.target.value)}
                         placeholder="Please enter your email"
                     />
                 </Form.Group>
@@ -61,7 +61,7 @@ export default function RegistrationScreen() {
                         type="input"
                         autoFocus
                         value={firstName}
-                        onChange={setFirstName}
+                        onChange={e => setFirstName(e.target.value)}
                         placeholder="Please enter your first name"
                     />
                 </Form.Group>
@@ -71,7 +71,7 @@ export default function RegistrationScreen() {
                         type="input"
                         autoFocus
                         value={lastName}
-                        onChange={setLastName}
+                        onChange={e => setLastName(e.target.value)}
                         placeholder="Please enter your last name"
                     />
                 </Form.Group>
@@ -80,7 +80,7 @@ export default function RegistrationScreen() {
                     <Form.Control
                         value={password}
                         type="password"
-                        onChange={setPassword}
+                        onChange={e => setPassword(e.target.value)}
                     />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formConfirmation">
@@ -88,7 +88,7 @@ export default function RegistrationScreen() {
                     <Form.Control
                         value={confirmationPassword}
                         type="password"
-                        onChange={setConfirmationPassword}
+                        onChange={e => setConfirmationPassword(e.target.value)}
                     />
                 </Form.Group>
                 <Button

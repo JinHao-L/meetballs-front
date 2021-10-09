@@ -49,7 +49,7 @@ export default function LoginScreen() {
                             type="email"
                             autoFocus
                             value={email}
-                            onChange={setEmail}
+                            onChange={e => setEmail(e.target.value)}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -57,7 +57,7 @@ export default function LoginScreen() {
                         <Form.Control
                             value={password}
                             type="password"
-                            onChange={setPassword}
+                            onChange={e => setPassword(e.target.value)}
                         />
                     </Form.Group>
                     <Button
@@ -77,7 +77,7 @@ export default function LoginScreen() {
                         <strong className="me-auto">Something went wrong!</strong>
                     </Toast.Header>
                     <Toast.Body>{ errMsg }</Toast.Body>
-            </Toast>
+                </Toast>
             </div>
         </>
     );
