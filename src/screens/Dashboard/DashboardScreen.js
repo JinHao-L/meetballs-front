@@ -29,17 +29,20 @@ export default function DashboardScreen() {
 
 	function pullMeetings() {
 		console.log(server.defaults);
-		return server.get('/user/me', defaultHeaders)
-			.then((res) => {
-				console.log(res);
-				const meetings = res.data.createdMeetings;
-				const upcoming = meetings.filter(meeting => (meeting.endedAt === null))
-				const history = meetings.filter(meeting => (meeting.endedAt !== null))
-				setUpcoming(upcoming);
-				setHistory(history);
-			})
-			.catch(console.error)
-			.finally(() => setLoading(false));
+		return server.get('/meeting', { 
+			params: { type: "all" },
+			...defaultHeaders 
+		})
+		.then((res) => {
+			console.log(res);
+			const meetings = res.data;
+			const upcoming = meetings.filter(meeting => (meeting.endedAt === null))
+			const history = meetings.filter(meeting => (meeting.endedAt !== null))
+			setUpcoming(upcoming);
+			setHistory(history);
+		})
+		.catch(console.error)
+		.finally(() => setLoading(false));
 	}
 
 	const upcomingList = upcoming.map((meeting, idx) => {
