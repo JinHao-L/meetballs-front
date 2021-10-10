@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
 import { Form, Button, Toast, Col } from "react-bootstrap";
 import { useHistory } from "react-router";
+import server from "../../services/server";
 
 export default function RegistrationScreen() {
 
@@ -32,7 +32,7 @@ export default function RegistrationScreen() {
     async function onSubmit(event) {
         event.preventDefault();
         setSending(true);
-        return axios.post('/auth/signup', {
+        return server.post('/auth/signup', {
             email: email,
             firstName: firstName,
             lastName: lastName,
