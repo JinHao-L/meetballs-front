@@ -1,7 +1,8 @@
 import { Card, Col, Button } from 'react-bootstrap';
 import { getDateInfo } from '../../common/CommonFunctions';
 
-export default function CompletedMeetingItem({ meeting, viewMeeting }) {
+export default function CompletedMeetingItem({ meeting }) {
+  const id = meeting.id;
   const topic = meeting.name;
   const desc = meeting.description;
 
@@ -10,6 +11,10 @@ export default function CompletedMeetingItem({ meeting, viewMeeting }) {
   const startTime = dateInfo.startTime;
   const endTime = dateInfo.endTime;
   const duration = dateInfo.duration;
+
+  function viewMeeting() {
+    console.log(`Viewing meeting of ID = ${id}`);
+  }
 
   return (
     <Col className="Container__padding--vertical-small">
@@ -23,13 +28,6 @@ export default function CompletedMeetingItem({ meeting, viewMeeting }) {
             Date: {date} {startTime} - {endTime}
           </Card.Subtitle>
           <Card.Text>Description: {desc}</Card.Text>
-          {/*
-				<Row className="justify-content-end" xs="auto">
-					<Button variant="primary" onClick={viewMeeting}>
-						View meeting report
-					</Button>
-				</Row>
-				*/}
         </Card.Body>
       </Card>
     </Col>
