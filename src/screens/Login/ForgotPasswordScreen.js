@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form, Button, Toast } from "react-bootstrap";
-import axios from "axios";
+import server from "../../services/server";
 
 export default function ForgotPasswordScreen() {
 
@@ -15,15 +15,14 @@ export default function ForgotPasswordScreen() {
     function submit(event) {
         event.preventDefault();
         console.log(`submitting to email: ${email}`);
-        return axios.post('/auth/forget-password', {
-            email: email
-        }).then((response) => {
-            console.log("email password reset success!");
-            if (response.data.success) setSuccess(true);
-        }).catch((error) => {
-            console.error(error);
-            setSuccess(false);
-        }).finally(() => setSent(true));
+        return server.post('/auth/forget-password', { email })
+            .then((response) => {
+                console.log("email password reset success!");
+                if (response.data.success) setSuccess(true);
+            }).catch((error) => {
+                console.error(error);
+                setSuccess(false);
+            }).finally(() => setSent(true));
     }
 
     return (

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router";
 import { Form, Toast, Button } from "react-bootstrap";
-import axios from "axios";
+import server from "../../services/server";
 
 export default function ResetPasswordScreen() {
 
@@ -26,7 +26,7 @@ export default function ResetPasswordScreen() {
     function submit(event) {
         event.preventDefault();
         setLoading(true);
-        return axios.post('/auth/password-reset', {
+        return server.post('/auth/password-reset', {
             token, password
         }).then((response) => {
             const res = response.data;

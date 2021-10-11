@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Spinner, Container, Col, Form, Toast, Button } from "react-bootstrap";
 import { useLocation } from "react-router";
+import server from "../../services/server";
 
 function ResendConfirmationForm() {
 
@@ -14,7 +14,7 @@ function ResendConfirmationForm() {
     const [ success, setSuccess ] = useState(false);
 
     function submit() {
-        return axios.post('/auth/resend-confirm', {
+        return server.post('/auth/resend-confirm', {
             email: email
         }).then((response) => {
             if (response.data.success) setSuccess(true);
@@ -73,7 +73,7 @@ export default function EmailConfirmationScreen() {
 
     useEffect(() => {
         console.log(`Begin email confirmation! Token is ${token}`);
-        return axios.post('/auth/confirm', {
+        return server.post('/auth/confirm', {
             token: token
         })
         .then(res => {
