@@ -1,5 +1,6 @@
 import { Container, Navbar, Image, Button, Row, Col } from 'react-bootstrap';
 import Logo from '../../assets/logo.png';
+import { Facebook } from 'react-bootstrap-icons';
 import LandingImage from '../../assets/landing_image.png';
 import { useHistory } from 'react-router';
 
@@ -44,6 +45,16 @@ export default function LandingScreen() {
                 <p>• Pace your meetings with intelligent agenda</p>
                 <p>• Mass email participants (Coming Soon)</p>
                 <p>• Save audio transcripts from zoom (Coming Soon)</p>
+                <div className="Buffer--20px" />
+                <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    window.open('https://www.facebook.com/MeetBallsApp/');
+                  }}
+                >
+                  <Facebook size={23} style={{ marginRight: 10 }} />
+                  Find Us On Facebook
+                </Button>
               </div>
             </Container>
           </Col>
