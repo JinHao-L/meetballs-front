@@ -2,6 +2,7 @@
 
 .Container__fixed-header {
   position: fixed;
+  width: 100%;
   top: 0px;
 }
 

@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Tab, Tabs, Spinner, Container } from 'react-bootstrap';
+import {
+  Tab,
+  Tabs,
+  Spinner,
+  Container,
+  Row,
+  Col,
+  Button,
+} from 'react-bootstrap';
 import { CalendarPlusFill } from 'react-bootstrap-icons';
 import CompletedMeetingItem from './CompletedMeetingItem';
 import UpcomingMeetingItem from './UpcomingMeetingItem';
@@ -121,25 +129,40 @@ export default function DashboardScreen() {
     );
   }
 
+  function logout() {
+    window.sessionStorage.clear();
+    window.localStorage.clear();
+    history.replace('/login');
+  }
+
   return (
     <>
-      <div className="Container__padding--vertical">
-        <Container className="Container__padding--horizontal">
-          <Tabs
-            defaultActiveKey="upcoming"
-            transition={false}
-            id="meetings-tabs"
-            className="justify-content-center"
-          >
-            <Tab eventKey="upcoming" title="Upcoming Meetings">
-              {upcomingList}
-            </Tab>
-            <Tab eventKey="past" title="Past Meetings">
-              {historyList}
-            </Tab>
-          </Tabs>
-        </Container>
-      </div>
+      <Container className="Container__padding--vertical">
+        <Row>
+          <Col sm={12} md={12} lg={3}></Col>
+          <Col sm={12} md={12} lg={6}>
+            <div className="d-grid gap-2">
+              <Button onClick={logout}>Logout</Button>
+            </div>
+            <div className="Buffer--20px" />
+            <Tabs
+              className="Container__padding--horizontal"
+              defaultActiveKey="upcoming"
+              transition={false}
+              id="meetings-tabs"
+            >
+              <Tab eventKey="upcoming" title="Upcoming Meetings">
+                <div className="Container__padding--vertical">
+                  {upcomingList}
+                </div>
+              </Tab>
+              <Tab eventKey="past" title="Past Meetings">
+                {historyList}
+              </Tab>
+            </Tabs>
+          </Col>
+        </Row>
+      </Container>
       <AddMeetingOverlay
         show={showOverlay}
         setShow={setShowOverlay}
