@@ -12,7 +12,7 @@ export default function LandingScreen() {
         <Container>
           <Navbar.Brand style={{ alignItems: 'center' }}>
             <Image src={Logo} style={{ width: 30, height: 30 }} />
-            <Navbar.Text className="Text__logo">Meatballs</Navbar.Text>
+            <Navbar.Text className="Text__logo">Meetballs</Navbar.Text>
           </Navbar.Brand>
           <Button
             variant="outline-secondary"
