@@ -1,6 +1,6 @@
 import { Container, Row, Col, Button, Nav, Toast } from 'react-bootstrap';
-import { useParams } from 'react-router';
-import { useState, useEffect, useContext, useMemo, useCallback } from 'react';
+import { useHistory, useParams } from 'react-router';
+import { useState, useEffect, useContext, useMemo } from 'react';
 import {
   getFormattedDateTime,
   getFormattedTime,
@@ -17,7 +17,7 @@ import {
 } from '../../services/meeting';
 import { useSocket } from '../../hooks/useSocket';
 import { UserContext } from '../../context/UserContext';
-import { useHistory } from 'react-router';
+import { AppNavbar } from '../../components/AppNavbar';
 
 var position = -1;
 
@@ -96,6 +96,7 @@ export default function OngoingMeetingAdminScreen() {
 
   return (
     <>
+      <AppNavbar showButton={false} />
       <Container className="Container__padding--vertical">
         <Row>
           <Col

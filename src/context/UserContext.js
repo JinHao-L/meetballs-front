@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { accessTokenKey } from '../common/CommonValues';
+import { FullLoadingIndicator } from '../components/FullLoadingIndicator';
 import { refresh } from '../services/auth';
 import { getUser } from '../services/user';
 
@@ -28,7 +29,7 @@ const UserProvider = ({ children }) => {
     document.addEventListener(accessTokenKey, updateUser, false);
     refresh()
       .catch((err) => console.log('refresh failed'))
-      .finally(() => setLoading(false));
+      .finally(() => {console.log(user); setLoading(false)});
 
     return () => {
       document.removeEventListener(accessTokenKey, updateUser, false);
@@ -37,13 +38,7 @@ const UserProvider = ({ children }) => {
 
   if (loading) {
     return (
-      <>
-        <Container className="Container__padding--vertical">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </Container>
-      </>
+      <FullLoadingIndicator/>
     );
   }
 

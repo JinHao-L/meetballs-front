@@ -12,6 +12,7 @@ import {
 import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import EditMeetingOverlay from './EditMeetingOverlay';
 import { useHistory, Redirect, useParams } from 'react-router';
+import { AppNavbar } from '../../components/AppNavbar';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -88,6 +89,7 @@ export default function UpcomingMeetingScreen() {
 
   return (
     <>
+      <AppNavbar buttonType={'dashboard'} />
       <Container className="Container__padding--vertical">
         <Row>
           <Col
