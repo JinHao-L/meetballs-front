@@ -23,11 +23,6 @@ export default function App() {
   useEffect(() => {
     console.log(`User is logged in ? ${ user ? "yes" : "no" }`);
   }, []);
-  
-  function LandingPage() {
-    if (user) return <Redirect to="/home" />;
-    else return <LandingScreen />;
-  }
 
   /**
    * @param {JSX.Element} child
@@ -46,7 +41,7 @@ export default function App() {
     <Router>
       <Switch>
         <Route exact path="/">
-          <LandingPage />
+          <LandingScreen />
         </Route>
         <Route path="/confirm-email">
           <EmailConfirmationScreen />
@@ -57,7 +52,7 @@ export default function App() {
         <Route path="/forgot-password">
           <ForgotPasswordScreen />
         </Route>
-        <Route path="/app/password-reset">
+        <Route path="/password-reset">
           <ResetPasswordScreen />
         </Route>
         <Route path="/signup">

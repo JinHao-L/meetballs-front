@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Form, Button, Toast, Col } from "react-bootstrap";
+import { Form, Button, Toast, Container } from "react-bootstrap";
 import { useHistory } from "react-router";
+import { AppNavbar } from "../../components/AppNavbar";
 import server from "../../services/server";
 
 const MISMATCHED_PWD = "Passwords do not match! Please retype them before submitting";
@@ -80,8 +81,10 @@ export default function RegistrationScreen() {
 
     return (
         <>
-            <div className="Container__padding--horizontal">
-                <Form className="Container__padding--vertical" onSubmit={onSubmit}>
+            <AppNavbar showButton={false} />
+            <Container className="Container__padding--horizontal Container__padding--vertical">
+                <h2 style={{padding: '0px 0px 10px 0px'}}> Signing up</h2>
+                <Form onSubmit={onSubmit}>
                     <Form.Group className="mb-3" controlId="formEmail">
                         <Form.Label>Email</Form.Label>
                         <Form.Control
@@ -130,7 +133,7 @@ export default function RegistrationScreen() {
                             placeholder="Please re-type your password"
                         />
                     </Form.Group>
-                    <Col xs="auto">
+                    <div  className="d-grid gap-2">
                         <Button
                             block="true"
                             size="lg"
@@ -140,12 +143,12 @@ export default function RegistrationScreen() {
                             {sending ? "Please wait a moment" : "Register"}
                         </Button>
                         <Button variant="link" onClick={toLogin}>Already have an account? Log in here!</Button>
-                    </Col>
+                    </div>
                 </Form>
                 <RegistrationCompleteToast show={sent && !error} message={response} />
                 <RegistrationErrorToast show={sent && error} message={response} />
                 <RegistrationErrorToast show={!sent && error} message={MISMATCHED_PWD} />
-            </div>
+            </Container>
         </>
     );
 }

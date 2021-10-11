@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "react-router";
-import { Form, Toast, Button } from "react-bootstrap";
+import { Form, Toast, Button, Container } from "react-bootstrap";
 import server from "../../services/server";
+import { AppNavbar } from "../../components/AppNavbar";
 
 const MISMATCHED_PWD = "Passwords do not match! Please retype them before submitting";
 
@@ -73,7 +74,8 @@ export default function ResetPasswordScreen() {
 
     return (
         <>
-            <div>
+            <AppNavbar showButton={false} />
+            <Container className="Container__padding--horizontal Container__padding--vertical">
                 <Form onSubmit={submit}>
                     <Form.Group className="mb-3" controlId="formPassword">
                         <Form.Label>New Password</Form.Label>
@@ -95,14 +97,16 @@ export default function ResetPasswordScreen() {
                             placeholder="Retype your password here"
                         />
                     </Form.Group>
-                    <Button
-                        block
-                        size="me"
-                        disabled={!readyToSubmit() || loading}
-                        type="submit"
-                    >
-                        { loading ? "Please wait a moment" : "Submit"}
-                    </Button>
+                    <div  className="d-grid gap-2">
+                        <Button
+                            block="true"
+                            size="me"
+                            disabled={!readyToSubmit() || loading}
+                            type="submit"
+                        >
+                            { loading ? "Please wait a moment" : "Submit"}
+                        </Button>
+                    </div>
                 </Form>
                 <SuccessfulResetToast
                     show={sent && success}
@@ -116,7 +120,7 @@ export default function ResetPasswordScreen() {
                     show={mismatchPasswords && !success} 
                     message={MISMATCHED_PWD}
                 />
-            </div>
+            </Container>
         </>
     );
 }

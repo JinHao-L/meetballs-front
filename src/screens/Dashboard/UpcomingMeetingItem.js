@@ -2,7 +2,7 @@ import { Card, Col, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { getDateInfo, openLinkInNewTab } from '../../common/CommonFunctions';
 
-export default function UpcomingMeetingItem({ key, meeting, editMeeting }) {
+export default function UpcomingMeetingItem({ meeting, editMeeting }) {
   const topic = meeting.name;
   const desc = meeting.description;
   // const startUrl = meeting.startUrl;
@@ -15,7 +15,7 @@ export default function UpcomingMeetingItem({ key, meeting, editMeeting }) {
 
   return (
     <Col className="Container__padding--vertical-small">
-      <Card bg={'light'} key={key}>
+      <Card bg={'light'}>
         <Card.Header>
           <Card.Text>Duration: {duration}</Card.Text>
         </Card.Header>
@@ -47,12 +47,11 @@ export default function UpcomingMeetingItem({ key, meeting, editMeeting }) {
 }
 
 UpcomingMeetingItem.propTypes = {
-  key: PropTypes.number.isRequired,
   meeting: PropTypes.shape({
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    start_url: PropTypes.string.isRequired,
-    start_time: PropTypes.string.isRequired,
+    // start_url: PropTypes.string.isRequired,
+    // start_time: PropTypes.string.isRequired,
     duration: PropTypes.number.isRequired,
   }).isRequired,
   editMeeting: PropTypes.func.isRequired,

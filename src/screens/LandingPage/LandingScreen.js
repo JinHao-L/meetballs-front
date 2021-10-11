@@ -1,29 +1,11 @@
-import { Container, Navbar, Image, Button, Row, Col } from 'react-bootstrap';
-import Logo from '../../assets/logo.png';
+import { Container, Image, Row, Col } from 'react-bootstrap';
 import LandingImage from '../../assets/landing_image.png';
-import { useHistory } from 'react-router';
+import { AppNavbar } from '../../components/AppNavbar';
 
 export default function LandingScreen() {
-  const history = useHistory();
-
   return (
     <Container fluid>
-      <Navbar bg="light" expand="lg" className="Container__fixed-header">
-        <Container>
-          <Navbar.Brand style={{ alignItems: 'center' }}>
-            <Image src={Logo} style={{ width: 30, height: 30 }} />
-            <Navbar.Text className="Text__logo">Meetballs</Navbar.Text>
-          </Navbar.Brand>
-          <Button
-            variant="outline-secondary"
-            size="sm"
-            style={{ borderRadius: 50 }}
-            onClick={() => history.push('/login')}
-          >
-            Login
-          </Button>
-        </Container>
-      </Navbar>
+      <AppNavbar/>
       <Container fluid>
         <Row>
           <Col sm={12} md={12} lg={6}>

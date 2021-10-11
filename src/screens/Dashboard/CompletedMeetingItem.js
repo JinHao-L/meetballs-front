@@ -1,7 +1,7 @@
 import { Card, Col, Button } from 'react-bootstrap';
 import { getDateInfo } from '../../common/CommonFunctions';
 
-export default function CompletedMeetingItem({ key, meeting, viewMeeting }) {
+export default function CompletedMeetingItem({ meeting, viewMeeting }) {
   const topic = meeting.name;
   const desc = meeting.description;
 
@@ -13,7 +13,7 @@ export default function CompletedMeetingItem({ key, meeting, viewMeeting }) {
 
   return (
     <Col className="Container__padding--vertical-small">
-      <Card bg={'light'} key={key}>
+      <Card bg={'light'}>
         <Card.Header>
           <Card.Text>Duration: {duration}</Card.Text>
         </Card.Header>

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import {
   Tab,
   Tabs,
-  Spinner,
   Container,
   Row,
   Col,
@@ -15,6 +14,8 @@ import { defaultHeaders } from '../../utils/axiosConfig';
 import AddMeetingOverlay from './AddMeetingOverlay';
 import server from '../../services/server';
 import { useHistory } from 'react-router';
+import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
+import { AppNavbar } from '../../components/AppNavbar';
 
 function AddMeetingButton({ onClick }) {
   return (
@@ -118,32 +119,17 @@ export default function DashboardScreen() {
 
   if (loadingUpcoming) {
     return (
-      <>
-        <Container className="Container__padding--vertical">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </Container>
-      </>
+      <FullLoadingIndicator/>
     );
-  }
-
-  function logout() {
-    window.sessionStorage.clear();
-    window.localStorage.clear();
-    history.replace('/login');
   }
 
   return (
     <>
+      <AppNavbar buttonType={'logout'} />
       <Container className="Container__padding--vertical">
         <Row>
           <Col sm={12} md={12} lg={3}></Col>
           <Col sm={12} md={12} lg={6}>
-            <div className="d-grid gap-2">
-              <Button onClick={logout}>Logout</Button>
-            </div>
-            <div className="Buffer--20px" />
             <Tabs
               className="Container__padding--horizontal"
               defaultActiveKey="upcoming"
@@ -156,7 +142,9 @@ export default function DashboardScreen() {
                 </div>
               </Tab>
               <Tab eventKey="past" title="Past Meetings">
-                {historyList}
+                <div className="Container__padding--vertical">
+                  {historyList}
+                </div>
               </Tab>
             </Tabs>
           </Col>

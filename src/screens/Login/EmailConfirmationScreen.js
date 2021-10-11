@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Spinner, Container, Col, Form, Toast, Button } from 'react-bootstrap';
+import { Container, Col, Form, Toast, Button } from 'react-bootstrap';
 import { useLocation } from 'react-router';
+import { AppNavbar } from '../../components/AppNavbar';
+import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import server from '../../services/server';
 
 function ResendConfirmationForm() {
@@ -40,9 +42,16 @@ function ResendConfirmationForm() {
             placeholder="Enter email here"
           />
         </Form.Group>
-        <Button block size="me" disabled={!readyToSubmit()} type="submit">
-          Resend confirmation email
-        </Button>
+        <div className="d-grid gap-2">
+          <Button
+            block="true"
+            size="me"
+            disabled={!readyToSubmit()}
+            type="submit"
+          >
+            Resend confirmation email
+          </Button>
+        </div>
       </Form>
       <Toast show={resent && success}>
         <Toast.Header>
@@ -91,23 +100,21 @@ export default function EmailConfirmationScreen() {
   }, []);
 
   if (isLoading) {
-    return (
-      <>
-        <Container className="Container__padding--vertical">
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </Container>
-      </>
-    );
+    return <FullLoadingIndicator />;
   }
 
   return (
     <>
+      <AppNavbar showButton={false} />
       <Container className="Container__padding--vertical">
         <Col className="Container__padding--horizontal">
-          <p>{failed ? 'Email confirmation failed' : responseMsg}</p>
-          {failed ? <ResendConfirmationForm /> : null}
+          <p>Status: {failed ? 'Email confirmation failed' : responseMsg}</p>
+          {failed ? (
+            <>
+              <hr style={{margin: '20px 0 20px 0'}}/>
+              <ResendConfirmationForm />
+            </>
+          ) : null}
         </Col>
       </Container>
     </>
