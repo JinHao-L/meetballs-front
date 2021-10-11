@@ -15,6 +15,7 @@ import RegistrationScreen from './screens/Login/RegistrationScreen';
 import ForgotPasswordScreen from './screens/Login/ForgotPasswordScreen';
 import ResetPasswordScreen from './screens/Login/ResetPasswordScreen';
 import { UserContext } from './context/UserContext';
+import LandingScreen from './screens/LandingPage/LandingScreen';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -24,7 +25,7 @@ export default function App() {
 
   function LandingPage() {
     if (user) return <Redirect to="/home" />;
-    else return <Redirect to="/login" />;
+    else return <LandingScreen />;
   }
 
   /**
