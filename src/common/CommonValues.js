@@ -1,3 +1,3 @@
-export const apiUrl = "http://localhost:3001";
-export const accessTokenKey = "AccessToken";
-export const refreshTokenKey = "RefreshToken";
+export const apiUrl = 'https://meetballs.herokuapp.com';
+export const accessTokenKey = 'AccessToken';
+export const refreshTokenKey = 'RefreshToken';
