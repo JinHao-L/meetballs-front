@@ -36,15 +36,15 @@ function ResendConfirmationForm() {
                         onChange={setEmail}
                         placeholder="Enter email here"
                     />
-                    <Button
-                        block
-                        size="me"
-                        disabled={!readyToSubmit()}
-                        type="submit"
-                    >
-                        Resend confirmation email
-                    </Button>
                 </Form.Group>
+                <Button
+                    block
+                    size="me"
+                    disabled={!readyToSubmit()}
+                    type="submit"
+                >
+                    Resend confirmation email
+                </Button>
             </Form>
             <Toast show={resent && success}>
                 <Toast.Header>
@@ -70,6 +70,7 @@ export default function EmailConfirmationScreen() {
 
     const [ responseMsg, setResponseMsg ] = useState('');
     const [ isLoading, setLoading ] = useState(true);
+    const [ failed, setFailed ] = useState(false);
 
     useEffect(() => {
         console.log(`Begin email confirmation! Token is ${token}`);
@@ -80,7 +81,10 @@ export default function EmailConfirmationScreen() {
             console.log('Email confirmation');
             setResponseMsg(res.data.message);
         })
-        .catch(e => console.error(e))
+        .catch(e => {
+            console.error(e);
+            setFailed(true);
+        })
         .finally(() => setLoading(false));
     }, []);
 
@@ -99,16 +103,11 @@ export default function EmailConfirmationScreen() {
     return (
         <>
             <Container className="Container__padding--vertical">
-                <Col
-                    lg={3}
-                    md={12}
-                    sm={12}
-                    className="Container__padding--horizontal"
-                >
+                <Col className="Container__padding--horizontal" >
                     <p>
-                        { responseMsg === '' ? "Email confirmation failed" : responseMsg }
+                        { failed ? "Email confirmation failed" : responseMsg }
                     </p>
-                    <ResendConfirmationForm />
+                    { failed ? <ResendConfirmationForm /> : null }
                 </Col>
             </Container>
         </>
