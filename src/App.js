@@ -19,10 +19,11 @@ import LandingScreen from './screens/LandingPage/LandingScreen';
 
 export default function App() {
   const user = useContext(UserContext);
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
+  useEffect(() => {
+    console.log(`User is logged in ? ${ user ? "yes" : "no" }`);
+  }, []);
+  
   function LandingPage() {
     if (user) return <Redirect to="/home" />;
     else return <LandingScreen />;
@@ -33,9 +34,10 @@ export default function App() {
    * @returns
    */
   function RouteIfLoggedIn({ path, children }) {
+    console.log( user ? "user exists" : "user not logged in");
     return (
       <Route path={path} >
-        { user ? children : <Redirect to="/login" /> }
+        { !user ? <Redirect to="/" /> : children }
       </Route>
     );
   }

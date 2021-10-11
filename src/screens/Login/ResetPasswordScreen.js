@@ -3,9 +3,31 @@ import { useLocation } from "react-router";
 import { Form, Toast, Button } from "react-bootstrap";
 import server from "../../services/server";
 
-export default function ResetPasswordScreen() {
+const MISMATCHED_PWD = "Passwords do not match! Please retype them before submitting";
 
-    console.log("I am at password reset screen!");
+function SuccessfulResetToast({ show, message }) {
+    return (
+        <Toast show={show}>
+            <Toast.Header>
+                <strong className="me-auto">Success!</strong>
+            </Toast.Header>
+            <Toast.Body>{message}</Toast.Body>
+        </Toast>
+    );
+}
+
+function ErrorToast({ show, message }) {
+    return (
+        <Toast show={show}>
+            <Toast.Header>
+                <strong className="me-auto">Error!</strong>
+            </Toast.Header>
+            <Toast.Body>{message}</Toast.Body>
+        </Toast>
+    );
+}
+
+export default function ResetPasswordScreen() {
 
     const { search } = useLocation();
     const params = new URLSearchParams(search);
@@ -15,16 +37,23 @@ export default function ResetPasswordScreen() {
     const [ confirmation, setConfirmation ] = useState("");
 
     function readyToSubmit() {
-        return password.trim().length > 0 && password === confirmation;
+        return password.trim().length > 0 && confirmation.trim().length > 0;
     }
 
     const [ loading, setLoading ] = useState(false);
     const [ sent, setSent ] = useState(false);
     const [ success, setSuccess ] = useState(false);
     const [ responseMsg, setResponseMsg ] = useState("");
+    const [ mismatchPasswords, setMismatchPasswords ] = useState(false);
 
     function submit(event) {
         event.preventDefault();
+        if (password !== confirmation) {
+            setSuccess(false);
+            setMismatchPasswords(true);
+            return;
+        }
+
         setLoading(true);
         return server.post('/auth/password-reset', {
             token, password
@@ -75,20 +104,18 @@ export default function ResetPasswordScreen() {
                         { loading ? "Please wait a moment" : "Submit"}
                     </Button>
                 </Form>
-                <Toast show={sent && success}>
-                    <Toast.Header>
-                        <strong className="me-auto">Success!</strong>
-                    </Toast.Header>
-                    <Toast.Body>{responseMsg}</Toast.Body>
-                </Toast>
-                <Toast show={sent && !success}>
-                    <Toast.Header>
-                        <strong className="me-auto">Error!</strong>
-                    </Toast.Header>
-                    <Toast.Body>
-                        {responseMsg === "" ? "Please try again later" : responseMsg }
-                    </Toast.Body>
-                </Toast>
+                <SuccessfulResetToast
+                    show={sent && success}
+                    message={responseMsg}
+                />
+                <ErrorToast
+                    show={sent && !success} 
+                    message={responseMsg === "" ? "Please try again later" : responseMsg }
+                />
+                <ErrorToast
+                    show={mismatchPasswords && !success} 
+                    message={MISMATCHED_PWD}
+                />
             </div>
         </>
     );

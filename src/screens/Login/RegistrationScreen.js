@@ -3,6 +3,30 @@ import { Form, Button, Toast, Col } from "react-bootstrap";
 import { useHistory } from "react-router";
 import server from "../../services/server";
 
+const MISMATCHED_PWD = "Passwords do not match! Please retype them before submitting";
+
+function RegistrationCompleteToast({ show, message }) {
+    return (
+        <Toast show={show}>
+            <Toast.Header>
+                <strong className="me-auto">Registration complete!</strong>
+            </Toast.Header>
+            <Toast.Body>{ message }</Toast.Body>
+        </Toast>
+    );
+}
+
+function RegistrationErrorToast({ show, message }) {
+    return (
+        <Toast show={show}>
+            <Toast.Header>
+                <strong className="me-auto">Something went wrong!</strong>
+            </Toast.Header>
+            <Toast.Body>{ message }</Toast.Body>
+        </Toast>
+    );
+}
+
 export default function RegistrationScreen() {
 
     const [ email, setEmail ] = useState("");
@@ -12,7 +36,7 @@ export default function RegistrationScreen() {
     const [ lastName, setLastName ] = useState("");
 
     const [ sending, setSending ] = useState(false);
-
+    const [ sent, setSent ] = useState(false);
     const [ response, setResponse ] = useState("");
     const [ error, setError ] = useState(false);
 
@@ -20,8 +44,7 @@ export default function RegistrationScreen() {
         return email.trim().length > 0
             && password.trim().length > 0
             && firstName.trim().length > 0
-            && lastName.trim().length > 0
-            && password === confirmationPassword;
+            && lastName.trim().length > 0;
     }
 
     const history = useHistory();
@@ -31,6 +54,11 @@ export default function RegistrationScreen() {
 
     async function onSubmit(event) {
         event.preventDefault();
+        if (password !== confirmationPassword) {
+            setError(true);
+            return;
+        }
+
         setSending(true);
         return server.post('/auth/signup', {
             email: email,
@@ -42,11 +70,12 @@ export default function RegistrationScreen() {
             setResponse(res.data.message);
         }).catch((e) => {
             console.log(e)
-            if (e.response) {
-                setError(true);
-                setResponse(e.response.data.message);
-            }
-        }).finally(() => setSending(false));
+            setError(true);
+            if (e.response) setResponse(e.response.data.message);
+        }).finally(() => {
+            setSending(false);
+            setSent(true);
+        });
     }
 
     return (
@@ -113,18 +142,9 @@ export default function RegistrationScreen() {
                         <Button variant="link" onClick={toLogin}>Already have an account? Log in here!</Button>
                     </Col>
                 </Form>
-                <Toast show={!sending && response !== ""}>
-                        <Toast.Header>
-                            <strong className="me-auto">Registration complete!</strong>
-                        </Toast.Header>
-                        <Toast.Body>{ response }</Toast.Body>
-                </Toast>
-                <Toast show={error && !sending}>
-                        <Toast.Header>
-                            <strong className="me-auto">Something went wrong!</strong>
-                        </Toast.Header>
-                        <Toast.Body>{ response }</Toast.Body>
-                </Toast>
+                <RegistrationCompleteToast show={sent && !error} message={response} />
+                <RegistrationErrorToast show={sent && error} message={response} />
+                <RegistrationErrorToast show={!sent && error} message={MISMATCHED_PWD} />
             </div>
         </>
     );

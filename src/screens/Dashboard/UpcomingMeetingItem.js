@@ -5,7 +5,7 @@ import { getDateInfo, openLinkInNewTab } from "../../common/CommonFunctions";
 export default function UpcomingMeetingItem({ key, meeting, editMeeting }) {
 	const topic = meeting.name;
 	const desc = meeting.description;
-	const startUrl = meeting.startUrl;
+	// const startUrl = meeting.startUrl;
 
 	const dateInfo = getDateInfo(meeting.startedAt, meeting.duration);
 	const date = dateInfo.date;

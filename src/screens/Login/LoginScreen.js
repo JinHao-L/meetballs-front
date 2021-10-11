@@ -25,6 +25,7 @@ export default function LoginScreen() {
             .then(() => history.push('/home'))
             .catch((e) => {
                 setError(true);
+                console.error(e);
                 if (e.response) setErrMsg(e.response.message);
                 else setErrMsg("Could not connect to server, please try again later");
             })
@@ -62,7 +63,8 @@ export default function LoginScreen() {
                     </Form.Group>
                     <Col>
                         <Button
-                            block size="lg"
+                            block="true"
+                            size="lg"
                             disabled={!readyToSubmit() || sending}
                             type="submit"
                         >
