@@ -62,7 +62,6 @@ export default function DashboardScreen() {
         const meetings = res.data;
         const upcoming = meetings.sort(sortMeetings);
         setUpcoming(upcoming);
-        setHistory(meetingHistory);
       })
       .catch(console.error)
       .finally(() => setLoadingUpcoming(false));
