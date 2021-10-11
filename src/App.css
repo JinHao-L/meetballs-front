@@ -1,5 +1,10 @@
 /* Containers */
 
+.Container__fixed-header {
+  position: fixed;
+  top: 0px;
+}
+
 .Container__padding--horizontal {
   padding-left: 20px;
   padding-right: 20px;
@@ -44,11 +49,14 @@
 .Text__header {
   font-size: 40px;
   margin-bottom: 10px;
+  font-weight: 700;
+  color: #212121;
 }
 
 .Text__subheader {
   font-size: 20px;
   font-weight: 500;
+  color: #212121;
 }
 
 .Text__subsubheader {
@@ -56,12 +64,14 @@
   font-weight: 500;
   margin-top: 20px;
   margin-bottom: 10px;
+  color: #212121;
 }
 
 .Text__paragraph {
   font-size: 17px;
   display: inline-block;
   word-break: break-word;
+  color: #212121;
 }
 
 .Text__elipsized--5-lines {
@@ -74,10 +84,19 @@
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   -webkit-line-clamp: 5;
+  color: #212121;
 }
 
 .Text__card-header {
   margin: 0px;
+}
+
+.Text__logo {
+  padding-left: 10px;
+  padding-top: 20px;
+  padding-bottom: 0px;
+  font-size: 25px;
+  font-weight: 400;
 }
 
 /* Miscs */
