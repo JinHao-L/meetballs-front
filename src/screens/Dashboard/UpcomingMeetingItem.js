@@ -1,4 +1,4 @@
-import { Card, Col, Button, Toast } from 'react-bootstrap';
+import { Card, Col, Button, Toast, Container, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { getDateInfo, openLinkInNewTab } from '../../common/CommonFunctions';
 import { useHistory } from 'react-router';
@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 function DeleteErrorToast({show}) {
   return (
-    <Toast show={error} >
+    <Toast show={show} >
       <Toast.Header>
         <strong className="me-auto">Error!</strong>
       </Toast.Header>
@@ -76,20 +76,20 @@ export default function UpcomingMeetingItem({ meeting, onDelete }) {
           <Card.Text>Description: {desc}</Card.Text>
 
           <div className="d-grid gap-2">
-            <Button variant="outline-primary" onClick={startMeeting} >
-              Start meeting
-            </Button>
-          </div>
-          <div className="d-grid gap-2">
-            <Button variant="outline-primary" onClick={editMeeting} >
-              Edit meeting
-            </Button>
-          </div>
-          <div className="d-grid gap-2">
-            <Button variant="outline-danger" onClick={deleteMeeting} disabled={deleting} >
-              { deleting ? "Deleting..." : "Delete meeting"}
-            </Button>
-            <DeleteErrorToast show={error} />
+            <Container fluid>
+              <Row>
+                <Button variant="outline-primary" onClick={startMeeting} >
+                  Start meeting
+                </Button>
+                <Button variant="outline-primary" onClick={editMeeting} >
+                  Edit meeting
+                </Button>
+                <Button variant="outline-danger" onClick={deleteMeeting} disabled={deleting} >
+                  { deleting ? "Deleting..." : "Delete meeting"}
+                </Button>
+                <DeleteErrorToast show={error} />
+              </Row>
+            </Container>
           </div>
         </Card.Body>
       </Card>
