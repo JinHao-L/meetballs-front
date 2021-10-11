@@ -33,7 +33,11 @@ export default function App() {
    * @returns
    */
   function RouteIfLoggedIn({ path, children }) {
-    return user && <Route path={path}>{children}</Route>;
+    return (
+      <Route path={path} >
+        { user ? children : <Redirect to="/login" /> }
+      </Route>
+    );
   }
 
   return (
