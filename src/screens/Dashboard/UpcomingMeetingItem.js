@@ -26,12 +26,14 @@ export default function UpcomingMeetingItem({ key, meeting, editMeeting }) {
 					<Button variant="primary" onClick={editMeeting}>
 						Edit meeting
 					</Button>
+					{/*
 					<Button
 						variant="primary"
 						onClick={() => openLinkInNewTab(startUrl)}
 					>
 						Start meeting
 					</Button>
+					*/}
 				</Row>
 			</Card.Body>
 		</Card>
