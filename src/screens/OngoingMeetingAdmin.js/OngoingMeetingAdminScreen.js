@@ -97,7 +97,7 @@ export default function OngoingMeetingAdminScreen() {
   return (
     <>
       <AppNavbar showButton={false} />
-      <Container className="Container__padding--vertical">
+      <Container className="Container__padding--vertical Container__content">
         <Row>
           <Col
             lg={3}

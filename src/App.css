@@ -6,6 +6,10 @@
   top: 0px;
 }
 
+.Container__content {
+  padding-top: 63px;
+}
+
 .Container__padding--horizontal {
   padding-left: 20px;
   padding-right: 20px;

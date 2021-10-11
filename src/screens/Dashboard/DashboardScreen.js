@@ -1,12 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Tab,
-  Tabs,
-  Container,
-  Row,
-  Col,
-  Button,
-} from 'react-bootstrap';
+import { Tab, Tabs, Container, Row, Col, Button } from 'react-bootstrap';
 import { CalendarPlusFill } from 'react-bootstrap-icons';
 import CompletedMeetingItem from './CompletedMeetingItem';
 import UpcomingMeetingItem from './UpcomingMeetingItem';
@@ -118,15 +111,13 @@ export default function DashboardScreen() {
   });
 
   if (loadingUpcoming) {
-    return (
-      <FullLoadingIndicator/>
-    );
+    return <FullLoadingIndicator />;
   }
 
   return (
     <>
       <AppNavbar buttonType={'logout'} />
-      <Container className="Container__padding--vertical">
+      <Container className="Container__padding--vertical Container__content">
         <Row>
           <Col sm={12} md={12} lg={3}></Col>
           <Col sm={12} md={12} lg={6}>

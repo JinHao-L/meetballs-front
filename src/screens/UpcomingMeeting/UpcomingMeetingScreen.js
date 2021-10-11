@@ -90,7 +90,7 @@ export default function UpcomingMeetingScreen() {
   return (
     <>
       <AppNavbar buttonType={'dashboard'} />
-      <Container className="Container__padding--vertical">
+      <Container className="Container__padding--vertical Container__content">
         <Row>
           <Col
             lg={3}
