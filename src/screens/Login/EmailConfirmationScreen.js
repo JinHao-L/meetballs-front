@@ -106,12 +106,12 @@ export default function EmailConfirmationScreen() {
   return (
     <>
       <AppNavbar showButton={false} />
-      <Container className="Container__padding--vertical">
+      <Container className="Container__padding--vertical Container__content">
         <Col className="Container__padding--horizontal">
           <p>Status: {failed ? 'Email confirmation failed' : responseMsg}</p>
           {failed ? (
             <>
-              <hr style={{margin: '20px 0 20px 0'}}/>
+              <hr style={{ margin: '20px 0 20px 0' }} />
               <ResendConfirmationForm />
             </>
           ) : null}

@@ -7,8 +7,8 @@ import { AppNavbar } from '../../components/AppNavbar';
 export default function LandingScreen() {
   return (
     <Container fluid>
-      <AppNavbar/>
-      <Container fluid>
+      <AppNavbar />
+      <Container fluid className="Container__content">
         <Row>
           <Col sm={12} md={12} lg={6}>
             <Container
