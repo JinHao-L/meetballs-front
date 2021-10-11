@@ -20,11 +20,13 @@ export default function CompletedMeetingItem({ key, meeting, viewMeeting }) {
 				<Card.Text>
 					Duration: {startTime} - {endTime} ({duration})
 				</Card.Text>
+				{/*
 				<Row className="justify-content-end" xs="auto">
 					<Button variant="primary" onClick={viewMeeting}>
 						View meeting report
 					</Button>
 				</Row>
+				*/}
 			</Card.Body>
 		</Card>
 	);

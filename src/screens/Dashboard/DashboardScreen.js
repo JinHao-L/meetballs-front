@@ -6,6 +6,7 @@ import UpcomingMeetingItem from "./UpcomingMeetingItem";
 import { defaultHeaders } from "../../utils/axiosConfig";
 import AddMeetingOverlay from "./AddMeetingOverlay";
 import server from "../../services/server";
+import { useHistory } from "react-router";
 
 function AddMeetingButton({ onClick }) {
 	return (
@@ -17,32 +18,67 @@ function AddMeetingButton({ onClick }) {
 
 export default function DashboardScreen() {
 	const [upcoming, setUpcoming] = useState([]);
-	const [history, setHistory] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [meetingHistory, setHistory] = useState([]);
+	
+	const [loadingUpcoming, setLoadingUpcoming] = useState(true);
+	const [loadingPast, setLoadingPast] = useState(true);
 
 	const [showOverlay, setShowOverlay] = useState(false);
 
+	const history = useHistory();
+
 	useEffect(() => {
-		setLoading(true);
 		return pullMeetings();
 	}, []);
 
 	function pullMeetings() {
-		console.log(server.defaults);
+		pullPastMeetings();
+		pullUpcomingMeetings();
+	}
+
+	function pullUpcomingMeetings() {
+		function sortMeetings(meetingA, meetingB) {
+			const startA = meetingA.startedAt;
+			const startB = meetingB.startedAt;
+			if (startA < startB) return 1;
+			else if (startA > startB) return -1;
+			else return 0;
+		}
 		return server.get('/meeting', { 
-			params: { type: "all" },
+			params: { type: "upcoming" },
 			...defaultHeaders 
 		})
 		.then((res) => {
 			console.log(res);
 			const meetings = res.data;
-			const upcoming = meetings.filter(meeting => (meeting.endedAt === null))
-			const history = meetings.filter(meeting => (meeting.endedAt !== null))
+			const upcoming = meetings.sort(sortMeetings);
 			setUpcoming(upcoming);
-			setHistory(history);
+			setHistory(meetingHistory);
 		})
 		.catch(console.error)
-		.finally(() => setLoading(false));
+		.finally(() => setLoadingUpcoming(false));
+	}
+
+	function pullPastMeetings() {
+		function sortMeetings(meetingA, meetingB) {
+			const startA = meetingA.startedAt;
+			const startB = meetingB.startedAt;
+			if (startA > startB) return 1;
+			else if (startA < startB) return -1;
+			else return 0;
+		}
+		console.log("Retrieving past meetings");
+		return server.get('/meeting', { 
+			params: { type: "past" },
+			...defaultHeaders 
+		})
+		.then((res) => {
+			console.log(res);
+			const pastMeetings = res.data.sort(sortMeetings);
+			setHistory(pastMeetings);
+		})
+		.catch(console.error)
+		.finally(() => setLoadingPast(false));
 	}
 
 	const upcomingList = upcoming.map((meeting, idx) => {
@@ -51,13 +87,15 @@ export default function DashboardScreen() {
 				key={idx}
 				meeting={meeting}
 				editMeeting={() => {
+					const id = meeting.id;
 					console.log("Edit meeting clicked");
+					history.push('/meeting/' + id);
 				}}
 			/>
 		);
 	});
 
-	const historyList = history.map((meeting, idx) => {
+	const historyList = meetingHistory.map((meeting, idx) => {
 		return (
 			<CompletedMeetingItem
 				key={idx}
@@ -69,7 +107,7 @@ export default function DashboardScreen() {
 		);
 	});
 
-	if (loading) {
+	if (loadingUpcoming) {
         return (
             <>
                 <Container className="Container__padding--vertical">
