@@ -1,14 +1,23 @@
-import { Container, Navbar, Image, Button, Row, Col } from 'react-bootstrap';
-import Logo from '../../assets/logo.png';
+import { Container, Image, Button, Row, Col } from 'react-bootstrap';
 import { Facebook } from 'react-bootstrap-icons';
 import LandingImage from '../../assets/landing_image.png';
+import PatternImage from '../../assets/pattern.png';
 import { AppNavbar } from '../../components/AppNavbar';
 
 export default function LandingScreen() {
   return (
-    <Container fluid>
+    <div>
       <AppNavbar />
-      <Container fluid className="Container__content">
+      <div fluid className="Container__content">
+        <Image
+          src={PatternImage}
+          style={{
+            position: 'absolute',
+            zIndex: -1,
+            maxWidth: '40%',
+            opacity: 0.3,
+          }}
+        />
         <Row>
           <Col sm={12} md={12} lg={6}>
             <Container
@@ -46,7 +55,7 @@ export default function LandingScreen() {
           </Col>
         </Row>
         <div className="Buffer--100px" />
-      </Container>
-    </Container>
+      </div>
+    </div>
   );
 }
