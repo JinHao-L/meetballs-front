@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Col, Form, Toast, Button } from 'react-bootstrap';
 import { useLocation } from 'react-router';
-import { AppNavbar } from '../../components/AppNavbar';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import server from '../../services/server';
 
@@ -105,8 +104,7 @@ export default function EmailConfirmationScreen() {
 
   return (
     <>
-      <AppNavbar showButton={false} />
-      <Container className="Container__padding--vertical Container__content">
+      <Container className="Container__padding--vertical">
         <Col className="Container__padding--horizontal">
           <p>Status: {failed ? 'Email confirmation failed' : responseMsg}</p>
           {failed ? (

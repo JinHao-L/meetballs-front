@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Form, Button, Toast, Container } from 'react-bootstrap';
-import { AppNavbar } from '../../components/AppNavbar';
 import server from '../../services/server';
 
 export default function ForgotPasswordScreen() {
@@ -30,8 +29,7 @@ export default function ForgotPasswordScreen() {
 
   return (
     <>
-      <AppNavbar showButton={false} />
-      <Container className="Container__padding--horizontal Container__content">
+      <Container className="Container__padding--horizontal">
         <h2 style={{ padding: '10px 0px' }}> Send password reset email</h2>
         <Form onSubmit={submit}>
           <Form.Group className="mb-3" controlId="formReset">

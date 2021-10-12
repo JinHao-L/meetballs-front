@@ -2,17 +2,11 @@ import { Container, Image, Button, Row, Col } from 'react-bootstrap';
 import { Facebook } from 'react-bootstrap-icons';
 import LandingImage from '../../assets/landing_image.png';
 import PatternImage from '../../assets/pattern.png';
-import { AppNavbar } from '../../components/AppNavbar';
 
 export default function LandingScreen() {
   return (
     <div>
-      <AppNavbar />
-      <Container
-        fluid
-        className="Container__content"
-        style={{ paddingLeft: 0, paddingRight: 0 }}
-      >
+      <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
         <Row style={{ marginLeft: 0, marginRight: 0 }}>
           <Col
             sm={12}

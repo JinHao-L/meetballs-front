@@ -2,12 +2,33 @@ import { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 import { Container, Navbar, Image, Button } from 'react-bootstrap';
 import Logo from '../assets/logo.png';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import setAuthToken from '../utils/setAuthToken';
 
-export const AppNavbar = ({ showButton = true, buttonType = 'dashboard' }) => {
+export const AppNavbar = () => {
   const user = useContext(UserContext);
   const history = useHistory();
+  const location = useLocation();
+
+  var option = {
+    button: null,
+    home: HOME.LANDING,
+  };
+
+  if (location.pathname === '/') {
+    option = {
+      button: TOGGLES.CHOOSE,
+      home: HOME.LANDING,
+    };
+  } else {
+    for (let i = 0; i < mapping.length; i++) {
+      if (location.pathname.startsWith(mapping[i].route)) {
+        option = mapping[i];
+        console.log(mapping[i]);
+        break;
+      }
+    }
+  }
 
   function logout() {
     window.sessionStorage.clear();
@@ -25,14 +46,14 @@ export const AppNavbar = ({ showButton = true, buttonType = 'dashboard' }) => {
       <Container>
         <Navbar.Brand
           style={{ alignItems: 'center', display: 'flex', cursor: 'pointer' }}
-          onClick={() => history.push('/')}
+          onClick={() => history.push(option.home)}
         >
           <Image src={Logo} style={{ width: 30, height: 30 }} />
           <Navbar.Text style={{ padding: '0px 10px' }} className="Text__logo">
             Meetballs
           </Navbar.Text>
         </Navbar.Brand>
-        {showButton && !user ? (
+        {option.button == TOGGLES.CHOOSE && !user ? (
           <Button
             variant="outline-secondary"
             size="sm"
@@ -41,7 +62,8 @@ export const AppNavbar = ({ showButton = true, buttonType = 'dashboard' }) => {
           >
             Login
           </Button>
-        ) : showButton && buttonType === 'dashboard' ? (
+        ) : option.button === TOGGLES.CHOOSE ||
+          option.button === TOGGLES.DASHBOARD ? (
           <Button
             variant="outline-secondary"
             size="sm"
@@ -50,7 +72,7 @@ export const AppNavbar = ({ showButton = true, buttonType = 'dashboard' }) => {
           >
             Dashboard
           </Button>
-        ) : showButton && buttonType === 'logout' ? (
+        ) : option.button === TOGGLES.LOGOUT ? (
           <Button
             variant="outline-secondary"
             size="sm"
@@ -64,3 +86,32 @@ export const AppNavbar = ({ showButton = true, buttonType = 'dashboard' }) => {
     </Navbar>
   );
 };
+
+const TOGGLES = {
+  CHOOSE: 'Choose',
+  LOGOUT: 'logout',
+  DASHBOARD: 'Dashboard',
+};
+
+const HOME = {
+  LANDING: '/',
+  DASHBOARD: '/home',
+};
+
+const mapping = [
+  {
+    route: '/home',
+    button: TOGGLES.LOGOUT,
+    home: HOME.DASHBOARD,
+  },
+  {
+    route: '/meeting',
+    button: TOGGLES.DASHBOARD,
+    home: HOME.DASHBOARD,
+  },
+  {
+    route: '/ongoing',
+    button: TOGGLES.DASHBOARD,
+    home: HOME.DASHBOARD,
+  },
+];

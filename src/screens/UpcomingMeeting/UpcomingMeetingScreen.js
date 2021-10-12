@@ -12,7 +12,6 @@ import {
 import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import EditMeetingOverlay from './EditMeetingOverlay';
 import { useHistory, Redirect, useParams } from 'react-router';
-import { AppNavbar } from '../../components/AppNavbar';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -34,14 +33,16 @@ export default function UpcomingMeetingScreen() {
       method: 'GET',
     });
     const result = await response.json();
-    result.agendaItems.sort((p1, p2) => {
-      return p1.position - p2.position;
-    });
-    result.agendaItems.forEach((item) => {
-      item.prevPosition = item.position;
-    });
-    console.log(result);
-    setMeeting(result);
+    if (response.status !== 200) return;
+    if (result.agendaItems != undefined && result.agendaItems.length > 1) {
+      result.agendaItems.sort((p1, p2) => {
+        return p1.position - p2.position;
+      });
+      result.agendaItems.forEach((item) => {
+        item.prevPosition = item.position;
+      });
+      setMeeting(result);
+    }
   }
 
   function startZoom() {
@@ -83,14 +84,15 @@ export default function UpcomingMeetingScreen() {
     );
   }
 
-  if (meeting.type !== 1) {
+  if (meeting.type !== undefined && meeting.type !== 1) {
     return <Redirect to={'/ongoing/' + id} />;
   }
 
+  console.log(meeting);
+
   return (
     <>
-      <AppNavbar buttonType={'dashboard'} />
-      <Container className="Container__padding--vertical Container__content">
+      <Container className="Container__padding--vertical">
         <Row>
           <Col
             lg={3}

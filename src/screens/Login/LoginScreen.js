@@ -1,7 +1,6 @@
 import { useContext, useState, useEffect } from 'react';
 import { Form, Button, Toast, Container } from 'react-bootstrap';
 import { useHistory } from 'react-router';
-import { AppNavbar } from '../../components/AppNavbar';
 import { UserContext } from '../../context/UserContext';
 import { login } from '../../services/auth';
 
@@ -48,8 +47,7 @@ export default function LoginScreen() {
 
   return (
     <>
-      <AppNavbar showButton={false} />
-      <Container className="Container__padding--horizontal md Container__content">
+      <Container className="Container__padding--horizontal md">
         <Form className="Container__padding--vertical" onSubmit={onSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Email</Form.Label>
