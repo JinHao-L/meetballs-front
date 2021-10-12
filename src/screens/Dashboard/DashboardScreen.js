@@ -42,10 +42,11 @@ export default function DashboardScreen() {
     function sortMeetings(meetingA, meetingB) {
       const startA = meetingA.startedAt;
       const startB = meetingB.startedAt;
-      if (startA < startB) return 1;
-      else if (startA > startB) return -1;
+      if (startA > startB) return 1;
+      else if (startA < startB) return -1;
       else return 0;
     }
+
     return server
       .get('/meeting', {
         params: { type: 'upcoming' },
@@ -65,10 +66,11 @@ export default function DashboardScreen() {
     function sortMeetings(meetingA, meetingB) {
       const startA = meetingA.startedAt;
       const startB = meetingB.startedAt;
-      if (startA > startB) return 1;
-      else if (startA < startB) return -1;
+      if (startA < startB) return 1;
+      else if (startA > startB) return -1;
       else return 0;
     }
+
     console.log('Retrieving past meetings');
     return server
       .get('/meeting', {
@@ -84,33 +86,15 @@ export default function DashboardScreen() {
       .finally(() => setLoadingPast(false));
   }
 
-  const upcomingList = upcoming.map((meeting, idx) => {
-    return (
-      <UpcomingMeetingItem
-        key={idx}
-        meeting={meeting}
-        editMeeting={() => {
-          const id = meeting.id;
-          console.log('Edit meeting clicked');
-          history.push('/meeting/' + id);
-        }}
-      />
+  const upcomingList = upcoming
+    .map((meeting, idx) => 
+      <UpcomingMeetingItem key={idx} meeting={meeting} onDelete={pullMeetings}/>
     );
-  });
 
-  const historyList = meetingHistory.map((meeting, idx) => {
-    return (
-      <CompletedMeetingItem
-        key={idx}
-        meeting={meeting}
-        viewMeeting={() => {
-          console.log('View meeting report clicked');
-        }}
-      />
-    );
-  });
+  const historyList = meetingHistory
+    .map((meeting, idx) => <CompletedMeetingItem key={idx} meeting={meeting} />);
 
-  if (loadingUpcoming) {
+  if (loadingUpcoming || loadingPast) {
     return <FullLoadingIndicator />;
   }
 
