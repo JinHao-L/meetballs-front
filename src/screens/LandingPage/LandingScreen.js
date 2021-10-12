@@ -24,7 +24,8 @@ export default function LandingScreen() {
               src={PatternImage}
               style={{
                 position: 'absolute',
-                top: 150,
+                top: 200,
+                left: 0,
                 zIndex: -1,
                 maxWidth: '40%',
                 opacity: 0.3,
