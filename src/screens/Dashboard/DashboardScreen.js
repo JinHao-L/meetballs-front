@@ -6,9 +6,7 @@ import UpcomingMeetingItem from './UpcomingMeetingItem';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import AddMeetingOverlay from './AddMeetingOverlay';
 import server from '../../services/server';
-import { useHistory } from 'react-router';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
-import { AppNavbar } from '../../components/AppNavbar';
 
 function AddMeetingButton({ onClick }) {
   return (
@@ -98,8 +96,7 @@ export default function DashboardScreen() {
 
   return (
     <>
-      <AppNavbar buttonType={'logout'} />
-      <Container className="Container__padding--vertical Container__content">
+      <Container className="Container__padding--vertical">
         <Row>
           <Col sm={12} md={12} lg={3}></Col>
           <Col sm={12} md={12} lg={6}>

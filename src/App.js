@@ -16,6 +16,7 @@ import ForgotPasswordScreen from './screens/Login/ForgotPasswordScreen';
 import ResetPasswordScreen from './screens/Login/ResetPasswordScreen';
 import { UserContext } from './context/UserContext';
 import LandingScreen from './screens/LandingPage/LandingScreen';
+import { AppNavbar } from './components/AppNavbar';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -35,38 +36,41 @@ export default function App() {
 
   return (
     <Router>
-      <Switch>
-        <Route exact path="/">
-          <LandingScreen />
-        </Route>
-        <Route path="/confirm-email">
-          <EmailConfirmationScreen />
-        </Route>
-        <Route path="/login">
-          <LoginScreen />
-        </Route>
-        <Route path="/forgot-password">
-          <ForgotPasswordScreen />
-        </Route>
-        <Route path="/password-reset">
-          <ResetPasswordScreen />
-        </Route>
-        <Route path="/signup">
-          <RegistrationScreen />
-        </Route>
-        <RouteIfLoggedIn path="/home">
-          <DashboardScreen />
-        </RouteIfLoggedIn>
-        <RouteIfLoggedIn path="/meeting/:id">
-          <UpcomingMeetingScreen />
-        </RouteIfLoggedIn>
-        <RouteIfLoggedIn path="/ongoing/:id">
-          <OngoingMeetingAdminScreen />
-        </RouteIfLoggedIn>
-        <Route path="*">
-          <Redirect to={{ pathname: '/' }} />
-        </Route>
-      </Switch>
+      <AppNavbar />
+      <div className="Container__content">
+        <Switch>
+          <Route exact path="/">
+            <LandingScreen />
+          </Route>
+          <Route path="/confirm-email">
+            <EmailConfirmationScreen />
+          </Route>
+          <Route path="/login">
+            <LoginScreen />
+          </Route>
+          <Route path="/forgot-password">
+            <ForgotPasswordScreen />
+          </Route>
+          <Route path="/password-reset">
+            <ResetPasswordScreen />
+          </Route>
+          <Route path="/signup">
+            <RegistrationScreen />
+          </Route>
+          <RouteIfLoggedIn path="/home">
+            <DashboardScreen />
+          </RouteIfLoggedIn>
+          <RouteIfLoggedIn path="/meeting/:id">
+            <UpcomingMeetingScreen />
+          </RouteIfLoggedIn>
+          <RouteIfLoggedIn path="/ongoing/:id">
+            <OngoingMeetingAdminScreen />
+          </RouteIfLoggedIn>
+          <Route path="*">
+            <Redirect to={{ pathname: '/' }} />
+          </Route>
+        </Switch>
+      </div>
     </Router>
   );
 }

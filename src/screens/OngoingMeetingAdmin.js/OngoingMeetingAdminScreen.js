@@ -17,7 +17,6 @@ import {
 } from '../../services/meeting';
 import { useSocket } from '../../hooks/useSocket';
 import { UserContext } from '../../context/UserContext';
-import { AppNavbar } from '../../components/AppNavbar';
 
 var position = -1;
 
@@ -96,8 +95,7 @@ export default function OngoingMeetingAdminScreen() {
 
   return (
     <>
-      <AppNavbar showButton={false} />
-      <Container className="Container__padding--vertical Container__content">
+      <Container className="Container__padding--vertical">
         <Row>
           <Col
             lg={3}

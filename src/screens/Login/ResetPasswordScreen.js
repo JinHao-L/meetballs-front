@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useLocation } from 'react-router';
 import { Form, Toast, Button, Container } from 'react-bootstrap';
 import server from '../../services/server';
-import { AppNavbar } from '../../components/AppNavbar';
 
 const MISMATCHED_PWD =
   'Passwords do not match! Please retype them before submitting';
@@ -79,8 +78,7 @@ export default function ResetPasswordScreen() {
 
   return (
     <>
-      <AppNavbar showButton={false} />
-      <Container className="Container__padding--horizontal Container__padding--vertical Container__content">
+      <Container className="Container__padding--horizontal Container__padding--vertical">
         <Form onSubmit={submit}>
           <Form.Group className="mb-3" controlId="formPassword">
             <Form.Label>New Password</Form.Label>

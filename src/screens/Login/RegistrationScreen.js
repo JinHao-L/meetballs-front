@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Form, Button, Toast, Container } from 'react-bootstrap';
 import { useHistory } from 'react-router';
-import { AppNavbar } from '../../components/AppNavbar';
 import server from '../../services/server';
 
 const MISMATCHED_PWD =
@@ -87,8 +86,7 @@ export default function RegistrationScreen() {
 
   return (
     <>
-      <AppNavbar showButton={false} />
-      <Container className="Container__padding--horizontal Container__padding--vertical Container__content">
+      <Container className="Container__padding--horizontal Container__padding--vertical">
         <h2 style={{ padding: '0px 0px 10px 0px' }}> Signing up</h2>
         <Form onSubmit={onSubmit}>
           <Form.Group className="mb-3" controlId="formEmail">
