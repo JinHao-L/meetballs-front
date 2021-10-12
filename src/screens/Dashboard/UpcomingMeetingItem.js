@@ -5,15 +5,13 @@ import { useHistory } from 'react-router';
 import server from '../../services/server';
 import { useState } from 'react';
 
-function DeleteErrorToast({show}) {
+function DeleteErrorToast({ show }) {
   return (
-    <Toast show={show} >
+    <Toast show={show}>
       <Toast.Header>
         <strong className="me-auto">Error!</strong>
       </Toast.Header>
-      <Toast.Body>
-        Could not delete meeting, please try again later!
-      </Toast.Body>
+      <Toast.Body>Could not delete meeting, please try again later!</Toast.Body>
     </Toast>
   );
 }
@@ -43,7 +41,8 @@ export default function UpcomingMeetingItem({ meeting, onDelete }) {
     if (deleting) return;
 
     setDeleting(true);
-    return server.delete(`/meeting/${id}`)
+    return server
+      .delete(`/meeting/${id}`)
       .then((_) => {
         onDelete();
         history.push('/home');
@@ -76,14 +75,16 @@ export default function UpcomingMeetingItem({ meeting, onDelete }) {
           <Card.Text>Description: {desc}</Card.Text>
 
           <div className="d-grid gap-2">
-            <Button onClick={startMeeting} >
-              Start meeting
-            </Button>
-            <Button variant="outline-primary" onClick={editMeeting} >
+            <Button onClick={startMeeting}>Start meeting</Button>
+            <Button variant="outline-primary" onClick={editMeeting}>
               Edit meeting
             </Button>
-            <Button variant="outline-danger" onClick={deleteMeeting} disabled={deleting} >
-              { deleting ? "Deleting..." : "Delete meeting"}
+            <Button
+              variant="outline-danger"
+              onClick={deleteMeeting}
+              disabled={deleting}
+            >
+              {deleting ? 'Deleting...' : 'Delete meeting'}
             </Button>
             <DeleteErrorToast show={error} />
           </div>

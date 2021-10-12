@@ -86,13 +86,13 @@ export default function DashboardScreen() {
       .finally(() => setLoadingPast(false));
   }
 
-  const upcomingList = upcoming
-    .map((meeting, idx) => 
-      <UpcomingMeetingItem key={idx} meeting={meeting} onDelete={pullMeetings}/>
-    );
+  const upcomingList = upcoming.map((meeting, idx) => (
+    <UpcomingMeetingItem key={idx} meeting={meeting} onDelete={pullMeetings} />
+  ));
 
-  const historyList = meetingHistory
-    .map((meeting, idx) => <CompletedMeetingItem key={idx} meeting={meeting} />);
+  const historyList = meetingHistory.map((meeting, idx) => (
+    <CompletedMeetingItem key={idx} meeting={meeting} />
+  ));
 
   if (loadingUpcoming || loadingPast) {
     return <FullLoadingIndicator />;
