@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Container, Row } from 'react-bootstrap';
+import { Container, Row, Image } from 'react-bootstrap';
 import { CalendarPlusFill } from 'react-bootstrap-icons';
-import CompletedMeetingItem from './CompletedMeetingItem';
 import TempUpcomingMeetingItem from './TempUpcomingMeetingItem';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import AddMeetingOverlay from './AddMeetingOverlay';
 import server from '../../services/server';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import TempCompletedMeetingItem from './TempCompletedMeetingItem';
+
+import BannerMorning from '../../assets/banner_morning.png';
+import BannerAfternoon from '../../assets/banner_afternoon.png';
+import BannerEvening from '../../assets/banner_evening.png';
+import BannerNight from '../../assets/banner_night.png';
 
 function AddMeetingButton({ onClick }) {
   return (
@@ -20,13 +24,12 @@ function AddMeetingButton({ onClick }) {
 export default function DashboardScreen() {
   const [upcoming, setUpcoming] = useState([]);
   const [meetingHistory, setHistory] = useState([]);
-
   const [loadingUpcoming, setLoadingUpcoming] = useState(true);
   const [loadingPast, setLoadingPast] = useState(true);
-
   const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
+    getBanner();
     return pullMeetings();
   }, []);
 
@@ -101,6 +104,36 @@ export default function DashboardScreen() {
 
   return (
     <>
+      <div style={{ position: 'relative' }}>
+        <Image
+          src={getBanner()}
+          fluid
+          style={{
+            maxHeight: 300,
+            width: '100%',
+            objectFit: 'cover',
+          }}
+        />
+        <div
+          className="Container__center--vertical"
+          style={{
+            width: '100%',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            alignItems: 'center',
+          }}
+        >
+          <p className="Text__header" style={{ color: 'white' }}>
+            Welcome Back!
+          </p>
+          <p className="Text__paragraph" style={{ color: 'white' }}>
+            You have {upcoming.length} upcoming meetings.
+          </p>
+        </div>
+      </div>
+
       <Container className="Container__padding--vertical">
         <Row>
           {upcomingList}
@@ -115,4 +148,25 @@ export default function DashboardScreen() {
       <AddMeetingButton onClick={() => setShowOverlay(true)} />
     </>
   );
+}
+
+function getBanner() {
+  const time = new Date().getHours();
+  switch (time) {
+    case time < 6: {
+      return BannerNight;
+    }
+    case time < 10: {
+      return BannerMorning;
+    }
+    case time < 16: {
+      return BannerAfternoon;
+    }
+    case time < 20: {
+      return BannerEvening;
+    }
+    default: {
+      return BannerNight;
+    }
+  }
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Row, Col, Container, Nav, Alert } from 'react-bootstrap';
+import { Button, Row, Col, Container, Nav } from 'react-bootstrap';
 import { getFormattedDateTime } from '../../common/CommonFunctions';
 import AgendaItemList from './AgendaItemList';
 import ParticipantItemList from './ParticipantItemList';
@@ -34,7 +34,7 @@ export default function UpcomingMeetingScreen() {
     });
     const result = await response.json();
     if (response.status !== 200) return;
-    if (result.agendaItems != undefined && result.agendaItems.length > 1) {
+    if (result.agendaItems !== undefined && result.agendaItems.length > 1) {
       result.agendaItems.sort((p1, p2) => {
         return p1.position - p2.position;
       });
