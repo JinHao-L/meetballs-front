@@ -76,20 +76,16 @@ export default function UpcomingMeetingItem({ meeting, onDelete }) {
           <Card.Text>Description: {desc}</Card.Text>
 
           <div className="d-grid gap-2">
-            <Container fluid>
-              <Row>
-                <Button variant="outline-primary" onClick={startMeeting} >
-                  Start meeting
-                </Button>
-                <Button variant="outline-primary" onClick={editMeeting} >
-                  Edit meeting
-                </Button>
-                <Button variant="outline-danger" onClick={deleteMeeting} disabled={deleting} >
-                  { deleting ? "Deleting..." : "Delete meeting"}
-                </Button>
-                <DeleteErrorToast show={error} />
-              </Row>
-            </Container>
+            <Button onClick={startMeeting} >
+              Start meeting
+            </Button>
+            <Button variant="outline-primary" onClick={editMeeting} >
+              Edit meeting
+            </Button>
+            <Button variant="outline-danger" onClick={deleteMeeting} disabled={deleting} >
+              { deleting ? "Deleting..." : "Delete meeting"}
+            </Button>
+            <DeleteErrorToast show={error} />
           </div>
         </Card.Body>
       </Card>

@@ -42,10 +42,11 @@ export default function DashboardScreen() {
     function sortMeetings(meetingA, meetingB) {
       const startA = meetingA.startedAt;
       const startB = meetingB.startedAt;
-      if (startA < startB) return 1;
-      else if (startA > startB) return -1;
+      if (startA > startB) return 1;
+      else if (startA < startB) return -1;
       else return 0;
     }
+
     return server
       .get('/meeting', {
         params: { type: 'upcoming' },
@@ -65,10 +66,11 @@ export default function DashboardScreen() {
     function sortMeetings(meetingA, meetingB) {
       const startA = meetingA.startedAt;
       const startB = meetingB.startedAt;
-      if (startA > startB) return 1;
-      else if (startA < startB) return -1;
+      if (startA < startB) return 1;
+      else if (startA > startB) return -1;
       else return 0;
     }
+
     console.log('Retrieving past meetings');
     return server
       .get('/meeting', {
