@@ -8,10 +8,10 @@ import server from '../../services/server';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import TempCompletedMeetingItem from './TempCompletedMeetingItem';
 
-import BannerMorning from '../../assets/banner_morning.png';
-import BannerAfternoon from '../../assets/banner_afternoon.png';
-import BannerEvening from '../../assets/banner_evening.png';
-import BannerNight from '../../assets/banner_night.png';
+import BannerMorning from '../../assets/banner_morning.jpg';
+import BannerAfternoon from '../../assets/banner_afternoon.jpg';
+import BannerEvening from '../../assets/banner_evening.jpg';
+import BannerNight from '../../assets/banner_night.jpg';
 
 function AddMeetingButton({ onClick }) {
   return (
@@ -129,7 +129,8 @@ export default function DashboardScreen() {
             Welcome Back!
           </p>
           <p className="Text__paragraph" style={{ color: 'white' }}>
-            You have {upcoming.length} upcoming meetings.
+            You have {upcoming.length} upcoming meeting
+            {upcoming.length > 1 ? 's' : null}.
           </p>
         </div>
       </div>
