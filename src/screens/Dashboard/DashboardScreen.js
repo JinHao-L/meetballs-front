@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Tab, Tabs, Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import { CalendarPlusFill } from 'react-bootstrap-icons';
 import CompletedMeetingItem from './CompletedMeetingItem';
-import UpcomingMeetingItem from './UpcomingMeetingItem';
+import TempUpcomingMeetingItem from './TempUpcomingMeetingItem';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import AddMeetingOverlay from './AddMeetingOverlay';
 import server from '../../services/server';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
+import TempCompletedMeetingItem from './TempCompletedMeetingItem';
 
 function AddMeetingButton({ onClick }) {
   return (
@@ -83,11 +84,15 @@ export default function DashboardScreen() {
   }
 
   const upcomingList = upcoming.map((meeting, idx) => (
-    <UpcomingMeetingItem key={idx} meeting={meeting} onDelete={pullMeetings} />
+    <TempUpcomingMeetingItem
+      key={idx}
+      meeting={meeting}
+      pullMeeting={pullMeetings}
+    />
   ));
 
   const historyList = meetingHistory.map((meeting, idx) => (
-    <CompletedMeetingItem key={idx} meeting={meeting} />
+    <TempCompletedMeetingItem key={idx} meeting={meeting} />
   ));
 
   if (loadingUpcoming || loadingPast) {
@@ -98,26 +103,8 @@ export default function DashboardScreen() {
     <>
       <Container className="Container__padding--vertical">
         <Row>
-          <Col sm={12} md={12} lg={3}></Col>
-          <Col sm={12} md={12} lg={6}>
-            <Tabs
-              className="Container__padding--horizontal"
-              defaultActiveKey="upcoming"
-              transition={false}
-              id="meetings-tabs"
-            >
-              <Tab eventKey="upcoming" title="Upcoming Meetings">
-                <div className="Container__padding--vertical">
-                  {upcomingList}
-                </div>
-              </Tab>
-              <Tab eventKey="past" title="Past Meetings">
-                <div className="Container__padding--vertical">
-                  {historyList}
-                </div>
-              </Tab>
-            </Tabs>
-          </Col>
+          {upcomingList}
+          {historyList}
         </Row>
       </Container>
       <AddMeetingOverlay

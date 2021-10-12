@@ -41,8 +41,8 @@ export default function UpcomingMeetingScreen() {
       result.agendaItems.forEach((item) => {
         item.prevPosition = item.position;
       });
-      setMeeting(result);
     }
+    setMeeting(result);
   }
 
   function startZoom() {
@@ -87,8 +87,6 @@ export default function UpcomingMeetingScreen() {
   if (meeting.type !== undefined && meeting.type !== 1) {
     return <Redirect to={'/ongoing/' + id} />;
   }
-
-  console.log(meeting);
 
   return (
     <>
