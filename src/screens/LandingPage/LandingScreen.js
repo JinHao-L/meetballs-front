@@ -8,19 +8,28 @@ export default function LandingScreen() {
   return (
     <div>
       <AppNavbar />
-      <div fluid className="Container__content">
-        <Image
-          src={PatternImage}
-          style={{
-            position: 'absolute',
-            zIndex: -1,
-            maxWidth: '40%',
-            opacity: 0.3,
-          }}
-        />
-        <Row>
-          <Col sm={12} md={12} lg={6}>
-            <Container
+      <Container
+        fluid
+        className="Container__content"
+        style={{ paddingLeft: 0, paddingRight: 0 }}
+      >
+        <Row style={{ marginLeft: 0, marginRight: 0 }}>
+          <Col
+            sm={12}
+            md={12}
+            lg={6}
+            style={{ paddingLeft: 0, paddingRight: 0 }}
+          >
+            <Image
+              src={PatternImage}
+              style={{
+                position: 'absolute',
+                zIndex: -1,
+                maxWidth: '40%',
+                opacity: 0.3,
+              }}
+            />
+            <div
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -28,7 +37,7 @@ export default function LandingScreen() {
               }}
             >
               <div className="Buffer--100px" />
-              <div>
+              <div className="Container__padding--horizontal">
                 <p className="Text__header">Get the Ball Rolling</p>
                 <p className="Text__subheader">
                   Plan, track {'&'} analyse your meetings on Meetballs{' '}
@@ -48,14 +57,20 @@ export default function LandingScreen() {
                   Find Us On Facebook
                 </Button>
               </div>
-            </Container>
+            </div>
           </Col>
-          <Col sm={0} md={0} lg={6} className="d-none d-lg-block">
+          <Col
+            sm={0}
+            md={0}
+            lg={6}
+            className="d-none d-lg-block"
+            style={{ paddingLeft: 0, paddingRight: 0 }}
+          >
             <Image src={LandingImage} fluid />
           </Col>
         </Row>
         <div className="Buffer--100px" />
-      </div>
+      </Container>
     </div>
   );
 }
