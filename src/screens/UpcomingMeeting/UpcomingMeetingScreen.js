@@ -33,6 +33,7 @@ export default function UpcomingMeetingScreen() {
       method: 'GET',
     });
     const result = await response.json();
+    if (response.status !== 200) return;
     if (result.agendaItems != undefined && result.agendaItems.length > 1) {
       result.agendaItems.sort((p1, p2) => {
         return p1.position - p2.position;
@@ -40,8 +41,8 @@ export default function UpcomingMeetingScreen() {
       result.agendaItems.forEach((item) => {
         item.prevPosition = item.position;
       });
+      setMeeting(result);
     }
-    setMeeting(result);
   }
 
   function startZoom() {
@@ -83,9 +84,11 @@ export default function UpcomingMeetingScreen() {
     );
   }
 
-  if (meeting.type !== 1) {
+  if (meeting.type !== undefined && meeting.type !== 1) {
     return <Redirect to={'/ongoing/' + id} />;
   }
+
+  console.log(meeting);
 
   return (
     <>
