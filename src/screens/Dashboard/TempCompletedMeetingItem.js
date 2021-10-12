@@ -35,7 +35,7 @@ export default function TempCompletedMeetingItem({ meeting }) {
   return (
     <Col lg={4} md={6} sm={12} className="Container__padding--vertical-small">
       <Card
-        onMouseEnter={() => setHovering(true)}
+        onMouseOver={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
         style={{ height: 230, backgroundColor: '#e5e5e5' }}
       >

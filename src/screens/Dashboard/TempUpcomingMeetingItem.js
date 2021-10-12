@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, Col, Button } from 'react-bootstrap';
 import { getDateInfo, openLinkInNewTab } from '../../common/CommonFunctions';
 import { useHistory } from 'react-router';
+import ConfirmDeleteModel from './ConfirmDeleteModel';
 import server from '../../services/server';
 import PropTypes from 'prop-types';
 
@@ -10,6 +11,7 @@ export default function TempUpcomingMeetingItem({ meeting, pullMeeting }) {
   const [hovering, setHovering] = useState(false);
   const history = useHistory();
   const [deleting, setDeleting] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   function editMeeting() {
     console.log(`Editing meeting of ID = ${meeting.id}`);
@@ -71,7 +73,10 @@ export default function TempUpcomingMeetingItem({ meeting, pullMeeting }) {
           <div className="Buffer--10px" />
           <div className="Line--horizontal" />
           <div className="Buffer--10px" />
-          <Button variant="outline-danger" onClick={deleteMeeting}>
+          <Button
+            variant="outline-danger"
+            onClick={() => setShowConfirmDelete(true)}
+          >
             {deleting ? 'Deleting' : 'Delete Meeting'}
           </Button>
         </div>
@@ -82,12 +87,18 @@ export default function TempUpcomingMeetingItem({ meeting, pullMeeting }) {
   return (
     <Col lg={4} md={6} sm={12} className="Container__padding--vertical-small">
       <Card
-        onMouseEnter={() => setHovering(true)}
+        onMouseOver={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
         style={{ height: 230 }}
       >
         {hovering ? Toggles() : Details()}
       </Card>
+      <ConfirmDeleteModel
+        showModal={showConfirmDelete}
+        setShowModal={setShowConfirmDelete}
+        meeting={meeting}
+        deleteMeeting={deleteMeeting}
+      />
     </Col>
   );
 }
