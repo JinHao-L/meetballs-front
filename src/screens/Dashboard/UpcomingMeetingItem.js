@@ -1,4 +1,4 @@
-import { Card, Col, Button, Toast, Container, Row } from 'react-bootstrap';
+import { Card, Col, Button, Toast } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { getDateInfo, openLinkInNewTab } from '../../common/CommonFunctions';
 import { useHistory } from 'react-router';

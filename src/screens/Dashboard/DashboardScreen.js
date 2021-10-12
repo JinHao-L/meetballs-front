@@ -27,8 +27,6 @@ export default function DashboardScreen() {
 
   const [showOverlay, setShowOverlay] = useState(false);
 
-  const history = useHistory();
-
   useEffect(() => {
     return pullMeetings();
   }, []);
