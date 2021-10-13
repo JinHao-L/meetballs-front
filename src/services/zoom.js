@@ -42,21 +42,21 @@ export async function requestToken(authCode, redirectUrl) {
 }
 
 async function refreshZoomToken() {
-    const refToken = localStorage.getItem(refreshTokenKey);
-    if (!refToken) throw Error('No refresh token');
+  const refToken = localStorage.getItem(refreshTokenKey);
+  if (!refToken) throw Error('No refresh token');
 
-    try {
-        const body = {
-            grant_type: "refresh_token",
-            refresh_token: refToken
-        };
-        const result = await zoomAuth.post('/oauth/token', body);
-        const data = result.data;
-        storeToken(data, refreshZoomToken);
-        console.log('Successfully refreshed Zoom OAuth token!');
-        return true;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+  try {
+    const body = {
+      grant_type: 'refresh_token',
+      refresh_token: refToken,
+    };
+    const result = await zoomAuth.post('/oauth/token', body);
+    const data = result.data;
+    storeToken(data, refreshZoomToken);
+    console.log('Successfully refreshed Zoom OAuth token!');
+    return true;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }

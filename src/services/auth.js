@@ -4,8 +4,8 @@ import setAuthToken from '../utils/setAuthToken';
 import { refreshTokenKey } from '../common/CommonValues';
 
 /**
- * @param {{ access_token: string, expires_in: number, refresh_token: string }} tokenObj 
- * @param {function} onExpiry 
+ * @param {{ access_token: string, expires_in: number, refresh_token: string }} tokenObj
+ * @param {function} onExpiry
  */
 export function storeToken(tokenObj, onExpiry) {
   accessToken = tokenObj.access_token;
