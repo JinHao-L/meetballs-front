@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { Container, Spinner } from 'react-bootstrap';
 import { accessTokenKey } from '../common/CommonValues';
 import { FullLoadingIndicator } from '../components/FullLoadingIndicator';
 import { refresh } from '../services/auth';
@@ -28,7 +27,7 @@ const UserProvider = ({ children }) => {
     };
     document.addEventListener(accessTokenKey, updateUser, false);
     refresh()
-      .catch((err) => console.log('refresh failed'))
+      .catch((_) => console.log('refresh failed'))
       .finally(() => {
         console.log(user);
         setLoading(false);
