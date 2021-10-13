@@ -17,8 +17,9 @@ export default function ZoomRedirectPage() {
 
   useEffect(() => {
     if (!code || state === 'type=dev') {
-      console.log(code)
+      console.log(code);
       history.push('/login-zoom');
+      return;
     }
     zoomLogin(code)
       .then((result) => {
