@@ -49,6 +49,7 @@ export default function App() {
           </Route>
           <Route exact path="/privacy-policy">
             <PrivacyPolicyScreen />
+          </Route>
           <Route exact path="/authorize">
             <ZoomRedirectPage />
           </Route>
