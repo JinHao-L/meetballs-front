@@ -61,22 +61,19 @@ export default function TempUpcomingMeetingItem({ meeting, pullMeeting }) {
         <Card.Title>{meeting.name}</Card.Title>
         <div className="Buffer--10px" />
         <div className="Container__column--space-between">
-          <Button variant="outline-primary" onClick={startMeeting}>
+          <Button variant="primary" onClick={startMeeting}>
             Start Meeting
           </Button>
           <div className="Buffer--10px" />
           <div className="Line--horizontal" />
           <div className="Buffer--10px" />
-          <Button variant="outline-secondary" onClick={editMeeting}>
+          <Button variant="secondary" onClick={editMeeting}>
             Edit Meeting
           </Button>
           <div className="Buffer--10px" />
           <div className="Line--horizontal" />
           <div className="Buffer--10px" />
-          <Button
-            variant="outline-danger"
-            onClick={() => setShowConfirmDelete(true)}
-          >
+          <Button variant="danger" onClick={() => setShowConfirmDelete(true)}>
             {deleting ? 'Deleting' : 'Delete Meeting'}
           </Button>
         </div>

@@ -17,6 +17,7 @@ import ResetPasswordScreen from './screens/Login/ResetPasswordScreen';
 import { UserContext } from './context/UserContext';
 import LandingScreen from './screens/LandingPage/LandingScreen';
 import { AppNavbar } from './components/AppNavbar';
+import CustomBootstrapStyle from './common/CustomBootstrapStyle';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -37,6 +38,7 @@ export default function App() {
   return (
     <Router>
       <AppNavbar />
+      <CustomBootstrapStyle />
       <div className="Container__content">
         <Switch>
           <Route exact path="/">

@@ -18,7 +18,7 @@ export default function ConfirmDeleteModel({
         </p>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="outline-secondary" onClick={() => setShowModal(false)}>
+        <Button variant="outline-primary" onClick={() => setShowModal(false)}>
           Cancel
         </Button>
         <Button

@@ -122,7 +122,7 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
             <div className="Buffer--20px" />
             <div className="d-grid gap-2">
               <Button
-                variant="secondary"
+                variant="primary"
                 onClick={handleSubmit}
                 disabled={!isValid}
               >

@@ -44,7 +44,7 @@ export default function LandingScreen() {
                 <p>• Save audio transcripts from zoom (Coming Soon)</p>
                 <div className="Buffer--20px" />
                 <Button
-                  variant="outline-primary"
+                  variant="outline-facebook"
                   onClick={() => {
                     window.open('https://www.facebook.com/MeetBallsApp/');
                   }}
