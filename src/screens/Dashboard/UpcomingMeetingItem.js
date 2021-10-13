@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { Card, Col, Button } from 'react-bootstrap';
+import { Card, Col, Row } from 'react-bootstrap';
 import { getDateInfo, openLinkInNewTab } from '../../common/CommonFunctions';
 import { useHistory } from 'react-router';
 import ConfirmDeleteModel from './ConfirmDeleteModel';
 import server from '../../services/server';
 import PropTypes from 'prop-types';
+import { Trash, CameraVideo, Pen } from 'react-bootstrap-icons';
 
 export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
   const dateInfo = getDateInfo(meeting.startedAt, meeting.duration);
-  const [hovering, setHovering] = useState(false);
   const history = useHistory();
   const [deleting, setDeleting] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -41,7 +41,7 @@ export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
 
   function Details() {
     return (
-      <Card.Body>
+      <div style={{ height: 210 }}>
         <Card.Title className="Text__elipsized--1-line">
           {meeting.name}
         </Card.Title>
@@ -53,49 +53,38 @@ export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
         <Card.Text className="Text__elipsized--5-lines">
           {meeting.description}
         </Card.Text>
-      </Card.Body>
+      </div>
     );
   }
 
   function Toggles() {
     return (
-      <Card.Body>
-        <Card.Title className="Text__elipsized--1-line">
-          {meeting.name}
-        </Card.Title>
-        <div className="Buffer--10px" />
-        <div className="Container__column--space-between">
-          <Button variant="primary" onClick={startMeeting}>
-            Start Meeting
-          </Button>
-          <div className="Buffer--10px" />
-          <div className="Line--horizontal" />
-          <div className="Buffer--10px" />
-          <Button variant="outline-primary" onClick={editMeeting}>
-            Edit Meeting
-          </Button>
-          <div className="Buffer--10px" />
-          <div className="Line--horizontal" />
-          <div className="Buffer--10px" />
-          <Button
-            variant="outline-primary"
-            onClick={() => setShowConfirmDelete(true)}
-          >
-            {deleting ? 'Deleting' : 'Delete Meeting'}
-          </Button>
-        </div>
-      </Card.Body>
+      <Row>
+        <Col onClick={startMeeting} className="Toggle-card">
+          <CameraVideo />
+          Start
+        </Col>
+        <Col onClick={editMeeting} className="Toggle-card">
+          <Pen />
+          Edit
+        </Col>
+        <Col onClick={() => setShowConfirmDelete(true)} className="Toggle-card">
+          <Trash />
+          Delete
+        </Col>
+      </Row>
     );
   }
 
   return (
     <Col lg={4} md={6} sm={12} className="Container__padding--vertical-small">
-      <Card
-        onMouseOver={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
-        style={{ height: 230 }}
-      >
-        {hovering ? Toggles() : Details()}
+      <Card style={{ height: 300 }}>
+        <Card.Body>
+          <Details />
+          <div className="Line--horizontal" />
+          <div className="Buffer--5px" />
+          <Toggles />
+        </Card.Body>
       </Card>
       <ConfirmDeleteModel
         showModal={showConfirmDelete}

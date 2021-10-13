@@ -69,9 +69,9 @@ export default function App() {
           <RouteIfLoggedIn path="/meeting/:id">
             <UpcomingMeetingScreen />
           </RouteIfLoggedIn>
-          <RouteIfLoggedIn path="/ongoing/:id">
+          <Route path="/ongoing/:id">
             <OngoingMeetingAdminScreen />
-          </RouteIfLoggedIn>
+          </Route>
           <Route path="*">
             <Redirect to={{ pathname: '/' }} />
           </Route>
