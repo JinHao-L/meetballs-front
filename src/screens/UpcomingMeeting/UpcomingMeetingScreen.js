@@ -12,9 +12,11 @@ import {
   blankMeeting,
   blankParticipant,
 } from '../../common/ObjectTemplates';
-import { accessTokenKey, apiUrl } from '../../common/CommonValues';
+import { apiUrl } from '../../common/CommonValues';
 import EditMeetingOverlay from './EditMeetingOverlay';
 import { useHistory, Redirect, useParams } from 'react-router';
+import server from '../../services/server';
+import { defaultHeaders } from '../../utils/axiosConfig';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -31,13 +33,10 @@ export default function UpcomingMeetingScreen() {
   }, []);
 
   async function pullMeeting() {
-    const url = apiUrl + '/meeting/' + id;
-    const response = await fetch(url, {
-      method: 'GET',
-    });
-    const result = await response.json();
+    const response = await server.get(`/meeting/${id}`, defaultHeaders);
+    const result = response.data;
     if (response.status !== 200) return;
-    if (result.agendaItems !== undefined && result.agendaItems.length > 1) {
+    if (result.agendaItems && result.agendaItems.length > 1) {
       result.agendaItems.sort((p1, p2) => {
         return p1.position - p2.position;
       });
@@ -194,21 +193,11 @@ async function addAgenda(meeting, setMeeting) {
 }
 
 async function addAgendaToDatabase(newAgenda) {
-  const url = apiUrl + '/agenda-item';
-  const accessToken = window.sessionStorage.getItem(accessTokenKey);
-  await fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      meetingId: newAgenda.meetingId,
-      position: newAgenda.position,
-      name: newAgenda.name,
-      description: newAgenda.description,
-      expectedDuration: newAgenda.expectedDuration,
-    }),
-  });
+  await server.post('/agenda-item', {
+    meetingId: newAgenda.meetingId,
+    position: newAgenda.position,
+    name: newAgenda.name,
+    description: newAgenda.description,
+    expectedDuration: newAgenda.expectedDuration,
+  }, defaultHeaders);
 }

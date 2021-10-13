@@ -2,6 +2,8 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import AgendaItem from './AgendaItem';
 import { Button } from 'react-bootstrap';
 import { accessTokenKey, apiUrl } from '../../common/CommonValues';
+import server from '../../services/server';
+import { defaultHeaders } from '../../utils/axiosConfig';
 
 export default function AgendaItemList({
   meeting,
@@ -102,17 +104,8 @@ async function updateDatabase(meetingId, agendaItems) {
     item.prevPosition = item.position;
   });
   const url = apiUrl + '/agenda-item/positions';
-  const accessToken = window.sessionStorage.getItem(accessTokenKey);
-  await fetch(url, {
-    method: 'PUT',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      positions: changes,
-      meetingId: meetingId,
-    }),
-  });
+  await server.put(url, {
+    positions: changes,
+    meetingId: meetingId,
+  }, defaultHeaders);
 }
