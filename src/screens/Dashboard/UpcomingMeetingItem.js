@@ -6,7 +6,7 @@ import ConfirmDeleteModel from './ConfirmDeleteModel';
 import server from '../../services/server';
 import PropTypes from 'prop-types';
 
-export default function TempUpcomingMeetingItem({ meeting, pullMeeting }) {
+export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
   const dateInfo = getDateInfo(meeting.startedAt, meeting.duration);
   const [hovering, setHovering] = useState(false);
   const history = useHistory();
@@ -42,9 +42,11 @@ export default function TempUpcomingMeetingItem({ meeting, pullMeeting }) {
   function Details() {
     return (
       <Card.Body>
-        <Card.Title>{meeting.name}</Card.Title>
+        <Card.Title className="Text__elipsized--1-line">
+          {meeting.name}
+        </Card.Title>
         <div className="Buffer--10px" />
-        <Card.Subtitle>
+        <Card.Subtitle className="Text__elipsized--1-line">
           {dateInfo.date} {dateInfo.startTime} - {dateInfo.endTime}
         </Card.Subtitle>
         <div className="Buffer--20px" />
@@ -58,7 +60,9 @@ export default function TempUpcomingMeetingItem({ meeting, pullMeeting }) {
   function Toggles() {
     return (
       <Card.Body>
-        <Card.Title>{meeting.name}</Card.Title>
+        <Card.Title className="Text__elipsized--1-line">
+          {meeting.name}
+        </Card.Title>
         <div className="Buffer--10px" />
         <div className="Container__column--space-between">
           <Button variant="primary" onClick={startMeeting}>
@@ -67,13 +71,16 @@ export default function TempUpcomingMeetingItem({ meeting, pullMeeting }) {
           <div className="Buffer--10px" />
           <div className="Line--horizontal" />
           <div className="Buffer--10px" />
-          <Button variant="secondary" onClick={editMeeting}>
+          <Button variant="outline-primary" onClick={editMeeting}>
             Edit Meeting
           </Button>
           <div className="Buffer--10px" />
           <div className="Line--horizontal" />
           <div className="Buffer--10px" />
-          <Button variant="danger" onClick={() => setShowConfirmDelete(true)}>
+          <Button
+            variant="outline-primary"
+            onClick={() => setShowConfirmDelete(true)}
+          >
             {deleting ? 'Deleting' : 'Delete Meeting'}
           </Button>
         </div>
@@ -100,7 +107,7 @@ export default function TempUpcomingMeetingItem({ meeting, pullMeeting }) {
   );
 }
 
-TempUpcomingMeetingItem.propTypes = {
+UpcomingMeetingItem.propTypes = {
   meeting: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,

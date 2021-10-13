@@ -30,7 +30,6 @@ export default function ParticipantList({
           meeting={meeting}
           setMeeting={setMeeting}
           position={i}
-          started={position >= 0}
           showButton={!ended && shouldShowButton}
           key={'Participant' + i}
         />,
@@ -40,11 +39,14 @@ export default function ParticipantList({
   return items;
 }
 
-function AwaitItem({ meeting, setMeeting, position, started, showButton }) {
+function AwaitItem({ meeting, setMeeting, position, showButton }) {
   const participant = meeting.participants[position];
   return (
     <Col className="Container__padding--vertical-small">
-      <Card bg={started ? 'danger' : 'light'} text={started ? 'light' : 'dark'}>
+      <Card
+        bg={showButton ? null : 'danger'}
+        text={showButton ? 'dark' : 'light'}
+      >
         <Card.Body>
           <Card.Title>
             {participant.userName != null && participant.userName.length > 0
@@ -55,7 +57,7 @@ function AwaitItem({ meeting, setMeeting, position, started, showButton }) {
           {showButton && (
             <div className="d-grid gap-2">
               <Button
-                variant={started ? 'outline-light' : 'outline-secondary'}
+                variant={showButton ? 'outline-primary' : 'outline-light'}
                 onClick={() => markPresent(meeting, setMeeting, position)}
               >
                 Mark as Present

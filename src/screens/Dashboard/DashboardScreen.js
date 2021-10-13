@@ -1,17 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Image } from 'react-bootstrap';
 import { CalendarPlusFill } from 'react-bootstrap-icons';
-import TempUpcomingMeetingItem from './TempUpcomingMeetingItem';
+import UpcomingMeetingItem from './UpcomingMeetingItem';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import AddMeetingOverlay from './AddMeetingOverlay';
 import server from '../../services/server';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
-import TempCompletedMeetingItem from './TempCompletedMeetingItem';
-
-import BannerMorning from '../../assets/banner_morning.jpg';
-import BannerAfternoon from '../../assets/banner_afternoon.jpg';
-import BannerEvening from '../../assets/banner_evening.jpg';
-import BannerNight from '../../assets/banner_night.jpg';
+import CompletedMeetingItem from './CompletedMeetingItem';
 
 function AddMeetingButton({ onClick }) {
   return (
@@ -87,7 +82,7 @@ export default function DashboardScreen() {
   }
 
   const upcomingList = upcoming.map((meeting, idx) => (
-    <TempUpcomingMeetingItem
+    <UpcomingMeetingItem
       key={idx}
       meeting={meeting}
       pullMeeting={pullMeetings}
@@ -95,7 +90,7 @@ export default function DashboardScreen() {
   ));
 
   const historyList = meetingHistory.map((meeting, idx) => (
-    <TempCompletedMeetingItem key={idx} meeting={meeting} />
+    <CompletedMeetingItem key={idx} meeting={meeting} />
   ));
 
   if (loadingUpcoming || loadingPast) {
@@ -106,12 +101,13 @@ export default function DashboardScreen() {
     <>
       <div style={{ position: 'relative' }}>
         <Image
-          src={getBanner()}
+          src={getBanner().default}
           fluid
           style={{
             maxHeight: 300,
             width: '100%',
             objectFit: 'cover',
+            filter: 'brightness(70%)',
           }}
         />
         <div
@@ -128,7 +124,7 @@ export default function DashboardScreen() {
           <p className="Text__header" style={{ color: 'white' }}>
             Welcome Back!
           </p>
-          <p className="Text__paragraph" style={{ color: 'white' }}>
+          <p style={{ color: 'white', fontWeight: 400, fontSize: 20 }}>
             You have {upcoming.length} upcoming meeting
             {upcoming.length > 1 ? 's' : null}.
           </p>
@@ -154,14 +150,14 @@ export default function DashboardScreen() {
 function getBanner() {
   const time = new Date().getHours();
   if (time < 6) {
-    return BannerNight;
+    return require('../../assets/banner_night.jpg');
   } else if (time < 10) {
-    return BannerMorning;
+    return require('../../assets/banner_morning.jpg');
   } else if (time < 16) {
-    return BannerAfternoon;
+    return require('../../assets/banner_afternoon.jpg');
   } else if (time < 20) {
-    return BannerEvening;
+    return require('../../assets/banner_evening.jpg');
   } else {
-    return BannerNight;
+    return require('../../assets/banner_night.jpg');
   }
 }

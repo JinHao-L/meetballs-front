@@ -71,7 +71,7 @@ export default function AgendaItem({
           {...provided.dragHandleProps}
         >
           <Col className="Container__padding--vertical-small">
-            <Card bg="light">
+            <Card>
               <Card.Header>
                 {getFormattedDuration(item.expectedDuration)}
               </Card.Header>
@@ -82,10 +82,7 @@ export default function AgendaItem({
                   <Row>
                     <Col>
                       <div className="d-grid gap-2">
-                        <Button
-                          variant="outline-danger"
-                          onClick={removeAgendaItem}
-                        >
+                        <Button variant="danger" onClick={removeAgendaItem}>
                           Remove
                         </Button>
                       </div>
@@ -93,7 +90,7 @@ export default function AgendaItem({
                     <Col>
                       <div className="d-grid gap-2">
                         <Button
-                          variant="outline-secondary"
+                          variant="primary"
                           onClick={() => setEditing(true)}
                         >
                           Edit

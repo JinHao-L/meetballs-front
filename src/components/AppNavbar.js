@@ -38,11 +38,7 @@ export const AppNavbar = () => {
   }
 
   return (
-    <Navbar
-      bg="light"
-      expand="lg"
-      className="Container__fixed-header .navbar-text"
-    >
+    <Navbar expand="lg" className="Container__fixed-header .navbar-text">
       <Container>
         <Navbar.Brand
           style={{ alignItems: 'center', display: 'flex', cursor: 'pointer' }}

@@ -12,27 +12,33 @@ export default function AgendaItemList({
   const items = [];
   if (!isReordering) {
     items.push(
-      <div
-        className="d-grid gap-2"
-        onClick={() => {
-          setReordering(true);
-        }}
-        key={'Button'}
-      >
-        <Button variant="outline-primary">Enable Reordering</Button>
+      <div className="d-grid gap-2" key={'Button'}>
+        <Button
+          variant="outline-primary"
+          onClick={() => {
+            setReordering(true);
+          }}
+        >
+          Enable Reordering
+        </Button>
       </div>,
     );
   } else {
     items.push(
-      <div
-        className="d-grid gap-2"
-        onClick={() => {
-          setReordering(false);
-          updateDatabase(meeting.id, meeting.agendaItems);
-        }}
-        key={'Button'}
-      >
-        <Button variant="outline-danger">Save Order</Button>
+      <div className="d-grid gap-2" key={'Button'}>
+        <Button
+          variant="primary"
+          onClick={() => {
+            setReordering(false);
+            updateDatabase(meeting.id, meeting.agendaItems);
+          }}
+        >
+          Save Order
+        </Button>
+        <p className="Text__subsubheader">
+          Drag and drop items to reorder them. Once you are done, press on the
+          "Save Order" bottom above to save any changes.
+        </p>
       </div>,
     );
   }
