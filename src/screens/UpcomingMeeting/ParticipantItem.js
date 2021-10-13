@@ -36,7 +36,7 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
   // Not editing
   return (
     <Col className="Container__padding--vertical-small">
-      <Card bg="light">
+      <Card>
         <Card.Body>
           <Card.Title>
             {participant.userName != null && participant.userName.length > 0
@@ -47,17 +47,14 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
           <Row>
             <Col>
               <div className="d-grid gap-2">
-                <Button variant="outline-danger" onClick={removeParticipant}>
+                <Button variant="danger" onClick={removeParticipant}>
                   Remove
                 </Button>
               </div>
             </Col>
             <Col>
               <div className="d-grid gap-2">
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => setEditing(true)}
-                >
+                <Button variant="primary" onClick={() => setEditing(true)}>
                   Edit
                 </Button>
               </div>

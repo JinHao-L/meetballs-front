@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Button, Row, Col, Container, Nav } from 'react-bootstrap';
-import { getFormattedDateTime } from '../../common/CommonFunctions';
+import {
+  getFormattedDateTime,
+  openLinkInNewTab,
+} from '../../common/CommonFunctions';
 import AgendaItemList from './AgendaItemList';
 import ParticipantItemList from './ParticipantItemList';
 import { PersonPlusFill, CalendarPlusFill } from 'react-bootstrap-icons';
@@ -12,12 +15,11 @@ import {
 import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import EditMeetingOverlay from './EditMeetingOverlay';
 import { useHistory, Redirect, useParams } from 'react-router';
-import { Link } from 'react-router-dom';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
   const [restrictDescription, setRestrictDescription] = useState(true);
-  const [currentTab, setCurrentTab] = useState('agenda');
+  const [currentTab, setCurrentTab] = useState('participants');
   const [showEditMeeting, setShowEditMeeting] = useState(false);
   const [isReordering, setReordering] = useState(false);
   const history = useHistory();
@@ -47,8 +49,7 @@ export default function UpcomingMeetingScreen() {
   }
 
   function startZoom() {
-    meeting.type = 2;
-    window.open(meeting.startUrl, '_blank');
+    openLinkInNewTab(meeting.startUrl);
     history.replace('/ongoing/' + id);
   }
 
@@ -94,7 +95,7 @@ export default function UpcomingMeetingScreen() {
       <Container className="Container__padding--vertical">
         <Row>
           <Col
-            lg={3}
+            lg={4}
             md={12}
             sm={12}
             className="Container__padding--horizontal"
@@ -105,7 +106,7 @@ export default function UpcomingMeetingScreen() {
             </p>
             <div className="d-grid gap-2">
               <Button onClick={startZoom}>Start Zoom Meeting</Button>
-              <Button variant="secondary">Email Participants</Button>
+              <Button variant="outline-primary">Email Participants</Button>
               <Button
                 variant="outline-primary"
                 onClick={() => setShowEditMeeting(true)}
@@ -119,7 +120,7 @@ export default function UpcomingMeetingScreen() {
                 className="Text__toggle"
                 onClick={() => setRestrictDescription(!restrictDescription)}
               >
-                View {restrictDescription ? 'More' : 'Less'}
+                {restrictDescription ? 'Show More' : 'Show Less'}
               </a>
             </div>
             <p
@@ -133,26 +134,23 @@ export default function UpcomingMeetingScreen() {
             <div className="Buffer--20px" />
           </Col>
           <Col lg={1} md={12} sm={12} />
-          <Col
-            lg={6}
-            md={12}
-            sm={12}
-            className="Container__padding--horizontal"
-          >
+          <Col lg={6} md={12} sm={12}>
             <Nav
               variant="tabs"
-              defaultActiveKey="agenda"
+              defaultActiveKey="participants"
               onSelect={(selectedKey) => setCurrentTab(selectedKey)}
             >
               <Nav.Item>
-                <Nav.Link eventKey="agenda">Agenda</Nav.Link>
+                <Nav.Link eventKey="participants">Participants</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="participants">Participants</Nav.Link>
+                <Nav.Link eventKey="agenda">Agenda</Nav.Link>
               </Nav.Item>
             </Nav>
             <div className="Buffer--20px" />
-            <Content />
+            <div className="Container__padding--horizontal">
+              <Content />
+            </div>
             <div className="Buffer--100px" />
           </Col>
         </Row>

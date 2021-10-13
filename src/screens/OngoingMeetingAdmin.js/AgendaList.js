@@ -26,7 +26,7 @@ export default function AgendaList({ time, agenda, position }) {
 function NotStartedItem({ item }) {
   return (
     <Col className="Container__padding--vertical-small">
-      <Card bg="light">
+      <Card>
         <Card.Body>
           <Card.Title>{item.name}</Card.Title>
           <Card.Text>{item.description}</Card.Text>
@@ -65,7 +65,7 @@ function CurrentItem({ item, time }) {
 function ActiveItem({ item }) {
   return (
     <Col className="Container__padding--vertical-small">
-      <Card bg="light">
+      <Card>
         <Card.Body>
           <Card.Title>{item.name}</Card.Title>
           <Card.Text>{item.description}</Card.Text>

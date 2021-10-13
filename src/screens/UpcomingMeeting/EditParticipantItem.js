@@ -26,17 +26,22 @@ export default function EditParticipantItem({
     setEditing(false);
   }
 
+  function close() {
+    const oldEmail = meeting.participants[position].userEmail;
+    if (oldEmail.length > 0) {
+      setEditing(false);
+    } else {
+      removeParticipant(setMeeting, meeting, position);
+    }
+  }
+
   return (
     <Col className="Container__padding--vertical-small">
-      <Card bg="light">
+      <Card>
         <Card.Header>
           <div className="Container__row--space-between">
             <p className="Text__card-header">Editing Participant</p>
-            <CloseButton
-              onClick={() => {
-                setEditing(false);
-              }}
-            />
+            <CloseButton onClick={close} />
           </div>
         </Card.Header>
         <Card.Body>
@@ -71,14 +76,11 @@ export default function EditParticipantItem({
           </p>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="outline-secondary"
-            onClick={() => setShowModal(false)}
-          >
+          <Button variant="outline-primary" onClick={() => setShowModal(false)}>
             Cancel
           </Button>
           <Button
-            variant="secondary"
+            variant="danger"
             onClick={() => removeParticipant(setMeeting, meeting, position)}
           >
             Confirm

@@ -98,7 +98,7 @@ export default function OngoingMeetingAdminScreen() {
       <Container className="Container__padding--vertical">
         <Row>
           <Col
-            lg={3}
+            lg={4}
             md={12}
             sm={12}
             className="Container__padding--horizontal"
@@ -108,7 +108,7 @@ export default function OngoingMeetingAdminScreen() {
               {getFormattedDateTime(meeting.startedAt)}
             </p>
             <div className="d-grid gap-2">
-              <Button variant="outline-secondary" onClick={startZoom}>
+              <Button variant="outline-primary" onClick={startZoom}>
                 Relaunch Zoom
               </Button>
             </div>
@@ -154,6 +154,7 @@ export default function OngoingMeetingAdminScreen() {
                 </div>
               </Toast.Body>
             </Toast>
+            <div className="Buffer--20px" />
           </Col>
           <Col lg={1} md={12} sm={12} />
           <Col

@@ -56,7 +56,7 @@ export default function EditAgendaItem({
 
   return (
     <Col className="Container__padding--vertical-small">
-      <Card bg="light">
+      <Card>
         <Card.Header>
           <div className="Container__row--space-between">
             <p className="Text__card-header">Editing Agenda Item</p>
@@ -72,7 +72,7 @@ export default function EditAgendaItem({
             />
             <Form.Label column>Duration</Form.Label>
             <DropdownButton
-              variant="outline-secondary"
+              variant="outline-primary  "
               title={getFormattedDuration(duration)}
             >
               {DurationItems()}

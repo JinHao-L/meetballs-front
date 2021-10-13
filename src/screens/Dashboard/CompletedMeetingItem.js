@@ -1,18 +1,27 @@
 import { useState } from 'react';
 import { Card, Col, Button } from 'react-bootstrap';
 import { getDateInfo } from '../../common/CommonFunctions';
+import { useHistory } from 'react-router';
 
-export default function TempCompletedMeetingItem({ meeting }) {
+export default function CompletedMeetingItem({ meeting }) {
   const dateInfo = getDateInfo(meeting.startedAt, meeting.duration);
   const [hovering, setHovering] = useState(false);
+  const history = useHistory();
+
+  function viewMeeting() {
+    console.log(`Viewing meeting of ID = ${meeting.id}`);
+    history.push(`/ongoing/${meeting.id}`);
+  }
 
   function Details() {
     return (
       <Card.Body>
-        <Card.Title>{meeting.name}</Card.Title>
+        <Card.Title className="Text__elipsized--1-line">
+          {meeting.name}
+        </Card.Title>
         <div className="Buffer--10px" />
-        <Card.Subtitle>
-          {dateInfo.date} - ENDED {dateInfo.endTime}
+        <Card.Subtitle className="Text__elipsized--1-line">
+          ENDED - {dateInfo.date} {dateInfo.endTime}
         </Card.Subtitle>
         <div className="Buffer--20px" />
         <Card.Text className="Text__elipsized--5-lines">
@@ -25,9 +34,15 @@ export default function TempCompletedMeetingItem({ meeting }) {
   function Toggles() {
     return (
       <Card.Body>
-        <Card.Title>{meeting.name}</Card.Title>
+        <Card.Title className="Text__elipsized--1-line">
+          {meeting.name}
+        </Card.Title>
         <div className="Buffer--10px" />
-        <div className="Container__column--space-between"></div>
+        <div className="Container__column--space-between">
+          <Button variant="primary" onClick={viewMeeting}>
+            View Meeting
+          </Button>
+        </div>
       </Card.Body>
     );
   }
