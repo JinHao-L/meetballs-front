@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Button, Col, Card, CloseButton, Form, Modal } from 'react-bootstrap';
 import { accessTokenKey, apiUrl } from '../../common/CommonValues';
+import server from '../../services/server';
+import { defaultHeaders } from '../../utils/axiosConfig';
 
 export default function EditParticipantItem({
   setEditing,
@@ -92,33 +94,18 @@ export default function EditParticipantItem({
 }
 
 async function updateDatabase(meetingId, newEmail, newUsername, oldEmail) {
-  const url = apiUrl + '/participant';
-  const accessToken = window.sessionStorage.getItem(accessTokenKey);
   if (oldEmail.length !== 0) {
-    await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        Authorization: 'Bearer ' + accessToken,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    await server.delete('/participant', {
+      data: {
         participants: [{ userEmail: oldEmail }],
         meetingId: meetingId,
-      }),
+      },
+      ...defaultHeaders
     });
   }
-  await fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+  await server.post('/participant', {
       meetingId: meetingId,
       userEmail: newEmail,
       userName: newUsername,
-    }),
-  });
+    }, defaultHeaders);
 }

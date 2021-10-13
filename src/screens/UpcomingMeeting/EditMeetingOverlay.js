@@ -2,6 +2,8 @@ import { Offcanvas, Form, Button } from 'react-bootstrap';
 import { useRef } from 'react';
 import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import { useHistory } from 'react-router';
+import server from '../../services/server';
+import { defaultHeaders } from '../../utils/axiosConfig';
 
 export default function EditMeetingOverlay({
   show,
@@ -60,35 +62,16 @@ export default function EditMeetingOverlay({
 }
 
 async function updateDatabase(newMeeting) {
-  const url = apiUrl + '/meeting/' + newMeeting.id;
-  const accessToken = window.sessionStorage.getItem(accessTokenKey);
-  await fetch(url, {
-    method: 'PUT',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: newMeeting.name,
-      description: newMeeting.description,
-      duration: newMeeting.duration,
-      enableTranscription: newMeeting.enableTranscription,
-    }),
-  });
+  await server.put(`/meeting/${newMeeting.id}`, {
+    name: newMeeting.name,
+    description: newMeeting.description,
+    duration: newMeeting.duration,
+    enableTranscription: newMeeting.enableTranscription,
+  }, defaultHeaders);
 }
 
 async function deleteMeeting(meetingId, history) {
-  const url = apiUrl + '/meeting/' + meetingId;
-  const accessToken = window.sessionStorage.getItem(accessTokenKey);
-  const response = await fetch(url, {
-    method: 'DELETE',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
+  const response = await server.delete(`/meeting/${meetingId}`, defaultHeaders);
   if (response.status === 200) {
     history.goBack();
   }

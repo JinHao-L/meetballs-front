@@ -14,6 +14,7 @@ import LoginScreen from './screens/Login/LoginScreen';
 import RegistrationScreen from './screens/Login/RegistrationScreen';
 import ForgotPasswordScreen from './screens/Login/ForgotPasswordScreen';
 import ResetPasswordScreen from './screens/Login/ResetPasswordScreen';
+import CompletedMeetingScreen from './screens/CompletedMeeting/CompletedMeetingScreen';
 import { UserContext } from './context/UserContext';
 import LandingScreen from './screens/LandingPage/LandingScreen';
 import { AppNavbar } from './components/AppNavbar';
@@ -80,6 +81,9 @@ export default function App() {
           <Route path="/ongoing/:id">
             <OngoingMeetingAdminScreen />
           </Route>
+          <RouteIfLoggedIn path="/completed/:id" >
+            <CompletedMeetingScreen />
+          </RouteIfLoggedIn>
           <Route path="*">
             <Redirect to={{ pathname: '/' }} />
           </Route>

@@ -8,8 +8,9 @@ import {
   Button,
 } from 'react-bootstrap';
 import { useState } from 'react';
-import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import { getFormattedDuration } from '../../common/CommonFunctions';
+import server from '../../services/server';
+import { defaultHeaders } from '../../utils/axiosConfig';
 
 export default function EditAgendaItem({
   setEditing,
@@ -103,24 +104,14 @@ async function updateDatabase(
   duration,
   description,
 ) {
-  var url = apiUrl + '/agenda-item/' + meetingId + '/' + position;
-  const accessToken = window.sessionStorage.getItem(accessTokenKey);
-  await fetch(url, {
-    method: 'PUT',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: name,
-      description: description,
-      startTime: null,
-      expectedDuration: duration,
-      actualDuration: null,
-      isCurrent: false,
-    }),
-  });
+  await server.put(`/agenda-item/${meetingId}/${position}`, {
+    name: name,
+    description: description,
+    startTime: null,
+    expectedDuration: duration,
+    actualDuration: null,
+    isCurrent: false,
+  }, defaultHeaders);
 }
 
 const durationMinutes = [

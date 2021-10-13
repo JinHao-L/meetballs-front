@@ -27,8 +27,8 @@ const UserProvider = ({ children }) => {
     };
     document.addEventListener(accessTokenKey, updateUser, false);
 
-    const type = localStorage.getItem(loginTypeKey)
-    const refFun = type === 'zoom' ? zoomRefresh : refresh
+    const type = localStorage.getItem(loginTypeKey);
+    const refFun = type === 'zoom' ? zoomRefresh : refresh;
     refFun()
       .catch((_) => console.log('No refresh token'))
       .finally(() => {

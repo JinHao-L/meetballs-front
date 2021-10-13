@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { getFormattedDuration } from '../../common/CommonFunctions';
 import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import EditAgendaItem from './EditAgendaItem';
+import server from '../../services/server';
+import { defaultHeaders } from '../../utils/axiosConfig';
 
 export default function AgendaItem({
   meeting,
@@ -109,14 +111,5 @@ export default function AgendaItem({
 }
 
 async function removeFromDatabase(meetingId, position) {
-  const url = apiUrl + '/agenda-item/' + meetingId + '/' + position;
-  const accessToken = window.sessionStorage.getItem(accessTokenKey);
-  await fetch(url, {
-    method: 'DELETE',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
+  await server.delete(`/agenda-item/${meetingId}/${position}`, defaultHeaders);
 }

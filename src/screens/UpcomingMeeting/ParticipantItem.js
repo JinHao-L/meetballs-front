@@ -2,6 +2,8 @@ import { Button, Row, Col, Card } from 'react-bootstrap';
 import { useState } from 'react';
 import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import EditParticipantItem from './EditParticipantItem';
+import server from '../../services/server';
+import { defaultHeaders } from '../../utils/axiosConfig';
 
 export default function ParticipantItem({ setMeeting, meeting, position }) {
   const [editing, setEditing] = useState(false);
@@ -67,18 +69,11 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
 }
 
 async function removeFromDatabase(email, meetingId) {
-  const url = apiUrl + '/participant';
-  const accessToken = window.sessionStorage.getItem(accessTokenKey);
-  await fetch(url, {
-    method: 'DELETE',
-    headers: {
-      Authorization: 'Bearer ' + accessToken,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+  await server.delete('/participant', {
+    ...defaultHeaders,
+    data: {
       participants: [{ userEmail: email }],
       meetingId: meetingId,
-    }),
+    },
   });
 }
