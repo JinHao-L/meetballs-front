@@ -32,7 +32,7 @@ export default function ZoomRedirectPage() {
     if (user) {
       history.push('/dashboard');
     }
-  }, [user])
+  }, [user]);
 
   return (
     <Container>
