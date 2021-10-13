@@ -8,7 +8,7 @@ const PARAM_KEY = 'code';
 
 export default function ZoomRedirectPage() {
   const { search } = useLocation();
-  const { user } = useContext(UserContext);
+  const user = useContext(UserContext);
   const history = useHistory();
   const query = new URLSearchParams(search);
   const code = query.get(PARAM_KEY);
