@@ -136,6 +136,23 @@
 
 /* Toggles */
 
+.Toggle-card {
+  height: 60px;
+  width: 100%;
+  margin: 10px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.Toggle-card:hover {
+  background-color: #f7f7f7;
+  color: #725546;
+}
+
 .Fab {
   position: fixed;
   bottom: 20px;

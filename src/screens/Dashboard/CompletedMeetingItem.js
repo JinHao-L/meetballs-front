@@ -1,11 +1,10 @@
-import { useState } from 'react';
-import { Card, Col, Button } from 'react-bootstrap';
+import { Card, Col, Row } from 'react-bootstrap';
 import { getDateInfo } from '../../common/CommonFunctions';
 import { useHistory } from 'react-router';
+import { Eye } from 'react-bootstrap-icons';
 
 export default function CompletedMeetingItem({ meeting }) {
   const dateInfo = getDateInfo(meeting.startedAt, meeting.duration);
-  const [hovering, setHovering] = useState(false);
   const history = useHistory();
 
   function viewMeeting() {
@@ -15,7 +14,7 @@ export default function CompletedMeetingItem({ meeting }) {
 
   function Details() {
     return (
-      <Card.Body>
+      <div style={{ height: 210 }}>
         <Card.Title className="Text__elipsized--1-line">
           {meeting.name}
         </Card.Title>
@@ -27,34 +26,33 @@ export default function CompletedMeetingItem({ meeting }) {
         <Card.Text className="Text__elipsized--5-lines">
           {meeting.description}
         </Card.Text>
-      </Card.Body>
+      </div>
     );
   }
 
   function Toggles() {
     return (
-      <Card.Body>
-        <Card.Title className="Text__elipsized--1-line">
-          {meeting.name}
-        </Card.Title>
-        <div className="Buffer--10px" />
-        <div className="Container__column--space-between">
-          <Button variant="primary" onClick={viewMeeting}>
-            View Meeting
-          </Button>
-        </div>
-      </Card.Body>
+      <Row>
+        <Col onClick={viewMeeting} className="Toggle-card">
+          <Eye />
+          View
+        </Col>
+      </Row>
     );
   }
 
   return (
     <Col lg={4} md={6} sm={12} className="Container__padding--vertical-small">
-      <Card
-        onMouseOver={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
-        style={{ height: 230, backgroundColor: '#e5e5e5' }}
-      >
-        {hovering ? Toggles() : Details()}
+      <Card style={{ height: 300, backgroundColor: '#e5e5e5' }}>
+        <Card.Body>
+          <Details />
+          <div
+            className="Line--horizontal"
+            style={{ backgroundColor: '#c5c5c5' }}
+          />
+          <div className="Buffer--5px" />
+          <Toggles />
+        </Card.Body>
       </Card>
     </Col>
   );

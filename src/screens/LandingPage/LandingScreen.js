@@ -21,7 +21,7 @@ export default function LandingScreen() {
                 top: 200,
                 left: 0,
                 zIndex: -1,
-                maxWidth: 600,
+                maxWidth: 'min(600px, 100%)',
                 opacity: 0.3,
               }}
             />
