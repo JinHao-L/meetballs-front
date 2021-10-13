@@ -3,6 +3,7 @@ import { Redirect, useParams } from 'react-router';
 import { blankMeeting } from '../../common/ObjectTemplates';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import server from '../../services/server';
+import AttendanceList from './AttendanceList';
 import CompletedAgendaCard from './CompletedAgendaCard';
 
 export default function CompletedMeetingScreen() {
@@ -34,11 +35,11 @@ export default function CompletedMeetingScreen() {
 
   function Content() {
     if (currentTab == 'agenda') {
-      return meeting.agendaItems.map((item) => (
-        <CompletedAgendaCard agendaItem={item} />
+      return meeting.agendaItems.map((item, idx) => (
+        <CompletedAgendaCard agendaItem={item} key={idx} />
       ));
     } else {
-      return null;
+      return <AttendanceList participants={meeting.participants} />;
     }
   }
 
