@@ -30,9 +30,8 @@ const UserProvider = ({ children }) => {
     const type = localStorage.getItem(loginTypeKey)
     const refFun = type === 'zoom' ? zoomRefresh : refresh
     refFun()
-      .catch((_) => console.log('refresh failed'))
+      .catch((_) => console.log('No refresh token'))
       .finally(() => {
-        console.log(user);
         setLoading(false);
       });
 

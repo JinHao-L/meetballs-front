@@ -6,8 +6,9 @@ export default function ZoomLoginScreen() {
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: zoomClientId,
-    state: '', // any state that should be preserved (handled in ZoomRedirectPage)
     redirect_uri: zoomRedirectUrl,
+    // TODO: remove before publishing
+    state: process.env.NODE_ENV ? 'type=dev' : '',
   });
 
   return (

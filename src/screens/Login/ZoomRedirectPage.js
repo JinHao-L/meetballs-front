@@ -4,17 +4,20 @@ import { useHistory, useLocation } from 'react-router';
 import { UserContext } from '../../context/UserContext';
 import { zoomLogin } from '../../services/auth';
 
-const PARAM_KEY = 'code';
+const CODE_PARAM_KEY = 'code';
+const STATE_PARAM_KEY = 'state';
 
 export default function ZoomRedirectPage() {
   const { search } = useLocation();
   const user = useContext(UserContext);
   const history = useHistory();
   const query = new URLSearchParams(search);
-  const code = query.get(PARAM_KEY);
+  const code = query.get(CODE_PARAM_KEY);
+  const state = query.get(STATE_PARAM_KEY);
 
   useEffect(() => {
-    if (!code) {
+    if (!code || state === 'type=dev') {
+      console.log(code)
       history.push('/login-zoom');
     }
     zoomLogin(code)
@@ -32,7 +35,7 @@ export default function ZoomRedirectPage() {
     if (user) {
       history.push('/dashboard');
     }
-  }, [user])
+  }, [user]);
 
   return (
     <Container>
