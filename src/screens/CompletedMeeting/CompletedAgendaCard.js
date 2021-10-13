@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { Col, Card } from 'react-bootstrap';
 import {
-  getFormattedDateTime,
+  getDateInfo,
   getFormattedDuration,
+  getFormattedTime,
 } from '../../common/CommonFunctions';
 
 export default function CompletedAgendaCard({ agendaItem }) {
@@ -10,14 +11,13 @@ export default function CompletedAgendaCard({ agendaItem }) {
   const expectedDuration = agendaItem.expectedDuration;
 
   const exceededDuration = duration > expectedDuration;
-  const startTime = getFormattedDateTime(agendaItem.startTime);
-  const endTime = getFormattedDateTime(agendaItem.endTime);
-  const durationStr = getFormattedDuration(duration % 1000);
-  const expectedDurationStr = getFormattedDuration(expectedDuration % 1000);
+  const { startTime, endTime } = getDateInfo(agendaItem.startTime, duration);
+  const durationStr = getFormattedDuration(duration);
+  const expectedDurationStr = getFormattedDuration(expectedDuration);
 
   return (
     <Col className="Container__padding--vertical-small">
-      <Card bg={exceededDuration ? 'primary' : 'warning'} text="light">
+      <Card bg={exceededDuration ? 'danger' :'primary'} text="light">
         <Card.Body>
           <Card.Title>{agendaItem.name}</Card.Title>
           <Card.Text>{agendaItem.description}</Card.Text>
@@ -33,7 +33,7 @@ export default function CompletedAgendaCard({ agendaItem }) {
   );
 }
 
-AgendaCard.propTypes = {
+CompletedAgendaCard.propTypes = {
   agendaItem: PropTypes.shape({
     meeting: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,

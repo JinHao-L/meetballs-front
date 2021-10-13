@@ -5,6 +5,8 @@ import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import server from '../../services/server';
 import AttendanceList from './AttendanceList';
 import CompletedAgendaCard from './CompletedAgendaCard';
+import { Col, Nav, Row, Button, Container } from "react-bootstrap";
+import { getDateInfo, getFormattedDate, getFormattedDateTime } from '../../common/CommonFunctions';
 
 export default function CompletedMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -39,7 +41,8 @@ export default function CompletedMeetingScreen() {
         <CompletedAgendaCard agendaItem={item} key={idx} />
       ));
     } else {
-      return <AttendanceList participants={meeting.participants} />;
+      const date = meeting.startedAt;
+      return <AttendanceList participants={meeting.participants} date={date}/>;
     }
   }
 
@@ -67,6 +70,8 @@ export default function CompletedMeetingScreen() {
     );
   }
 
+  const startTime = meeting.startedAt;
+  const { endTime } = getDateInfo(startTime, meeting.duration);
   return (
     <>
       <Container className="Container__padding--vertical">
@@ -79,10 +84,7 @@ export default function CompletedMeetingScreen() {
           >
             <p className="Text__header">{meeting.name}</p>
             <p className="Text__subheader">
-              {getFormattedDateTime(meeting.startedAt)}
-            </p>
-            <p className="Text__subheader">
-              {getFormattedDateTime(meeting.endedAt)}
+              {getFormattedDateTime(meeting.startedAt)} - {endTime}
             </p>
             <div className="d-grid gap-2">
               <Button>Get Meeting Recording</Button>

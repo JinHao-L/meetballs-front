@@ -9,7 +9,7 @@ export default function CompletedMeetingItem({ meeting }) {
 
   function viewMeeting() {
     console.log(`Viewing meeting of ID = ${meeting.id}`);
-    history.push(`/ongoing/${meeting.id}`);
+    history.push(`/completed/${meeting.id}`);
   }
 
   function Details() {

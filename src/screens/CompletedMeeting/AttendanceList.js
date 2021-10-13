@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { getFormattedDate } from '../../common/CommonFunctions';
-import { Button } from 'react-bootstrap';
+import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 
 export default function AttendanceList({ participants, date }) {
   const attendees = participants
@@ -11,20 +11,36 @@ export default function AttendanceList({ participants, date }) {
     .map((person, idx) => <ParticipantItem person={person} key={idx} />);
 
   const dateStr = getFormattedDate(date);
-  const fileName = `attendance_list_${dateStr}`;
+  const fileName = `attendance_list_${dateStr}.csv`;
+
+  function DownloadButton() {
+    return (
+      <a
+        href={exportToCsv(participants)}
+        style={{textDecoration: "none"}}
+        className="d-grid gap-2"
+        download={fileName}
+      >
+        <div className="d-grid gap-2">
+          <Button block>Export to CSV</Button>
+        </div>
+      </a>
+    );
+  }
 
   return (
     <div>
-      <a href={exportToCsv()} download={fileName}>
-        <Button>Export to CSV</Button>
-      </a>
-      <div>
-        <h1>Meeting Attendees</h1>
-        {attendees}
+      <div className="d-grid gap-2">
+        <DownloadButton />
       </div>
+      <div className="Buffer--20px"/>
+      <div> 
+        <p className="Text__subheader">Meeting Attendees</p>
+        <div>{attendees}</div>
+      </div >
       <div>
-        <h1>Absent With Apologies</h1>
-        {absentees}
+        <h1 className="Text__subheader">Absent With Apologies</h1>
+        <div className="d-grid gap-2">{absentees}</div>
       </div>
     </div>
   );
@@ -80,9 +96,11 @@ function toCsvString(person) {
 }
 
 function exportToCsv(participants) {
+  if (!participants) return "#";
   const sortedList = participants.sort(sortByPresence);
+  console.log(sortedList);
   const csvString =
     'data:text/csv;charset=utf-8,' + sortedList.map(toCsvString).join('\n');
-
+  console.log(csvString);
   return encodeURI(csvString);
 }
