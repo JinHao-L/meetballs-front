@@ -1,7 +1,16 @@
 import { Col, Row, Image, Button } from 'react-bootstrap';
 import LoginImage from '../../assets/login.jpg';
+import { zoomClientId, zoomRedirectUrl } from '../../common/CommonValues';
 
 export default function ZoomLoginScreen() {
+  const params = new URLSearchParams({
+    response_type: 'code',
+    client_id: zoomClientId,
+    redirect_uri: zoomRedirectUrl,
+    // TODO: remove before publishing
+    state: process.env.NODE_ENV ? 'type=dev' : '',
+  });
+
   return (
     <Row style={{ marginLeft: 0, marginRight: 0 }}>
       <Col
@@ -42,7 +51,11 @@ export default function ZoomLoginScreen() {
         >
           <p className="Text__header">Get the ball rolling</p>
           <p className="Text__subheader">with MeetBalls</p>
-          <Button variant="zoom" style={{ width: 200 }}>
+          <Button
+            variant="zoom"
+            style={{ width: 200 }}
+            href={`https://zoom.us/oauth/authorize?${params.toString()}`}
+          >
             Login With Zoom
           </Button>
         </div>

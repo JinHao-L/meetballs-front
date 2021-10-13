@@ -20,6 +20,7 @@ import { AppNavbar } from './components/AppNavbar';
 import CustomBootstrapStyle from './common/CustomBootstrapStyle';
 import ZoomLoginScreen from './screens/Login/ZoomLoginScreen';
 import PrivacyPolicyScreen from './screens/LandingPage/PrivacyPolicyScreen';
+import ZoomRedirectPage from './screens/Login/ZoomRedirectPage';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -48,6 +49,8 @@ export default function App() {
           </Route>
           <Route exact path="/privacy-policy">
             <PrivacyPolicyScreen />
+          <Route exact path="/authorize">
+            <ZoomRedirectPage />
           </Route>
           <Route path="/confirm-email">
             <EmailConfirmationScreen />
