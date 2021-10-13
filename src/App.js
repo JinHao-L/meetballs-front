@@ -18,6 +18,7 @@ import { UserContext } from './context/UserContext';
 import LandingScreen from './screens/LandingPage/LandingScreen';
 import { AppNavbar } from './components/AppNavbar';
 import CustomBootstrapStyle from './common/CustomBootstrapStyle';
+import ZoomLoginScreen from './screens/Login/ZoomLoginScreen';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -49,6 +50,9 @@ export default function App() {
           </Route>
           <Route path="/login">
             <LoginScreen />
+          </Route>
+          <Route path="/login-zoom">
+            <ZoomLoginScreen />
           </Route>
           <Route path="/forgot-password">
             <ForgotPasswordScreen />

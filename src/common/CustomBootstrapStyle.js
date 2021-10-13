@@ -121,6 +121,18 @@ export default function CustomBootstrapStyle() {
       border-color: #3b5998;
     }
 
+    .btn-zoom {
+      background-color: #2D8CFF;
+      color: white;
+      border-color: #2D8CFF;
+    }
+
+    .btn-zoom:hover {
+      background-color: #357dd4;
+      color: white;
+      border-color: #357dd4;
+    }
+
     .bg-primary {
       background-color: #8F6B58!important;
       color: white;
