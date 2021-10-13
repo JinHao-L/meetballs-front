@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { accessTokenKey } from '../common/CommonValues';
+import { accessTokenKey, loginTypeKey } from '../common/CommonValues';
 import { FullLoadingIndicator } from '../components/FullLoadingIndicator';
-import { refresh } from '../services/auth';
+import { refresh, zoomRefresh } from '../services/auth';
 import { getUser } from '../services/user';
 
 const UserContext = createContext(null);
@@ -26,7 +26,10 @@ const UserProvider = ({ children }) => {
       }
     };
     document.addEventListener(accessTokenKey, updateUser, false);
-    refresh()
+
+    const type = localStorage.getItem(loginTypeKey)
+    const refFun = type === 'zoom' ? zoomRefresh : refresh
+    refFun()
       .catch((_) => console.log('refresh failed'))
       .finally(() => {
         console.log(user);
