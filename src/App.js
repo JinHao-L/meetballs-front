@@ -19,6 +19,7 @@ import LandingScreen from './screens/LandingPage/LandingScreen';
 import { AppNavbar } from './components/AppNavbar';
 import CustomBootstrapStyle from './common/CustomBootstrapStyle';
 import ZoomLoginScreen from './screens/Login/ZoomLoginScreen';
+import PrivacyPolicyScreen from './screens/LandingPage/PrivacyPolicyScreen';
 import ZoomRedirectPage from './screens/Login/ZoomRedirectPage';
 
 export default function App() {
@@ -46,6 +47,8 @@ export default function App() {
           <Route exact path="/">
             <LandingScreen />
           </Route>
+          <Route exact path="/privacy-policy">
+            <PrivacyPolicyScreen />
           <Route exact path="/authorize">
             <ZoomRedirectPage />
           </Route>
