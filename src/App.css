@@ -4,6 +4,7 @@
   position: fixed;
   width: 100%;
   top: 0px;
+  z-index: 100;
 }
 
 .Container__content {
@@ -21,8 +22,8 @@
 }
 
 .Container__padding--vertical-small {
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .Container__row--space-between {
@@ -102,12 +103,16 @@
   margin: 0px;
 }
 
-.Text__logo {
-  padding-left: 10px;
-  padding-top: 20px;
-  padding-bottom: 0px;
-  font-size: 25px;
-  font-weight: 400;
+.Text__toggle {
+  color: #a5a5a5;
+  margin-top: 20px;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.Text__toggle:hover {
+  color: #c5c5c5;
 }
 
 /* Toggles */

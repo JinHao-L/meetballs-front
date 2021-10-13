@@ -48,14 +48,11 @@ export const AppNavbar = () => {
           style={{ alignItems: 'center', display: 'flex', cursor: 'pointer' }}
           onClick={() => history.push(option.home)}
         >
-          <Image src={Logo} style={{ width: 30, height: 30 }} />
-          <Navbar.Text style={{ padding: '0px 10px' }} className="Text__logo">
-            Meetballs
-          </Navbar.Text>
+          <Image src={Logo} style={{ height: 30 }} />
         </Navbar.Brand>
         {option.button == TOGGLES.CHOOSE && !user ? (
           <Button
-            variant="outline-secondary"
+            variant="outline-primary"
             size="sm"
             style={{ borderRadius: 50 }}
             onClick={() => history.push('/login')}
@@ -65,7 +62,7 @@ export const AppNavbar = () => {
         ) : option.button === TOGGLES.CHOOSE ||
           option.button === TOGGLES.DASHBOARD ? (
           <Button
-            variant="outline-secondary"
+            variant="outline-primary"
             size="sm"
             style={{ borderRadius: 50 }}
             onClick={() => history.push('/home')}
@@ -74,7 +71,7 @@ export const AppNavbar = () => {
           </Button>
         ) : option.button === TOGGLES.LOGOUT ? (
           <Button
-            variant="outline-secondary"
+            variant="outline-primary"
             size="sm"
             style={{ borderRadius: 50 }}
             onClick={logout}

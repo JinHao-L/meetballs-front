@@ -41,14 +41,14 @@ export default function EditMeetingOverlay({
         </Form.Group>
         <div className="Buffer--20px" />
         <div className="d-grid gap-2">
-          <Button variant="secondary" onClick={update}>
+          <Button variant="primary" onClick={update}>
             Update
           </Button>
           <div className="Buffer--20px" />
           <div className="Line--horizontal" />
           <div className="Buffer--20px" />
           <Button
-            variant="outline-danger"
+            variant="danger"
             onClick={() => deleteMeeting(meeting.id, history)}
           >
             Delete Meeting

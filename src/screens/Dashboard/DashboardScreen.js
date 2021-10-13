@@ -153,21 +153,15 @@ export default function DashboardScreen() {
 
 function getBanner() {
   const time = new Date().getHours();
-  switch (time) {
-    case time < 6: {
-      return BannerNight;
-    }
-    case time < 10: {
-      return BannerMorning;
-    }
-    case time < 16: {
-      return BannerAfternoon;
-    }
-    case time < 20: {
-      return BannerEvening;
-    }
-    default: {
-      return BannerNight;
-    }
+  if (time < 6) {
+    return BannerNight;
+  } else if (time < 10) {
+    return BannerMorning;
+  } else if (time < 16) {
+    return BannerAfternoon;
+  } else if (time < 20) {
+    return BannerEvening;
+  } else {
+    return BannerNight;
   }
 }

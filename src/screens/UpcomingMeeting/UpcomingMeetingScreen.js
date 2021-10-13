@@ -12,6 +12,7 @@ import {
 import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import EditMeetingOverlay from './EditMeetingOverlay';
 import { useHistory, Redirect, useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -104,15 +105,23 @@ export default function UpcomingMeetingScreen() {
             </p>
             <div className="d-grid gap-2">
               <Button onClick={startZoom}>Start Zoom Meeting</Button>
-              <Button variant="outline-primary">Email Participants</Button>
+              <Button variant="secondary">Email Participants</Button>
               <Button
-                variant="outline-secondary"
+                variant="outline-primary"
                 onClick={() => setShowEditMeeting(true)}
               >
                 Edit / Delete Meeting
               </Button>
             </div>
-            <p className="Text__subsubheader">Description</p>
+            <div className="Container__row--space-between">
+              <p className="Text__subsubheader">Description</p>
+              <a
+                className="Text__toggle"
+                onClick={() => setRestrictDescription(!restrictDescription)}
+              >
+                View {restrictDescription ? 'More' : 'Less'}
+              </a>
+            </div>
             <p
               className={
                 'Text__paragraph' +
@@ -121,14 +130,6 @@ export default function UpcomingMeetingScreen() {
             >
               {meeting.description}
             </p>
-            <div className="d-grid gap-2">
-              <Button
-                variant="secondary"
-                onClick={() => setRestrictDescription(!restrictDescription)}
-              >
-                View {restrictDescription ? 'More' : 'Less'}
-              </Button>
-            </div>
             <div className="Buffer--20px" />
           </Col>
           <Col lg={1} md={12} sm={12} />
