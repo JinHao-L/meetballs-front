@@ -48,7 +48,9 @@ export default function AttendanceList({ participants, date }) {
       <div className="Buffer--20px" />
       <div>
         <div>
-          <p className="Text__subheader">Present: {numPresent}/{numTotal}</p>
+          <p className="Text__subheader">
+            Present: {numPresent}/{numTotal}
+          </p>
           <CollapseToggle show={showPresent} setShow={setShowPresent} />
         </div>
         <Collapse in={showPresent}>
@@ -58,7 +60,9 @@ export default function AttendanceList({ participants, date }) {
       <div className="Buffer--20px" />
       <div>
         <div>
-          <p className="Text__subheader">Absent: {numAbsent}/{numTotal}</p>
+          <p className="Text__subheader">
+            Absent: {numAbsent}/{numTotal}
+          </p>
           <CollapseToggle show={showAbsent} setShow={setShowAbsent} />
         </div>
         <Collapse in={showAbsent}>
@@ -130,10 +134,7 @@ function exportToCsv(participants) {
 
 function CollapseToggle({ show, setShow }) {
   return (
-    <a
-      className="Text__toggle"
-      onClick={() => setShow(!show)}
-    >
+    <a className="Text__toggle" onClick={() => setShow(!show)}>
       {show ? 'Collapse' : 'Expand'}
     </a>
   );

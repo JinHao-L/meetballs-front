@@ -81,7 +81,7 @@ export default function App() {
           <Route path="/ongoing/:id">
             <OngoingMeetingAdminScreen />
           </Route>
-          <RouteIfLoggedIn path="/completed/:id" >
+          <RouteIfLoggedIn path="/completed/:id">
             <CompletedMeetingScreen />
           </RouteIfLoggedIn>
           <Route path="*">

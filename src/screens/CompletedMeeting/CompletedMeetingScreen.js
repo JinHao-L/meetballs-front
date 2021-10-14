@@ -6,7 +6,7 @@ import server from '../../services/server';
 import AttendanceList from './AttendanceList';
 import CompletedAgendaCard from './CompletedAgendaCard';
 import { Col, Nav, Row, Button, Container } from 'react-bootstrap';
-import { getDateInfo, getFormattedDate, } from '../../common/CommonFunctions';
+import { getDateInfo, getFormattedDate } from '../../common/CommonFunctions';
 import Statistics from './Statistics';
 
 export default function CompletedMeetingScreen() {
@@ -56,20 +56,23 @@ export default function CompletedMeetingScreen() {
   }
 
   function emailParticipants() {
-    const recipients = meeting.participants
-      .map((p) => p.userEmail)
-      .join(',');
+    const recipients = meeting.participants.map((p) => p.userEmail).join(',');
     const title = `Minutes to ${meeting.name}`;
-    const body = "Dear all,\n\n"
-      + "Please refer to the attachment for the minutes "
-      +`to our meeting on ${getFormattedDate(meeting.startedAt)}.\n\n`
-      + "Thank you.";
-    const href = `mailto:${recipients}?subject=${title}&body=${encodeURI(body)}`;
+    const body =
+      'Dear all,\n\n' +
+      'Please refer to the attachment for the minutes ' +
+      `to our meeting on ${getFormattedDate(meeting.startedAt)}.\n\n` +
+      'Thank you.';
+    const encodedBody = encodeURI(body);
+    const href = `mailto:${recipients}?subject=${title}&body=${encodedBody}`;
     window.location = href;
   }
 
   const startTimeIso = meeting.startedAt;
-  const { date, startTime, endTime } = getDateInfo(startTimeIso, meeting.duration);
+  const { date, startTime, endTime } = getDateInfo(
+    startTimeIso,
+    meeting.duration,
+  );
   return (
     <>
       <Container className="Container__padding--vertical">

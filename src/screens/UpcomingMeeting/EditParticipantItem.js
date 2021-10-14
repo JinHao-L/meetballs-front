@@ -100,12 +100,16 @@ async function updateDatabase(meetingId, newEmail, newUsername, oldEmail) {
         participants: [{ userEmail: oldEmail }],
         meetingId: meetingId,
       },
-      ...defaultHeaders
+      ...defaultHeaders,
     });
   }
-  await server.post('/participant', {
+  await server.post(
+    '/participant',
+    {
       meetingId: meetingId,
       userEmail: newEmail,
       userName: newUsername,
-    }, defaultHeaders);
+    },
+    defaultHeaders,
+  );
 }

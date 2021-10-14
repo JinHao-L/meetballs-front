@@ -193,11 +193,15 @@ async function addAgenda(meeting, setMeeting) {
 }
 
 async function addAgendaToDatabase(newAgenda) {
-  await server.post('/agenda-item', {
-    meetingId: newAgenda.meetingId,
-    position: newAgenda.position,
-    name: newAgenda.name,
-    description: newAgenda.description,
-    expectedDuration: newAgenda.expectedDuration,
-  }, defaultHeaders);
+  await server.post(
+    '/agenda-item',
+    {
+      meetingId: newAgenda.meetingId,
+      position: newAgenda.position,
+      name: newAgenda.name,
+      description: newAgenda.description,
+      expectedDuration: newAgenda.expectedDuration,
+    },
+    defaultHeaders,
+  );
 }

@@ -31,11 +31,10 @@ const UserProvider = ({ children }) => {
 
     const type = localStorage.getItem(loginTypeKey);
     const refFun = type === 'zoom' ? zoomRefresh : refresh;
-    refFun()
-      .catch((_) => {
-        setLoading(false);
-        console.log('No refresh token');
-      })
+    refFun().catch((_) => {
+      setLoading(false);
+      console.log('No refresh token');
+    });
 
     return () => {
       document.removeEventListener(accessTokenKey, updateUser, false);

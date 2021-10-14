@@ -103,9 +103,12 @@ async function updateDatabase(meetingId, agendaItems) {
     });
     item.prevPosition = item.position;
   });
-  const url = apiUrl + '/agenda-item/positions';
-  await server.put(url, {
-    positions: changes,
-    meetingId: meetingId,
-  }, defaultHeaders);
+  await server.put(
+    '/agenda-item/positions',
+    {
+      positions: changes,
+      meetingId: meetingId,
+    },
+    defaultHeaders,
+  );
 }

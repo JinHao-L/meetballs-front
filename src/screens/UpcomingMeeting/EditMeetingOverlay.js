@@ -62,12 +62,16 @@ export default function EditMeetingOverlay({
 }
 
 async function updateDatabase(newMeeting) {
-  await server.put(`/meeting/${newMeeting.id}`, {
-    name: newMeeting.name,
-    description: newMeeting.description,
-    duration: newMeeting.duration,
-    enableTranscription: newMeeting.enableTranscription,
-  }, defaultHeaders);
+  await server.put(
+    `/meeting/${newMeeting.id}`,
+    {
+      name: newMeeting.name,
+      description: newMeeting.description,
+      duration: newMeeting.duration,
+      enableTranscription: newMeeting.enableTranscription,
+    },
+    defaultHeaders,
+  );
 }
 
 async function deleteMeeting(meetingId, history) {
