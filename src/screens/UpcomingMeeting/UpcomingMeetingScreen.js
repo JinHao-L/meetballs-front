@@ -49,7 +49,7 @@ export default function UpcomingMeetingScreen() {
   }
 
   function startZoom() {
-    openLinkInNewTab(meeting.startUrl);
+    openLinkInNewTab(meeting.joinUrl);
     history.replace('/ongoing/' + id);
   }
 

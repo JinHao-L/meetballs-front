@@ -6,7 +6,6 @@ export const testMeeting = {
   duration: 180000,
   hostId: '//Zoom host id',
   uuid: '//Meeting id',
-  startUrl: 'https://zoom.us/',
   joinUrl: 'https://zoom.us/',
   startedAt: '2021-11-01T22:00:00Z',
   endedAt: '',

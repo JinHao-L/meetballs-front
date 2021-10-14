@@ -20,7 +20,7 @@ export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
 
   function startMeeting() {
     console.log(`Starting meeting of ID = ${meeting.id}`);
-    openLinkInNewTab(meeting.startUrl);
+    openLinkInNewTab(meeting.joinUrl);
     history.push(`/ongoing/${meeting.id}`);
   }
 
@@ -102,7 +102,7 @@ UpcomingMeetingItem.propTypes = {
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     type: PropTypes.number.isRequired,
-    startUrl: PropTypes.string.isRequired,
+    joinUrl: PropTypes.string.isRequired,
     startedAt: PropTypes.string.isRequired,
     duration: PropTypes.number.isRequired,
   }).isRequired,

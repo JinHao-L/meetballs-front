@@ -5,7 +5,6 @@ export const blankMeeting = {
   duration: 3600000,
   hostId: '',
   id: '',
-  startUrl: '',
   joinUrl: '',
   startedAt: '1999-24-06T22:00:00Z',
   endedAt: '',
