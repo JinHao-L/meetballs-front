@@ -108,7 +108,11 @@ export default function OngoingMeetingAdminScreen() {
               {getFormattedDateTime(meeting.startedAt)}
             </p>
             <div className="d-grid gap-2">
-              <Button variant="outline-primary" onClick={startZoom}>
+              <Button
+                variant="outline-primary"
+                onClick={startZoom}
+                enabled={meeting.type == 1 || meeting.type == 2}
+              >
                 Relaunch Zoom
               </Button>
             </div>
@@ -208,11 +212,17 @@ function AgendaToggle({ time, agenda, id }) {
       </Button>
     );
   } else if (position < agenda.length) {
+    const isLastItem = position === agenda.length - 1;
+    const message = isLastItem ? "Finish Meeting" : "Next Item";
     return (
-      <Button onClick={() => nextItem(time, agenda, id)}>Next Item</Button>
+      <Button onClick={() => nextItem(time, agenda, id)}>{message}</Button>
     );
   } else {
-    return <Button disabled>Meeting Ended</Button>;
+    return (
+      <Button href={`/completed/${id}`}>
+        Meeting Ended - View Report
+      </Button>
+    );
   }
 }
 
