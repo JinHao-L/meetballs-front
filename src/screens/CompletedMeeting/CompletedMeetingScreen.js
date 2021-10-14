@@ -6,11 +6,7 @@ import server from '../../services/server';
 import AttendanceList from './AttendanceList';
 import CompletedAgendaCard from './CompletedAgendaCard';
 import { Col, Nav, Row, Button, Container } from 'react-bootstrap';
-import {
-  getDateInfo,
-  getFormattedDate,
-  getFormattedDateTime,
-} from '../../common/CommonFunctions';
+import { getDateInfo, getFormattedDate, } from '../../common/CommonFunctions';
 import Statistics from './Statistics';
 
 export default function CompletedMeetingScreen() {
@@ -93,6 +89,9 @@ export default function CompletedMeetingScreen() {
               <Button variant="outline-primary" onClick={emailParticipants}>
                 Email Participants
               </Button>
+              <p className="Text__hint">
+                Make sure you have enabled mail links in your browser
+              </p>
             </div>
             <div className="Container__row--space-between">
               <p className="Text__subsubheader">Description</p>

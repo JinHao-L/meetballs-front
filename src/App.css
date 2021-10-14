@@ -124,6 +124,11 @@
   margin: 0px;
 }
 
+.Text__hint {
+  color: #858585;
+  font-size: 15px;
+}
+
 .Text__toggle {
   color: #858585;
   margin-top: 20px;
