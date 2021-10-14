@@ -19,6 +19,7 @@ export default function AddMeetingOverlay({
   const [showZoomList, setShowZoomList] = useState(false);
   const [zoomMeetingList, setZoomMeetingList] = useState([]);
   const [showErrorToast, setShowErrorToast] = useState(false);
+  const [isZoomMeeting, setIsZoomMeeting] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -50,8 +51,9 @@ export default function AddMeetingOverlay({
       joinUrl: link,
       enableTranscription: true,
     };
+    const key = isZoomMeeting ? `/zoom/meetings/${meetingId}` : '/meeting'
     return server
-      .post('/meeting', newMeeting, defaultHeaders)
+      .post(key, newMeeting, defaultHeaders)
       .then((res) => {
         onUpdate();
         const id = res.data.id;
@@ -74,6 +76,7 @@ export default function AddMeetingOverlay({
     setFieldValue('meetingPassword', meeting.password);
     setFieldValue('link', meeting.join_url);
     setFieldValue('date', new Date(meeting.start_time));
+    setIsZoomMeeting(true);
     setShowZoomList(false);
   }
 
@@ -116,6 +119,7 @@ export default function AddMeetingOverlay({
             onChange={handleChange}
             value={values.meetingId}
             isValid={touched.meetingId && !errors.meetingId}
+            disabled={isZoomMeeting}
           />
           <Form.Label column>Meeting Password</Form.Label>
           <Form.Control
@@ -125,6 +129,7 @@ export default function AddMeetingOverlay({
             onChange={handleChange}
             value={values.meetingPassword}
             isValid={touched.meetingPassword && !errors.meetingId}
+            disabled={isZoomMeeting}
           />
           <Form.Label column>Meeting link</Form.Label>
           <Form.Control
@@ -134,6 +139,7 @@ export default function AddMeetingOverlay({
             onChange={handleChange}
             value={values.link}
             isValid={touched.link && !errors.link}
+            disabled={isZoomMeeting}
           />
           <Form.Label column>Start Date</Form.Label>
           <DatePicker
@@ -143,6 +149,7 @@ export default function AddMeetingOverlay({
             onChange={(date) => setFieldValue('date', date)}
             dateFormat="Pp"
             customInput={<Form.Control />}
+            disabled={isZoomMeeting}
           />
         </Form.Group>
         <div className="Buffer--20px" />
@@ -169,9 +176,9 @@ export default function AddMeetingOverlay({
 
   function ZoomMeetingList({ setFieldValue }) {
     const items = [];
-    zoomMeetingList.forEach((meeting) => {
+    zoomMeetingList.forEach((meeting, idx) => {
       items.push(
-        <div className="Container__padding--vertical-small">
+        <div className="Container__padding--vertical-small Clickable" key={idx}>
           <Card
             onClick={() => {
               selectMeeting(meeting.id, setFieldValue);
