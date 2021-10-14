@@ -1,6 +1,6 @@
 import DatePicker from 'react-datepicker';
 import { useState, useEffect } from 'react';
-import { Offcanvas, Form, Button, Card } from 'react-bootstrap';
+import { Offcanvas, Form, Button, Card, Toast } from 'react-bootstrap';
 import { useHistory } from 'react-router';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import * as yup from 'yup';
@@ -10,9 +10,15 @@ import 'react-datepicker/dist/react-datepicker.css';
 import server from '../../services/server';
 import { getFormattedDateTime } from '../../common/CommonFunctions';
 
-export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
+export default function AddMeetingOverlay({
+  show,
+  setShow,
+  onUpdate,
+  checkIfExist,
+}) {
   const [showZoomList, setShowZoomList] = useState(false);
   const [zoomMeetingList, setZoomMeetingList] = useState([]);
+  const [showErrorToast, setShowErrorToast] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -23,7 +29,13 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
     const response = await server.get(`/zoom/meetings`, defaultHeaders);
     const result = response.data;
     if (response.status !== 200) return;
-    setZoomMeetingList(result);
+    const filteredList = [];
+    result.forEach((meeting) => {
+      if (checkIfExist(meeting.id)) {
+        filteredList.push();
+      }
+    });
+    setZoomMeetingList(filteredList);
   }
 
   function submit({ name, desc, date, meetingId, meetingPassword, link }) {
@@ -38,16 +50,18 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
       joinUrl: link,
       enableTranscription: true,
     };
-    setShow(false);
     return server
       .post('/meeting', newMeeting, defaultHeaders)
       .then((res) => {
         onUpdate();
         const id = res.data.id;
         console.log('New meeting created with ID = ' + id);
+        setShow(false);
         history.push('/meeting/' + id);
       })
-      .catch(console.error);
+      .catch(() => {
+        setShowErrorToast(true);
+      });
   }
 
   async function selectMeeting(id, setFieldValue) {
@@ -137,6 +151,18 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
             Add new Meeting
           </Button>
         </div>
+        <div className="Buffer--20px" />
+        <Toast
+          show={showErrorToast}
+          onClose={() => setShowErrorToast(false)}
+          autohide
+          delay={2000}
+        >
+          <Toast.Header closeButton={false}>Error</Toast.Header>
+          <Toast.Body>
+            Unable to create meeting. Please check if it has already been added.
+          </Toast.Body>
+        </Toast>
       </>
     );
   }

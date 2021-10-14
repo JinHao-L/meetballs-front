@@ -7,19 +7,7 @@ import AddMeetingOverlay from './AddMeetingOverlay';
 import server from '../../services/server';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import CompletedMeetingItem from './CompletedMeetingItem';
-import {
-  getZoomMeeting,
-  getZoomMeetingList,
-  linkZoomMeeting,
-} from '../../services/zoom';
-
-function AddMeetingButton({ onClick }) {
-  return (
-    <div className="Fab" onClick={onClick}>
-      <CalendarPlusFill size={22} color="white" />
-    </div>
-  );
-}
+import { getZoomMeeting, getZoomMeetingList } from '../../services/zoom';
 
 export default function DashboardScreen() {
   const [upcoming, setUpcoming] = useState([]);
@@ -107,6 +95,20 @@ export default function DashboardScreen() {
       .finally(() => setLoadingPast(false));
   }
 
+  function checkIfExist(id) {
+    for (let i = 0; i < upcoming.length; i++) {
+      if (upcoming[i].zoomUuid === id.toString()) {
+        return true;
+      }
+    }
+    for (let i = 0; i < meetingHistory.length; i++) {
+      if (meetingHistory[i].zoomUuid === id.toString()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   const upcomingList = upcoming.map((meeting, idx) => (
     <UpcomingMeetingItem
       key={idx}
@@ -167,8 +169,11 @@ export default function DashboardScreen() {
         show={showOverlay}
         setShow={setShowOverlay}
         onUpdate={pullMeetings}
+        checkIfExist={checkIfExist}
       />
-      <AddMeetingButton onClick={() => setShowOverlay(true)} />
+      <div className="Fab" onClick={() => setShowOverlay(true)}>
+        <CalendarPlusFill size={22} color="white" />
+      </div>
     </>
   );
 }
