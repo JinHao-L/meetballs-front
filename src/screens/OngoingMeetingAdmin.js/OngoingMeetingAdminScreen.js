@@ -67,7 +67,7 @@ export default function OngoingMeetingAdminScreen() {
   }, [socket, isHost]);
 
   function startZoom() {
-    window.open(meeting.startUrl, '_blank');
+    window.open(meeting.joinUrl, '_blank');
   }
 
   const updateMeeting = (meetingObj) => {

@@ -16,6 +16,7 @@ const UserProvider = ({ children }) => {
       const token = sessionStorage.getItem(accessTokenKey);
       if (!token) {
         setUser(null);
+        setLoading(false);
         return;
       }
       try {
@@ -24,16 +25,17 @@ const UserProvider = ({ children }) => {
       } catch (err) {
         console.log('Error getting user', err);
       }
+      setLoading(false);
     };
     document.addEventListener(accessTokenKey, updateUser, false);
 
     const type = localStorage.getItem(loginTypeKey);
     const refFun = type === 'zoom' ? zoomRefresh : refresh;
     refFun()
-      .catch((_) => console.log('No refresh token'))
-      .finally(() => {
+      .catch((_) => {
         setLoading(false);
-      });
+        console.log('No refresh token');
+      })
 
     return () => {
       document.removeEventListener(accessTokenKey, updateUser, false);
