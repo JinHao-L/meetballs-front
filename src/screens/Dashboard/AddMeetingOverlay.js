@@ -12,7 +12,8 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
   const schema = yup.object().shape({
     name: yup.string().required(),
     desc: yup.string().required(),
-    meetingId: yup.string().required(),
+    meetingId: yup.number().required(),
+    meetingPassword: yup.string().required(),
     link: yup.string().url('Must be a valid URL!').required(),
     date: yup.date().required(),
   });
@@ -21,21 +22,22 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
     name: '',
     desc: '',
     meetingId: '',
+    meetingPassword: '',
     link: '',
     date: new Date(),
   };
 
   const history = useHistory();
 
-  function submit({ name, desc, date, meetingId, link }) {
+  function submit({ name, desc, date, meetingId, meetingPassword, link }) {
     console.log(server.defaults.headers.common['Authorization']);
     const newMeeting = {
       name: name,
       description: desc,
       startedAt: date.toISOString(),
       duration: 1800000,
-      meetingId: meetingId,
-      startUrl: link,
+      meetingId: `${meetingId}`,
+      meetingPassword: meetingPassword,
       joinUrl: link,
       enableTranscription: true,
     };
@@ -99,6 +101,15 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
                 onChange={handleChange}
                 value={values.meetingId}
                 isValid={touched.meetingId && !errors.meetingId}
+              />
+              <Form.Label column>Meeting Password</Form.Label>
+              <Form.Control
+                required
+                name="meetingPassword"
+                placeholder="Please enter meeting password"
+                onChange={handleChange}
+                value={values.meetingPassword}
+                isValid={touched.meetingPassword && !errors.meetingId}
               />
               <Form.Label column>Meeting link</Form.Label>
               <Form.Control
