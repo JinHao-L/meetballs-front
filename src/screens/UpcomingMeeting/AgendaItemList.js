@@ -1,7 +1,6 @@
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import AgendaItem from './AgendaItem';
 import { Button } from 'react-bootstrap';
-import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 

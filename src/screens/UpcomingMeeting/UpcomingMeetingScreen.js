@@ -12,7 +12,6 @@ import {
   blankMeeting,
   blankParticipant,
 } from '../../common/ObjectTemplates';
-import { apiUrl } from '../../common/CommonValues';
 import EditMeetingOverlay from './EditMeetingOverlay';
 import { useHistory, Redirect, useParams } from 'react-router';
 import server from '../../services/server';
@@ -115,12 +114,12 @@ export default function UpcomingMeetingScreen() {
             </div>
             <div className="Container__row--space-between">
               <p className="Text__subsubheader">Description</p>
-              <a
-                className="Text__toggle"
+              <div
+                className="Text__toggle Clickable"
                 onClick={() => setRestrictDescription(!restrictDescription)}
               >
                 {restrictDescription ? 'Show More' : 'Show Less'}
-              </a>
+              </div>
             </div>
             <p
               className={

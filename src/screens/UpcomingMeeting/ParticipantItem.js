@@ -1,6 +1,5 @@
 import { Button, Row, Col, Card } from 'react-bootstrap';
 import { useState } from 'react';
-import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import EditParticipantItem from './EditParticipantItem';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';

@@ -1,6 +1,5 @@
 import { Offcanvas, Form, Button } from 'react-bootstrap';
 import { useRef } from 'react';
-import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import { useHistory } from 'react-router';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';

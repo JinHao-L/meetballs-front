@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button, Col, Card, CloseButton, Form, Modal } from 'react-bootstrap';
-import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 
