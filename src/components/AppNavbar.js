@@ -107,4 +107,9 @@ const mapping = [
     button: TOGGLES.DASHBOARD,
     home: HOME.DASHBOARD,
   },
+  {
+    route: '/completed',
+    button: TOGGLES.DASHBOARD,
+    home: HOME.DASHBOARD,
+  },
 ];

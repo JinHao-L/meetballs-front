@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
-import { getFormattedDate } from '../../common/CommonFunctions';
-import { Button, Card, Col, Container, Row } from 'react-bootstrap';
+import {
+  getFormattedDateTime,
+  getFormattedDate,
+} from '../../common/CommonFunctions';
+import { Button, Card, Col } from 'react-bootstrap';
 
 export default function AttendanceList({ participants, date }) {
   const attendees = participants
@@ -17,7 +20,7 @@ export default function AttendanceList({ participants, date }) {
     return (
       <a
         href={exportToCsv(participants)}
-        style={{textDecoration: "none"}}
+        style={{ textDecoration: 'none' }}
         className="d-grid gap-2"
         download={fileName}
       >
@@ -33,13 +36,14 @@ export default function AttendanceList({ participants, date }) {
       <div className="d-grid gap-2">
         <DownloadButton />
       </div>
-      <div className="Buffer--20px"/>
-      <div> 
-        <p className="Text__subheader">Meeting Attendees</p>
-        <div>{attendees}</div>
-      </div >
+      <div className="Buffer--20px" />
       <div>
-        <h1 className="Text__subheader">Absent With Apologies</h1>
+        <p className="Text__subheader">Present</p>
+        <div>{attendees}</div>
+      </div>
+      <div className="Buffer--20px" />
+      <div>
+        <h1 className="Text__subheader">Absent</h1>
         <div className="d-grid gap-2">{absentees}</div>
       </div>
     </div>
@@ -61,7 +65,7 @@ function ParticipantItem({ person }) {
   const displayName = person.userName;
   const joinedTime = person.timeJoined;
   const presence = joinedTime
-    ? `Joined: ${getFormattedDate(joinedTime)}`
+    ? `Joined: ${getFormattedDateTime(joinedTime)}`
     : 'Absent';
 
   return (
@@ -96,7 +100,7 @@ function toCsvString(person) {
 }
 
 function exportToCsv(participants) {
-  if (!participants) return "#";
+  if (!participants) return '#';
   const sortedList = participants.sort(sortByPresence);
   console.log(sortedList);
   const csvString =
