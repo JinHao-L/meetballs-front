@@ -3,7 +3,6 @@ import { Col, Card } from 'react-bootstrap';
 import {
   getDateInfo,
   getFormattedDuration,
-  getFormattedTime,
 } from '../../common/CommonFunctions';
 
 export default function CompletedAgendaCard({ agendaItem }) {
@@ -13,15 +12,16 @@ export default function CompletedAgendaCard({ agendaItem }) {
   const exceededDuration = duration > expectedDuration;
   const { startTime, endTime } = getDateInfo(agendaItem.startTime, duration);
   const durationStr = getFormattedDuration(duration);
-  const expectedDurationStr = getFormattedDuration(expectedDuration);
 
   return (
     <Col className="Container__padding--vertical-small">
-      <Card bg={exceededDuration ? 'danger' :'primary'} text="light">
+      <Card
+        bg={exceededDuration ? 'danger' : null}
+        text={exceededDuration ? 'light' : 'dark'}
+      >
         <Card.Body>
           <Card.Title>{agendaItem.name}</Card.Title>
           <Card.Text>{agendaItem.description}</Card.Text>
-          <Card.Text>{expectedDurationStr}</Card.Text>
         </Card.Body>
         <Card.Footer>
           <Card.Text>

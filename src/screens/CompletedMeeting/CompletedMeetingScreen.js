@@ -5,14 +5,18 @@ import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import server from '../../services/server';
 import AttendanceList from './AttendanceList';
 import CompletedAgendaCard from './CompletedAgendaCard';
-import { Col, Nav, Row, Button, Container } from "react-bootstrap";
-import { getDateInfo, getFormattedDate, getFormattedDateTime } from '../../common/CommonFunctions';
+import { Col, Nav, Row, Button, Container } from 'react-bootstrap';
+import {
+  getDateInfo,
+  getFormattedDateTime,
+} from '../../common/CommonFunctions';
+import Statistics from './Statistics';
 
 export default function CompletedMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
   const [loading, setLoading] = useState(true);
   const [restrictDescription, setRestrictDescription] = useState(false);
-  const [currentTab, setCurrentTab] = useState('participants');
+  const [currentTab, setCurrentTab] = useState('statistics');
 
   const { id } = useParams();
 
@@ -36,38 +40,22 @@ export default function CompletedMeetingScreen() {
   }
 
   function Content() {
-    if (currentTab == 'agenda') {
-      return meeting.agendaItems.map((item, idx) => (
-        <CompletedAgendaCard agendaItem={item} key={idx} />
-      ));
-    } else {
-      const date = meeting.startedAt;
-      return <AttendanceList participants={meeting.participants} date={date}/>;
+    switch (currentTab) {
+      case 'statistics': {
+        return <Statistics meeting={meeting} />;
+      }
+      case 'agenda': {
+        return meeting.agendaItems.map((item, idx) => (
+          <CompletedAgendaCard agendaItem={item} key={idx} />
+        ));
+      }
+      default: {
+        const date = meeting.startedAt;
+        return (
+          <AttendanceList participants={meeting.participants} date={date} />
+        );
+      }
     }
-  }
-
-  function NavBar() {
-    return (
-      <Col lg={6} md={12} sm={12}>
-        <Nav
-          variant="tabs"
-          defaultActiveKey="participants"
-          onSelect={(selectedKey) => setCurrentTab(selectedKey)}
-        >
-          <Nav.Item>
-            <Nav.Link eventKey="participants">Participants</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link eventKey="agenda">Agenda</Nav.Link>
-          </Nav.Item>
-        </Nav>
-        <div className="Buffer--20px" />
-        <div className="Container__padding--horizontal">
-          <Content />
-        </div>
-        <div className="Buffer--100px" />
-      </Col>
-    );
   }
 
   const startTime = meeting.startedAt;
@@ -110,7 +98,28 @@ export default function CompletedMeetingScreen() {
             <div className="Buffer--20px" />
           </Col>
           <Col lg={1} md={12} sm={12} />
-          <NavBar />
+          <Col lg={6} md={12} sm={12}>
+            <Nav
+              variant="tabs"
+              defaultActiveKey="statistics"
+              onSelect={(selectedKey) => setCurrentTab(selectedKey)}
+            >
+              <Nav.Item>
+                <Nav.Link eventKey="statistics">Statistics</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="participants">Participants</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="agenda">Agenda</Nav.Link>
+              </Nav.Item>
+            </Nav>
+            <div className="Buffer--20px" />
+            <div className="Container__padding--horizontal">
+              <Content />
+            </div>
+            <div className="Buffer--100px" />
+          </Col>
         </Row>
       </Container>
     </>
