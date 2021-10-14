@@ -7,6 +7,11 @@ import AddMeetingOverlay from './AddMeetingOverlay';
 import server from '../../services/server';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import CompletedMeetingItem from './CompletedMeetingItem';
+import {
+  getZoomMeeting,
+  getZoomMeetingList,
+  linkZoomMeeting,
+} from '../../services/zoom';
 
 function AddMeetingButton({ onClick }) {
   return (
@@ -25,6 +30,27 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     getBanner();
+    // TODO: see here
+    getZoomMeetingList()
+      .then((res) => res.data)
+      .then((meetings) => {
+        console.log(meetings);
+
+        if (meetings.length > 0) {
+          // technically dont have to call this to get detailed zoom meeting info
+
+          return getZoomMeeting(meetings[0].id).then((res) => {
+            console.log(res.data);
+            return res.data;
+          });
+          // return linkZoomMeeting(meetings[0].id, {
+          //   enableTranscriptions: false,
+          // }).then((res) => {
+          //   console.log(res.data);
+          //   return res.data;
+          // });
+        }
+      });
     return pullMeetings();
   }, []);
 
