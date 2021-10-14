@@ -32,7 +32,7 @@ export default function AddMeetingOverlay({
     const filteredList = [];
     result.forEach((meeting) => {
       if (!checkIfExist(meeting.id)) {
-        filteredList.push();
+        filteredList.push(meeting);
       }
     });
     setZoomMeetingList(filteredList);
