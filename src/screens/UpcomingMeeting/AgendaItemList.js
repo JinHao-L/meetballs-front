@@ -102,12 +102,14 @@ async function updateDatabase(meetingId, agendaItems) {
     });
     item.prevPosition = item.position;
   });
-  await server.put(
-    '/agenda-item/positions',
-    {
-      positions: changes,
-      meetingId: meetingId,
-    },
-    defaultHeaders,
-  );
+  if (changes.length > 0) {
+    await server.put(
+      '/agenda-item/positions',
+      {
+        positions: changes,
+        meetingId: meetingId,
+      },
+      defaultHeaders,
+    );
+  }
 }
