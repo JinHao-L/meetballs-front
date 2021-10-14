@@ -35,7 +35,7 @@ export default function CompletedAgendaCard({ agendaItem }) {
 
 CompletedAgendaCard.propTypes = {
   agendaItem: PropTypes.shape({
-    meeting: PropTypes.string.isRequired,
+    meetingId: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     startTime: PropTypes.string.isRequired,

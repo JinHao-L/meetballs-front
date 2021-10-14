@@ -34,7 +34,7 @@ export default function AttendanceList({ participants, date }) {
         download={fileName}
       >
         <div className="d-grid gap-2">
-          <Button block>Export to CSV</Button>
+          <Button block="true">Export to CSV</Button>
         </div>
       </a>
     );
