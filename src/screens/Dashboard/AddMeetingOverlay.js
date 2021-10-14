@@ -31,7 +31,7 @@ export default function AddMeetingOverlay({
     if (response.status !== 200) return;
     const filteredList = [];
     result.forEach((meeting) => {
-      if (checkIfExist(meeting.id)) {
+      if (!checkIfExist(meeting.id)) {
         filteredList.push();
       }
     });
