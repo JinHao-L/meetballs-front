@@ -3,15 +3,24 @@ import {
   getFormattedDateTime,
   getFormattedDate,
 } from '../../common/CommonFunctions';
-import { Button, Card, Col } from 'react-bootstrap';
+import { Button, Card, Col, Collapse } from 'react-bootstrap';
+import { useState } from 'react';
 
 export default function AttendanceList({ participants, date }) {
+  const [showPresent, setShowPresent] = useState(true);
+  const [showAbsent, setShowAbsent] = useState(true);
+
+  const numTotal = participants.length;
+
   const attendees = participants
     .filter((person) => person.timeJoined)
     .map((person, idx) => <ParticipantItem person={person} key={idx} />);
+  const numPresent = attendees.length;
+
   const absentees = participants
     .filter((person) => !person.timeJoined)
     .map((person, idx) => <ParticipantItem person={person} key={idx} />);
+  const numAbsent = absentees.length;
 
   const dateStr = getFormattedDate(date);
   const fileName = `attendance_list_${dateStr}.csv`;
@@ -38,13 +47,23 @@ export default function AttendanceList({ participants, date }) {
       </div>
       <div className="Buffer--20px" />
       <div>
-        <p className="Text__subheader">Present</p>
-        <div>{attendees}</div>
+        <div>
+          <p className="Text__subheader">Present: {numPresent}/{numTotal}</p>
+          <CollapseToggle show={showPresent} setShow={setShowPresent} />
+        </div>
+        <Collapse in={showPresent}>
+          <div>{attendees}</div>
+        </Collapse>
       </div>
       <div className="Buffer--20px" />
       <div>
-        <h1 className="Text__subheader">Absent</h1>
-        <div className="d-grid gap-2">{absentees}</div>
+        <div>
+          <p className="Text__subheader">Absent: {numAbsent}/{numTotal}</p>
+          <CollapseToggle show={showAbsent} setShow={setShowAbsent} />
+        </div>
+        <Collapse in={showAbsent}>
+          <div>{absentees}</div>
+        </Collapse>
       </div>
     </div>
   );
@@ -107,4 +126,15 @@ function exportToCsv(participants) {
     'data:text/csv;charset=utf-8,' + sortedList.map(toCsvString).join('\n');
   console.log(csvString);
   return encodeURI(csvString);
+}
+
+function CollapseToggle({ show, setShow }) {
+  return (
+    <a
+      className="Text__toggle"
+      onClick={() => setShow(!show)}
+    >
+      {show ? 'Collapse' : 'Expand'}
+    </a>
+  );
 }

@@ -8,6 +8,7 @@ import CompletedAgendaCard from './CompletedAgendaCard';
 import { Col, Nav, Row, Button, Container } from 'react-bootstrap';
 import {
   getDateInfo,
+  getFormattedDate,
   getFormattedDateTime,
 } from '../../common/CommonFunctions';
 import Statistics from './Statistics';
@@ -58,8 +59,21 @@ export default function CompletedMeetingScreen() {
     }
   }
 
-  const startTime = meeting.startedAt;
-  const { endTime } = getDateInfo(startTime, meeting.duration);
+  function emailParticipants() {
+    const recipients = meeting.participants
+      .map((p) => p.userEmail)
+      .join(',');
+    const title = `Minutes to ${meeting.name}`;
+    const body = "Dear all,\n\n"
+      + "Please refer to the attachment for the minutes "
+      +`to our meeting on ${getFormattedDate(meeting.startedAt)}.\n\n`
+      + "Thank you.";
+    const href = `mailto:${recipients}?subject=${title}&body=${encodeURI(body)}`;
+    window.location = href;
+  }
+
+  const startTimeIso = meeting.startedAt;
+  const { date, startTime, endTime } = getDateInfo(startTimeIso, meeting.duration);
   return (
     <>
       <Container className="Container__padding--vertical">
@@ -72,11 +86,13 @@ export default function CompletedMeetingScreen() {
           >
             <p className="Text__header">{meeting.name}</p>
             <p className="Text__subheader">
-              {getFormattedDateTime(meeting.startedAt)} - {endTime}
+              {date}, {startTime} - {endTime}
             </p>
             <div className="d-grid gap-2">
               <Button>Get Meeting Recording</Button>
-              <Button variant="outline-primary">Email Minutes</Button>
+              <Button variant="outline-primary" onClick={emailParticipants}>
+                Email Participants
+              </Button>
             </div>
             <div className="Container__row--space-between">
               <p className="Text__subsubheader">Description</p>
