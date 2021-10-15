@@ -12,7 +12,6 @@ import {
   blankMeeting,
   blankParticipant,
 } from '../../common/ObjectTemplates';
-import { apiUrl } from '../../common/CommonValues';
 import EditMeetingOverlay from './EditMeetingOverlay';
 import { useHistory, Redirect, useParams } from 'react-router';
 import server from '../../services/server';
@@ -42,6 +41,11 @@ export default function UpcomingMeetingScreen() {
       });
       result.agendaItems.forEach((item) => {
         item.prevPosition = item.position;
+      });
+    }
+    if (result.participants && result.participants.length > 1) {
+      result.participants.sort((p1, p2) => {
+        return p1.userName.localeCompare(p2.userName);
       });
     }
     setMeeting(result);
