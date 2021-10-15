@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Row, Col, Container, Nav } from 'react-bootstrap';
+import { Button, Row, Col, Container, Nav, Spinner } from 'react-bootstrap';
 import {
   getFormattedDateTime,
   openLinkInNewTab,
@@ -16,12 +16,16 @@ import EditMeetingOverlay from './EditMeetingOverlay';
 import { useHistory, Redirect, useParams } from 'react-router';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import ConfirmInviteModel from '../OngoingMeetingAdmin.js/ConfirmInviteModel';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
   const [restrictDescription, setRestrictDescription] = useState(true);
   const [currentTab, setCurrentTab] = useState('participants');
   const [showEditMeeting, setShowEditMeeting] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [inviteList, setInviteList] = useState([]);
+  const [inviteLoading, setInviteLoading] = useState(false);
   const [isReordering, setReordering] = useState(false);
   const history = useHistory();
 
@@ -49,6 +53,18 @@ export default function UpcomingMeetingScreen() {
   function startZoom() {
     openLinkInNewTab(meeting.joinUrl);
     history.replace('/ongoing/' + id);
+  }
+
+  async function sendInvitationToAll(participants) {
+    setInviteLoading(true);
+    await server.post(
+      `/participant/send-multiple-invites`,
+      { participants },
+      defaultHeaders,
+    );
+    setInviteLoading(false);
+    const res = await server.get(`/participant/${meeting.id}`);
+    setMeeting((prev) => ({...prev, participants: res.data}))
   }
 
   function Content() {
@@ -104,7 +120,25 @@ export default function UpcomingMeetingScreen() {
             </p>
             <div className="d-grid gap-2">
               <Button onClick={startZoom}>Start Zoom Meeting</Button>
-              <Button variant="outline-primary">Email Participants</Button>
+              <Button
+                variant="outline-primary"
+                onClick={() => {
+                  setInviteList(meeting.participants.filter((x) => !x.invited));
+                  setShowInviteModal(true);
+                }}
+                disabled={inviteLoading}
+              >
+                Email participants{' '}
+                {inviteLoading && (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                )}
+              </Button>
               <Button
                 variant="outline-primary"
                 onClick={() => setShowEditMeeting(true)}
@@ -158,6 +192,13 @@ export default function UpcomingMeetingScreen() {
         setShow={setShowEditMeeting}
         meeting={meeting}
         setMeeting={setMeeting}
+      />
+      <ConfirmInviteModel
+        showModal={showInviteModal}
+        setShowModal={setShowInviteModal}
+        meetingName={meeting.name}
+        inviteList={inviteList}
+        sendInvitation={(participant) => sendInvitationToAll(participant)}
       />
       <AddToggle />
     </>
