@@ -8,39 +8,40 @@ import {
   Button,
 } from 'react-bootstrap';
 import { useState } from 'react';
-import { getFormattedDuration } from '../../common/CommonFunctions';
+import { getFormattedDuration, isValidUrl } from '../../common/CommonFunctions';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 
-export default function EditAgendaItem({
-  setEditing,
-  meeting,
-  setMeeting,
-  position,
-}) {
+export default function EditAgendaItem({ setEditing, meeting, position }) {
   const item = meeting.agendaItems[position];
   const [duration, setDuration] = useState(item.expectedDuration);
   const [name, setName] = useState(item.name);
   const [description, setDescription] = useState(item.description);
+  const [speaker, setSpeaker] = useState(item.speakerName || '');
+  const [materials, setMaterials] = useState(item.speakerMaterials || '');
 
   function DurationItems() {
-    const items = [];
-    durationMinutes.forEach((duration) =>
-      items.push(
-        <Dropdown.Item
-          key={'Duration' + duration.mils}
-          onClick={() => {
-            setDuration(duration.mils);
-          }}
-        >
-          {duration.display}
-        </Dropdown.Item>,
-      ),
-    );
-    return items;
+    return durationMinutes.map((duration) => (
+      <Dropdown.Item
+        key={'Duration' + duration.mils}
+        onClick={() => {
+          setDuration(duration.mils);
+        }}
+      >
+        {duration.display}
+      </Dropdown.Item>
+    ));
   }
 
   async function updateChanges() {
+    const linkSubmitted = materials !== '';
+    if (linkSubmitted && !isValidUrl(materials)) {
+      console.log('Attempted to submit an invalid URL');
+      // Try to give them a warning
+      setMaterials('');
+      return;
+    }
+
     const actualPosition = meeting.agendaItems[position].position;
     await updateDatabase(
       meeting.id,
@@ -48,11 +49,40 @@ export default function EditAgendaItem({
       name,
       duration,
       description,
+      speaker,
+      materials,
     );
     meeting.agendaItems[position].name = name;
     meeting.agendaItems[position].expectedDuration = duration;
     meeting.agendaItems[position].description = description;
+    meeting.agendaItems[position].speakerName = speaker;
+    meeting.agendaItems[position].speakerMaterials = materials;
     setEditing(false);
+  }
+
+  function SpeakerItems() {
+    const choices = meeting.participants.map((participant) => (
+      <Dropdown.Item
+        key={participant.userEmail}
+        onClick={() => {
+          setSpeaker(participant.userName);
+        }}
+      >
+        {participant.userName}
+      </Dropdown.Item>
+    ));
+    choices.push(
+      <Dropdown.Item
+        key="null choice"
+        onClick={() => {
+          setSpeaker('');
+          setMaterials('');
+        }}
+      >
+        Remove speaker
+      </Dropdown.Item>,
+    );
+    return choices;
   }
 
   return (
@@ -76,13 +106,28 @@ export default function EditAgendaItem({
               variant="outline-primary  "
               title={getFormattedDuration(duration)}
             >
-              {DurationItems()}
+              <DurationItems />
             </DropdownButton>
             <Form.Label column>Description</Form.Label>
             <Form.Control
               as="textarea"
               defaultValue={description}
               onChange={(event) => setDescription(event.target.value)}
+            />
+            <Form.Label column>Speaker (optional)</Form.Label>
+            <DropdownButton
+              variant="outline-primary  "
+              placeholder="Add presenter"
+              title={speaker}
+            >
+              <SpeakerItems />
+            </DropdownButton>
+            <Form.Label column>Materials (optional)</Form.Label>
+            <Form.Control
+              value={materials}
+              placeholder="Add a URL to your presentation materials"
+              disabled={speaker === ''}
+              onChange={(event) => setMaterials(event.target.value)}
             />
             <div className="Buffer--20px" />
             <div className="d-grid gap-2">
@@ -103,17 +148,23 @@ async function updateDatabase(
   name,
   duration,
   description,
+  speaker,
+  materials,
 ) {
+  const data = {
+    name: name,
+    description: description,
+    startTime: null,
+    expectedDuration: duration,
+    actualDuration: null,
+    isCurrent: false,
+  };
+  if (speaker !== '') data.speakerName = speaker;
+  if (materials !== '') data.speakerMaterials = materials;
+  console.log(data);
   await server.put(
     `/agenda-item/${meetingId}/${position}`,
-    {
-      name: name,
-      description: description,
-      startTime: null,
-      expectedDuration: duration,
-      actualDuration: null,
-      isCurrent: false,
-    },
+    data,
     defaultHeaders,
   );
 }

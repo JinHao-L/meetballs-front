@@ -4,6 +4,10 @@ import {
   getDateInfo,
   getFormattedDuration,
 } from '../../common/CommonFunctions';
+import {
+  MaterialsSection,
+  SpeakerSection,
+} from '../../components/AgendaItemComponents';
 
 export default function CompletedAgendaCard({ agendaItem }) {
   const duration = agendaItem.actualDuration;
@@ -22,6 +26,8 @@ export default function CompletedAgendaCard({ agendaItem }) {
         <Card.Body>
           <Card.Title>{agendaItem.name}</Card.Title>
           <Card.Text>{agendaItem.description}</Card.Text>
+          <SpeakerSection item={agendaItem} />
+          <MaterialsSection item={agendaItem} />
         </Card.Body>
         <Card.Footer>
           <Card.Text>
