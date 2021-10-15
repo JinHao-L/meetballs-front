@@ -18,7 +18,6 @@ import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import ConfirmInviteModel from '../OngoingMeetingAdmin.js/ConfirmInviteModel';
 import { toast } from 'react-toastify';
-import ConfirmInviteModel from '../OngoingMeetingAdmin/ConfirmInviteModel';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
