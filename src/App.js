@@ -54,14 +54,15 @@ export default function App() {
           <Route exact path="/authorize">
             <ZoomRedirectPage />
           </Route>
+          <Route path="/login">
+            <ZoomLoginScreen />
+          </Route>
+          {/*
           <Route path="/confirm-email">
             <EmailConfirmationScreen />
           </Route>
           <Route path="/login">
-            <LoginScreen />
-          </Route>
-          <Route path="/login-zoom">
-            <ZoomLoginScreen />
+          <LoginScreen />
           </Route>
           <Route path="/forgot-password">
             <ForgotPasswordScreen />
@@ -72,9 +73,13 @@ export default function App() {
           <Route path="/signup">
             <RegistrationScreen />
           </Route>
+          */}
           <RouteIfLoggedIn path="/home">
             <DashboardScreen />
           </RouteIfLoggedIn>
+          <Route path="/meeting">
+            <MeetingRedirectScreen />
+          </Route>
           <RouteIfLoggedIn path="/meeting/:id">
             <UpcomingMeetingScreen />
           </RouteIfLoggedIn>
