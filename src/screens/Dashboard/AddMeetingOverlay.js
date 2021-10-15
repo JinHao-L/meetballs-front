@@ -22,8 +22,10 @@ export default function AddMeetingOverlay({
   const history = useHistory();
 
   useEffect(() => {
-    getZoomMeetingList();
-  }, []);
+    if (show) {
+      getZoomMeetingList();
+    }
+  }, [show]);
 
   async function getZoomMeetingList() {
     const response = await server.get(`/zoom/meetings`, defaultHeaders);
@@ -31,7 +33,7 @@ export default function AddMeetingOverlay({
     if (response.status !== 200) return;
     const filteredList = [];
     result.forEach((meeting) => {
-      if (!checkIfExist(meeting.id)) {
+      if (!checkIfExist(meeting.uuid)) {
         filteredList.push(meeting);
       }
     });
@@ -173,6 +175,7 @@ export default function AddMeetingOverlay({
       items.push(
         <div className="Container__padding--vertical-small">
           <Card
+            style={{ cursor: 'pointer' }}
             onClick={() => {
               selectMeeting(meeting.id, setFieldValue);
             }}
@@ -205,7 +208,13 @@ export default function AddMeetingOverlay({
         isValid,
         errors,
       }) => (
-        <Offcanvas show={show} onHide={() => setShow(false)}>
+        <Offcanvas
+          show={show}
+          onHide={() => {
+            setShow(false);
+            setShowZoomList(false);
+          }}
+        >
           <Offcanvas.Header closeButton>
             <Offcanvas.Title>Add New Meeting</Offcanvas.Title>
           </Offcanvas.Header>
