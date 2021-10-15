@@ -17,6 +17,8 @@ import CustomBootstrapStyle from './common/CustomBootstrapStyle';
 import ZoomLoginScreen from './screens/Login/ZoomLoginScreen';
 import PrivacyPolicyScreen from './screens/LandingPage/PrivacyPolicyScreen';
 import ZoomRedirectPage from './screens/Login/ZoomRedirectPage';
+import TermsNConditionScreen from './screens/LandingPage/TermsNConditionScreen';
+import SupportPage from './screens/LandingPage/SupportPage';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -46,6 +48,12 @@ export default function App() {
           <Route exact path="/privacy-policy">
             <PrivacyPolicyScreen />
           </Route>
+          <Route exact path="/terms">
+            <TermsNConditionScreen />
+          </Route>
+          <Route exact path="/support">
+            <SupportPage />
+          </Route>
           <Route exact path="/authorize">
             <ZoomRedirectPage />
           </Route>
@@ -57,7 +65,7 @@ export default function App() {
             <EmailConfirmationScreen />
           </Route>
           <Route path="/login">
-          <LoginScreen />
+            <LoginScreen />
           </Route>
           <Route path="/forgot-password">
             <ForgotPasswordScreen />
