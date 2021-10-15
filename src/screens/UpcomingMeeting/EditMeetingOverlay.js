@@ -1,8 +1,10 @@
 import { Offcanvas, Form, Button } from 'react-bootstrap';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import { toast } from 'react-toastify';
+import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 
 export default function EditMeetingOverlay({
   show,
@@ -10,17 +12,42 @@ export default function EditMeetingOverlay({
   meeting,
   setMeeting,
 }) {
+  const [loading, setLoading] = useState(false);
   const nameRef = useRef();
   const descriptionRef = useRef();
   const history = useHistory();
 
   async function update() {
-    const newMeeting = Object.assign({}, meeting);
-    newMeeting.name = nameRef.current.value;
-    newMeeting.description = descriptionRef.current.value;
-    setMeeting(newMeeting);
-    setShow(false);
-    updateDatabase(newMeeting);
+    try {
+      setLoading(true);
+      const newMeeting = Object.assign({}, meeting);
+      newMeeting.name = nameRef.current.value;
+      newMeeting.description = descriptionRef.current.value;
+      setMeeting(newMeeting);
+      setShow(false);
+      updateDatabase(newMeeting);
+    } catch (err) {
+      toast.error(err.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function deleteMeeting(meetingId) {
+    try {
+      setLoading(true);
+      const response = await server.delete(
+        `/meeting/${meetingId}`,
+        defaultHeaders,
+      );
+      if (response.status === 200) {
+        history.goBack();
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -28,34 +55,35 @@ export default function EditMeetingOverlay({
       <Offcanvas.Header closeButton>
         <Offcanvas.Title>Edit Meeting</Offcanvas.Title>
       </Offcanvas.Header>
-      <Offcanvas.Body>
-        <Form.Group>
-          <Form.Label column>Meeting Name</Form.Label>
-          <Form.Control defaultValue={meeting.name} ref={nameRef} />
-          <Form.Label column>Description</Form.Label>
-          <Form.Control
-            as="textarea"
-            style={{ height: 200 }}
-            defaultValue={meeting.description}
-            ref={descriptionRef}
-          />
-        </Form.Group>
-        <div className="Buffer--20px" />
-        <div className="d-grid gap-2">
-          <Button variant="primary" onClick={update}>
-            Update
-          </Button>
+      {loading ? (
+        <FullLoadingIndicator />
+      ) : (
+        <Offcanvas.Body>
+          <Form.Group>
+            <Form.Label column>Meeting Name</Form.Label>
+            <Form.Control defaultValue={meeting.name} ref={nameRef} />
+            <Form.Label column>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              style={{ height: 200 }}
+              defaultValue={meeting.description}
+              ref={descriptionRef}
+            />
+          </Form.Group>
           <div className="Buffer--20px" />
-          <div className="Line--horizontal" />
-          <div className="Buffer--20px" />
-          <Button
-            variant="danger"
-            onClick={() => deleteMeeting(meeting.id, history)}
-          >
-            Delete Meeting
-          </Button>
-        </div>
-      </Offcanvas.Body>
+          <div className="d-grid gap-2">
+            <Button variant="primary" onClick={update}>
+              Update
+            </Button>
+            <div className="Buffer--20px" />
+            <div className="Line--horizontal" />
+            <div className="Buffer--20px" />
+            <Button variant="danger" onClick={() => deleteMeeting(meeting.id)}>
+              Delete Meeting
+            </Button>
+          </div>
+        </Offcanvas.Body>
+      )}
     </Offcanvas>
   );
 }
@@ -71,11 +99,4 @@ async function updateDatabase(newMeeting) {
     },
     defaultHeaders,
   );
-}
-
-async function deleteMeeting(meetingId, history) {
-  const response = await server.delete(`/meeting/${meetingId}`, defaultHeaders);
-  if (response.status === 200) {
-    history.goBack();
-  }
 }

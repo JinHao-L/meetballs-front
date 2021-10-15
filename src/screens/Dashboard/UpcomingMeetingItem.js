@@ -6,6 +6,7 @@ import ConfirmDeleteModel from './ConfirmDeleteModel';
 import server from '../../services/server';
 import PropTypes from 'prop-types';
 import { Trash, CameraVideo, Pen } from 'react-bootstrap-icons';
+import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 
 export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
   const dateInfo = getDateInfo(meeting.startedAt, meeting.duration);
@@ -34,6 +35,7 @@ export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
         history.push('/home');
       })
       .catch((e) => {
+        // show toast error
         console.error(e);
       })
       .finally(() => setDeleting(false));
@@ -79,12 +81,16 @@ export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
   return (
     <Col lg={4} md={6} sm={12} className="Container__padding--vertical-small">
       <Card style={{ height: 300 }}>
-        <Card.Body>
-          <Details />
-          <div className="Line--horizontal" />
-          <div className="Buffer--5px" />
-          <Toggles />
-        </Card.Body>
+        {deleting ? (
+          <FullLoadingIndicator />
+        ) : (
+          <Card.Body>
+            <Details />
+            <div className="Line--horizontal" />
+            <div className="Buffer--5px" />
+            <Toggles />
+          </Card.Body>
+        )}
       </Card>
       <ConfirmDeleteModel
         showModal={showConfirmDelete}

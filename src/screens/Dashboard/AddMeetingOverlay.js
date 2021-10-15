@@ -9,6 +9,8 @@ import { Formik } from 'formik';
 import 'react-datepicker/dist/react-datepicker.css';
 import server from '../../services/server';
 import { getFormattedDateTime } from '../../common/CommonFunctions';
+import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
+import { toast } from 'react-toastify';
 
 export default function AddMeetingOverlay({
   show,
@@ -16,6 +18,7 @@ export default function AddMeetingOverlay({
   onUpdate,
   checkIfExist,
 }) {
+  const [loading, setLoading] = useState(false);
   const [showZoomList, setShowZoomList] = useState(false);
   const [zoomMeetingList, setZoomMeetingList] = useState([]);
   const [showErrorToast, setShowErrorToast] = useState(false);
@@ -29,17 +32,34 @@ export default function AddMeetingOverlay({
   }, [show]);
 
   async function getZoomMeetingList() {
-    const response = await server.get(`/zoom/meetings`, defaultHeaders);
-    const result = response.data;
-    if (response.status !== 200) return;
-    const filteredList = [];
-    result.forEach((meeting) => {
-      if (!checkIfExist(meeting.uuid)) filteredList.push(meeting);
-    });
-    setZoomMeetingList(filteredList);
+    try {
+      setLoading(true);
+      setShowErrorToast(true);
+      const response = await server.get(`/zoom/meetings`, defaultHeaders);
+      const result = response.data;
+      if (response.status !== 200) return;
+      const filteredList = [];
+      result.forEach((meeting) => {
+        if (!checkIfExist(meeting.uuid)) {
+          filteredList.push(meeting);
+        }
+      });
+      setZoomMeetingList(filteredList);
+    } catch (err) {
+      toast.error(err.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  function submit({ name, desc, date, meetingId, meetingPassword, link }) {
+  async function submit({
+    name,
+    desc,
+    date,
+    meetingId,
+    meetingPassword,
+    link,
+  }) {
     console.log(server.defaults.headers.common['Authorization']);
     const newMeeting = {
       name: name,
@@ -52,6 +72,7 @@ export default function AddMeetingOverlay({
       enableTranscription: true,
     };
     const key = isZoomMeeting ? `/zoom/meetings/${meetingId}` : '/meeting';
+    setLoading(true);
     return server
       .post(key, newMeeting, defaultHeaders)
       .then((res) => {
@@ -63,24 +84,31 @@ export default function AddMeetingOverlay({
       })
       .catch(() => {
         setShowErrorToast(true);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
   async function selectMeeting(id, setFieldValue) {
-    const response = await server.get('/zoom/meetings/' + id, defaultHeaders);
-    const meeting = response.data;
-    if (response.status !== 200) return;
-
-    const zoomStartTime = meeting.start_time;
-    const date = zoomStartTime ? new Date(zoomStartTime) : new Date();
-    setFieldValue('name', meeting.topic);
-    setFieldValue('desc', meeting.agenda);
-    setFieldValue('meetingId', id);
-    setFieldValue('meetingPassword', meeting.password);
-    setFieldValue('link', meeting.join_url);
-    setFieldValue('date', date);
-    setIsZoomMeeting(true);
-    setShowZoomList(false);
+    try {
+      setLoading(true);
+      const response = await server.get('/zoom/meetings/' + id, defaultHeaders);
+      const meeting = response.data;
+      if (response.status !== 200) return;
+      setFieldValue('name', meeting.topic);
+      setFieldValue('desc', meeting.agenda);
+      setFieldValue('meetingId', id);
+      setFieldValue('meetingPassword', meeting.password);
+      setFieldValue('link', meeting.join_url);
+      setFieldValue('date', new Date(meeting.start_time));
+      setIsZoomMeeting(true);
+      setShowZoomList(false);
+    } catch (err) {
+      toast.error(err.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function ManualInput({
@@ -237,21 +265,27 @@ export default function AddMeetingOverlay({
                 {showZoomList ? 'Cancel' : 'Select from Zoom'}
               </Button>
             </div>
-            <div className="Buffer--20px" />
-            <div className="Line--horizontal" />
-            <div className="Buffer--20px" />
-            {showZoomList ? (
-              <ZoomMeetingList setFieldValue={setFieldValue} />
+            {loading ? (
+              <FullLoadingIndicator />
             ) : (
-              <ManualInput
-                handleSubmit={handleSubmit}
-                handleChange={handleChange}
-                setFieldValue={setFieldValue}
-                values={values}
-                touched={touched}
-                isValid={isValid}
-                errors={errors}
-              />
+              <>
+                <div className="Buffer--20px" />
+                <div className="Line--horizontal" />
+                <div className="Buffer--20px" />
+                {!loading && showZoomList ? (
+                  <ZoomMeetingList setFieldValue={setFieldValue} />
+                ) : (
+                  <ManualInput
+                    handleSubmit={handleSubmit}
+                    handleChange={handleChange}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    touched={touched}
+                    isValid={isValid}
+                    errors={errors}
+                  />
+                )}
+              </>
             )}
           </Offcanvas.Body>
         </Offcanvas>

@@ -17,6 +17,7 @@ import { useHistory, Redirect, useParams } from 'react-router';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import ConfirmInviteModel from '../OngoingMeetingAdmin/ConfirmInviteModel';
+import { toast } from 'react-toastify';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -62,8 +63,8 @@ export default function UpcomingMeetingScreen() {
   }
 
   async function sendInvitationToAll(participants) {
-    setInviteLoading(true);
     try {
+      setInviteLoading(true);
       await server.post(
         `/participant/send-multiple-invites`,
         { participants },
@@ -71,7 +72,9 @@ export default function UpcomingMeetingScreen() {
       );
       const res = await server.get(`/participant/${meeting.id}`);
       setMeeting((prev) => ({ ...prev, participants: res.data }));
-    } catch (error) {
+      toast.success('Invitations sent!');
+    } catch (err) {
+      toast.error(err.response?.data?.message);
       setError(true);
     } finally {
       setInviteLoading(false);

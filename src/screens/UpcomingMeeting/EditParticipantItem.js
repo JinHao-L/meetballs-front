@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { Button, Col, Card, CloseButton, Form, Modal } from 'react-bootstrap';
+import { isNil } from 'lodash';
+import {
+  Button,
+  Col,
+  Card,
+  CloseButton,
+  Form,
+  Modal,
+  Spinner,
+} from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 
@@ -12,19 +22,39 @@ export default function EditParticipantItem({
 }) {
   const [showModal, setShowModal] = useState(false);
   const participant = meeting.participants[position];
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState(participant.userEmail);
   const [username, setUsername] = useState(participant.userName);
+
+  const checkForDuplicate = () => {
+    return !isNil(
+      meeting.participants.find(
+        (participant) => participant.userEmail === email,
+      ),
+    );
+  };
 
   async function updateChanges() {
     if (email.length === 0) {
       setShowModal(true);
       return;
     }
+    if (participant.userName === username && checkForDuplicate()) {
+      toast.error(`Participant with email ${email} already exist`);
+      return;
+    }
     const oldEmail = meeting.participants[position].userEmail;
-    await updateDatabase(meeting.id, email, username, oldEmail);
-    meeting.participants[position].userName = username;
-    meeting.participants[position].userEmail = email;
-    setEditing(false);
+    try {
+      setLoading(true);
+      await updateDatabase(meeting.id, email, username, oldEmail);
+      meeting.participants[position].userName = username;
+      meeting.participants[position].userEmail = email;
+      setEditing(false);
+    } catch (err) {
+      toast.error(err.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function close() {
@@ -44,34 +74,49 @@ export default function EditParticipantItem({
 
   return (
     <Col className="Container__padding--vertical-small">
-      <Card>
-        <Card.Header>
-          <div className="Container__row--space-between">
-            <p className="Text__card-header">Editing Participant</p>
-            <CloseButton onClick={close} />
-          </div>
-        </Card.Header>
-        <Card.Body>
-          <Form.Group>
-            <Form.Label column>Name</Form.Label>
-            <Form.Control
-              defaultValue={username}
-              onChange={(event) => setUsername(event.target.value)}
-            />
-            <Form.Label column>Email</Form.Label>
-            <Form.Control
-              defaultValue={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-            <div className="Buffer--20px" />
-            <div className="d-grid gap-2">
-              <Button variant="primary" onClick={() => updateChanges()}>
-                Confirm
+      {loading ? (
+        <div className="d-flex justify-content-center">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      ) : (
+        <Card>
+          <Card.Header>
+            <div className="Container__row--space-between">
+              <p className="Text__card-header">Editing Participant</p>
+              <Button
+                variant="outline-primary"
+                size="sm"
+                style={{ borderRadius: 50 }}
+                onClick={close}
+              >
+                Cancel Edit
               </Button>
             </div>
-          </Form.Group>
-        </Card.Body>
-      </Card>
+          </Card.Header>
+          <Card.Body>
+            <Form.Group>
+              <Form.Label column>Name</Form.Label>
+              <Form.Control
+                defaultValue={username}
+                onChange={(event) => setUsername(event.target.value)}
+              />
+              <Form.Label column>Email</Form.Label>
+              <Form.Control
+                defaultValue={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+              <div className="Buffer--20px" />
+              <div className="d-grid gap-2">
+                <Button variant="primary" onClick={() => updateChanges()}>
+                  Confirm
+                </Button>
+              </div>
+            </Form.Group>
+          </Card.Body>
+        </Card>
+      )}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header>
           <Modal.Title>Confirm?</Modal.Title>

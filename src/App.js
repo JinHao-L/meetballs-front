@@ -1,4 +1,5 @@
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useEffect, useContext } from 'react';
 import {
   BrowserRouter as Router,
@@ -20,6 +21,7 @@ import ZoomRedirectPage from './screens/Login/ZoomRedirectPage';
 import TermsNConditionScreen from './screens/LandingPage/TermsNConditionScreen';
 import MeetingRedirectScreen from './screens/OngoingMeetingAdmin/MeetingRedirectScreen';
 import SupportPage from './screens/LandingPage/SupportPage';
+import { ToastContainer } from 'react-toastify';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -42,6 +44,7 @@ export default function App() {
       <AppNavbar />
       <CustomBootstrapStyle />
       <div className="Container__content">
+        <ToastContainer position="top-right" />
         <Switch>
           <Route exact path="/">
             <LandingScreen />
