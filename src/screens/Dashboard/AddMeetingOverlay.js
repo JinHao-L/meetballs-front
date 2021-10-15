@@ -34,9 +34,7 @@ export default function AddMeetingOverlay({
     if (response.status !== 200) return;
     const filteredList = [];
     result.forEach((meeting) => {
-      if (!checkIfExist(meeting.uuid)) {
-        filteredList.push(meeting);
-      }
+      if (!checkIfExist(meeting.uuid)) filteredList.push(meeting);
     });
     setZoomMeetingList(filteredList);
   }
@@ -72,12 +70,15 @@ export default function AddMeetingOverlay({
     const response = await server.get('/zoom/meetings/' + id, defaultHeaders);
     const meeting = response.data;
     if (response.status !== 200) return;
+
+    const zoomStartTime = meeting.start_time;
+    const date = zoomStartTime ? new Date(zoomStartTime) : new Date();
     setFieldValue('name', meeting.topic);
     setFieldValue('desc', meeting.agenda);
     setFieldValue('meetingId', id);
     setFieldValue('meetingPassword', meeting.password);
     setFieldValue('link', meeting.join_url);
-    setFieldValue('date', new Date(meeting.start_time));
+    setFieldValue('date', date);
     setIsZoomMeeting(true);
     setShowZoomList(false);
   }
@@ -179,6 +180,10 @@ export default function AddMeetingOverlay({
   function ZoomMeetingList({ setFieldValue }) {
     const items = [];
     zoomMeetingList.forEach((meeting, idx) => {
+      const startTime = meeting.start_time;
+      const dateStr = startTime
+        ? getFormattedDateTime(new Date(startTime))
+        : "No date available";
       items.push(
         <div className="Container__padding--vertical-small Clickable" key={idx}>
           <Card
@@ -189,9 +194,7 @@ export default function AddMeetingOverlay({
           >
             <Card.Body>
               <Card.Title>{meeting.topic}</Card.Title>
-              <Card.Text>
-                {getFormattedDateTime(new Date(meeting.start_time))}
-              </Card.Text>
+              <Card.Text>{dateStr}</Card.Text>
             </Card.Body>
           </Card>
         </div>,

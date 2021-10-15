@@ -82,7 +82,7 @@ export const AppNavbar = () => {
 
 const TOGGLES = {
   CHOOSE: 'Choose',
-  LOGOUT: 'logout',
+  LOGOUT: 'Logout',
   DASHBOARD: 'Dashboard',
 };
 
@@ -111,5 +111,20 @@ const mapping = [
     route: '/completed',
     button: TOGGLES.DASHBOARD,
     home: HOME.DASHBOARD,
+  },
+  {
+    route: '/privacy-policy',
+    button: TOGGLES.CHOOSE,
+    home: HOME.LANDING,
+  },
+  {
+    route: '/terms',
+    button: TOGGLES.CHOOSE,
+    home: HOME.LANDING,
+  },
+  {
+    route: '/support',
+    button: TOGGLES.CHOOSE,
+    home: HOME.LANDING,
   },
 ];

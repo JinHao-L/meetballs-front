@@ -169,7 +169,7 @@ export default function OngoingMeetingAdminScreen() {
               <Button
                 variant="outline-primary"
                 onClick={startZoom}
-                enabled={meeting.type == 1 || meeting.type == 2}
+                enabled={meeting.type === 1 || meeting.type === 2}
               >
                 Relaunch Zoom
               </Button>

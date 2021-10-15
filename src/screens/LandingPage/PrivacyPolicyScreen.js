@@ -1,4 +1,4 @@
-import { Container, Image, Row, Col } from 'react-bootstrap';
+import { Image, Row, Col } from 'react-bootstrap';
 import Banner from '../../assets/banner_privacy.jpg';
 
 export default function PrivacyPolicyScreen() {
