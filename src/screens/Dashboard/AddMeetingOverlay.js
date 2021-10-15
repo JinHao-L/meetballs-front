@@ -105,7 +105,7 @@ export default function AddMeetingOverlay({
       setIsZoomMeeting(true);
       setShowZoomList(false);
     } catch (err) {
-      // show toast
+      toast.error(err.response?.data?.message);
     } finally {
       setLoading(false);
     }
