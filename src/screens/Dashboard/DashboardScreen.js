@@ -7,19 +7,6 @@ import AddMeetingOverlay from './AddMeetingOverlay';
 import server from '../../services/server';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import CompletedMeetingItem from './CompletedMeetingItem';
-import {
-  getZoomMeeting,
-  getZoomMeetingList,
-  linkZoomMeeting,
-} from '../../services/zoom';
-
-function AddMeetingButton({ onClick }) {
-  return (
-    <div className="Fab" onClick={onClick}>
-      <CalendarPlusFill size={22} color="white" />
-    </div>
-  );
-}
 
 export default function DashboardScreen() {
   const [upcoming, setUpcoming] = useState([]);
@@ -30,27 +17,6 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     getBanner();
-    // TODO: see here
-    getZoomMeetingList()
-      .then((res) => res.data)
-      .then((meetings) => {
-        console.log(meetings);
-
-        if (meetings.length > 0) {
-          // technically dont have to call this to get detailed zoom meeting info
-
-          return getZoomMeeting(meetings[0].id).then((res) => {
-            console.log(res.data);
-            return res.data;
-          });
-          // return linkZoomMeeting(meetings[0].id, {
-          //   enableTranscriptions: false,
-          // }).then((res) => {
-          //   console.log(res.data);
-          //   return res.data;
-          // });
-        }
-      });
     return pullMeetings();
   }, []);
 
@@ -105,6 +71,20 @@ export default function DashboardScreen() {
       })
       .catch(console.error)
       .finally(() => setLoadingPast(false));
+  }
+
+  function checkIfExist(id) {
+    for (let i = 0; i < upcoming.length; i++) {
+      if (upcoming[i].zoomUuid === id) {
+        return true;
+      }
+    }
+    for (let i = 0; i < meetingHistory.length; i++) {
+      if (meetingHistory[i].zoomUuid === id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   const upcomingList = upcoming.map((meeting, idx) => (
@@ -167,8 +147,11 @@ export default function DashboardScreen() {
         show={showOverlay}
         setShow={setShowOverlay}
         onUpdate={pullMeetings}
+        checkIfExist={checkIfExist}
       />
-      <AddMeetingButton onClick={() => setShowOverlay(true)} />
+      <div className="Fab" onClick={() => setShowOverlay(true)}>
+        <CalendarPlusFill size={22} color="white" />
+      </div>
     </>
   );
 }

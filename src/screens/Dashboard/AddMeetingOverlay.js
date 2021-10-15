@@ -1,6 +1,6 @@
 import DatePicker from 'react-datepicker';
 import { useState, useEffect } from 'react';
-import { Offcanvas, Form, Button, Card } from 'react-bootstrap';
+import { Offcanvas, Form, Button, Card, Toast } from 'react-bootstrap';
 import { useHistory } from 'react-router';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import * as yup from 'yup';
@@ -10,20 +10,35 @@ import 'react-datepicker/dist/react-datepicker.css';
 import server from '../../services/server';
 import { getFormattedDateTime } from '../../common/CommonFunctions';
 
-export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
+export default function AddMeetingOverlay({
+  show,
+  setShow,
+  onUpdate,
+  checkIfExist,
+}) {
   const [showZoomList, setShowZoomList] = useState(false);
   const [zoomMeetingList, setZoomMeetingList] = useState([]);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [isZoomMeeting, setIsZoomMeeting] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
-    getZoomMeetingList();
-  }, []);
+    if (show) {
+      getZoomMeetingList();
+    }
+  }, [show]);
 
   async function getZoomMeetingList() {
     const response = await server.get(`/zoom/meetings`, defaultHeaders);
     const result = response.data;
     if (response.status !== 200) return;
-    setZoomMeetingList(result);
+    const filteredList = [];
+    result.forEach((meeting) => {
+      if (!checkIfExist(meeting.uuid)) {
+        filteredList.push(meeting);
+      }
+    });
+    setZoomMeetingList(filteredList);
   }
 
   function submit({ name, desc, date, meetingId, meetingPassword, link }) {
@@ -38,16 +53,19 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
       joinUrl: link,
       enableTranscription: true,
     };
-    setShow(false);
+    const key = isZoomMeeting ? `/zoom/meetings/${meetingId}` : '/meeting'
     return server
-      .post('/meeting', newMeeting, defaultHeaders)
+      .post(key, newMeeting, defaultHeaders)
       .then((res) => {
         onUpdate();
         const id = res.data.id;
         console.log('New meeting created with ID = ' + id);
+        setShow(false);
         history.push('/meeting/' + id);
       })
-      .catch(console.error);
+      .catch(() => {
+        setShowErrorToast(true);
+      });
   }
 
   async function selectMeeting(id, setFieldValue) {
@@ -60,6 +78,7 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
     setFieldValue('meetingPassword', meeting.password);
     setFieldValue('link', meeting.join_url);
     setFieldValue('date', new Date(meeting.start_time));
+    setIsZoomMeeting(true);
     setShowZoomList(false);
   }
 
@@ -102,6 +121,7 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
             onChange={handleChange}
             value={values.meetingId}
             isValid={touched.meetingId && !errors.meetingId}
+            disabled={isZoomMeeting}
           />
           <Form.Label column>Meeting Password</Form.Label>
           <Form.Control
@@ -111,6 +131,7 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
             onChange={handleChange}
             value={values.meetingPassword}
             isValid={touched.meetingPassword && !errors.meetingId}
+            disabled={isZoomMeeting}
           />
           <Form.Label column>Meeting link</Form.Label>
           <Form.Control
@@ -120,6 +141,7 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
             onChange={handleChange}
             value={values.link}
             isValid={touched.link && !errors.link}
+            disabled={isZoomMeeting}
           />
           <Form.Label column>Start Date</Form.Label>
           <DatePicker
@@ -129,6 +151,7 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
             onChange={(date) => setFieldValue('date', date)}
             dateFormat="Pp"
             customInput={<Form.Control />}
+            disabled={isZoomMeeting}
           />
         </Form.Group>
         <div className="Buffer--20px" />
@@ -137,16 +160,29 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
             Add new Meeting
           </Button>
         </div>
+        <div className="Buffer--20px" />
+        <Toast
+          show={showErrorToast}
+          onClose={() => setShowErrorToast(false)}
+          autohide
+          delay={2000}
+        >
+          <Toast.Header closeButton={false}>Error</Toast.Header>
+          <Toast.Body>
+            Unable to create meeting. Please check if it has already been added.
+          </Toast.Body>
+        </Toast>
       </>
     );
   }
 
   function ZoomMeetingList({ setFieldValue }) {
     const items = [];
-    zoomMeetingList.forEach((meeting) => {
+    zoomMeetingList.forEach((meeting, idx) => {
       items.push(
-        <div className="Container__padding--vertical-small">
+        <div className="Container__padding--vertical-small Clickable" key={idx}>
           <Card
+            style={{ cursor: 'pointer' }}
             onClick={() => {
               selectMeeting(meeting.id, setFieldValue);
             }}
@@ -179,7 +215,13 @@ export default function AddMeetingOverlay({ show, setShow, onUpdate }) {
         isValid,
         errors,
       }) => (
-        <Offcanvas show={show} onHide={() => setShow(false)}>
+        <Offcanvas
+          show={show}
+          onHide={() => {
+            setShow(false);
+            setShowZoomList(false);
+          }}
+        >
           <Offcanvas.Header closeButton>
             <Offcanvas.Title>Add New Meeting</Offcanvas.Title>
           </Offcanvas.Header>

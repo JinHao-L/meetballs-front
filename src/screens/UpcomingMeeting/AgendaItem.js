@@ -2,7 +2,6 @@ import { Button, Row, Col, Card } from 'react-bootstrap';
 import { Draggable } from 'react-beautiful-dnd';
 import { useState } from 'react';
 import { getFormattedDuration } from '../../common/CommonFunctions';
-import { accessTokenKey, apiUrl } from '../../common/CommonValues';
 import EditAgendaItem from './EditAgendaItem';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';

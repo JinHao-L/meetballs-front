@@ -18,9 +18,8 @@ import {
 import { useSocket } from '../../hooks/useSocket';
 import { UserContext } from '../../context/UserContext';
 
-var position = -1;
-
 export default function OngoingMeetingAdminScreen() {
+  const [position, setPosition] = useState(-1);
   const [meeting, setMeeting] = useState(blankMeeting);
   const [currentTab, setCurrentTab] = useState('agenda');
   const [time, setTime] = useState(new Date().getTime());
@@ -35,6 +34,10 @@ export default function OngoingMeetingAdminScreen() {
   const [showError, setShowError] = useState(false);
 
   useEffect(() => {
+    console.log(meeting);
+  }, [meeting]);
+
+  useEffect(() => {
     pullMeeting();
     setInterval(() => {
       setTime(new Date().getTime());
@@ -42,17 +45,19 @@ export default function OngoingMeetingAdminScreen() {
   }, []);
 
   useEffect(() => {
-    if (socket && !isHost) {
+    if (socket) {
       socket.on('meetingUpdated', function (data) {
+        console.log('meetingUpdated', data);
         const newMeeting = JSON.parse(data, agendaReviver);
-        updateMeeting({ ...meeting, ...newMeeting });
+        setMeeting((meeting) => updateMeeting({ ...meeting, ...newMeeting }));
       });
       socket.on('participantUpdated', function (data) {
+        console.log('participantUpdated', data);
         const update = JSON.parse(data);
-        setMeeting({
+        setMeeting((meeting) => ({
           ...meeting,
           participants: updateParticipants(meeting.participants, update),
-        });
+        }));
       });
       socket.on('agendaUpdated', function (data) {
         console.log('agendaUpdated', data);
@@ -64,7 +69,7 @@ export default function OngoingMeetingAdminScreen() {
     } else {
       socket && socket.removeAllListeners();
     }
-  }, [socket, isHost]);
+  }, [socket]);
 
   function startZoom() {
     window.open(meeting.joinUrl, '_blank');
@@ -78,20 +83,73 @@ export default function OngoingMeetingAdminScreen() {
       return p1.position - p2.position;
     });
     setShowError(meetingObj.agendaItems.length === 0);
+    console.log(meetingObj);
     syncMeeting(meetingObj, time);
-    setMeeting(meetingObj);
+    return meetingObj;
   };
 
   async function pullMeeting() {
     try {
       const res = await getMeeting(id);
-      updateMeeting(res.data);
+      setMeeting(() => updateMeeting(res.data));
     } catch (err) {
       history.replace('/');
     }
   }
 
-  updateDelay(meeting.agendaItems, time);
+  async function startMeeting(time, agenda, id) {
+    if (agenda.length < 1) {
+      return;
+    }
+    try {
+      await callStartMeeting(id);
+      setPosition(position + 1);
+      initializeAgenda(time, agenda);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function nextItem(time, agenda, id) {
+    const apiCall =
+      position + 1 < agenda.length ? callNextMeeting : callEndMeeting;
+    try {
+      await apiCall(id);
+      agenda[position].actualDuration = time - agenda[position].startTime;
+      const newPosition = position + 1;
+      setPosition(newPosition);
+      if (newPosition < agenda.length) {
+        agenda[newPosition].startTime = time;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  function syncMeeting(meeting) {
+    if (meeting.type === 1) {
+      // waiting to start
+      return;
+    } else if (meeting.type === 2) {
+      // started
+      const pos = getCurrentPosition(meeting);
+      setPosition(pos);
+      const agenda = meeting.agendaItems;
+      var lastTiming = agenda[pos].startTime;
+      for (let i = pos; i < agenda.length; i++) {
+        agenda[i].startTime = lastTiming;
+        agenda[i].actualDuration = agenda[i].expectedDuration;
+        lastTiming += agenda[i].actualDuration;
+      }
+      return;
+    } else if (meeting.type === 3) {
+      // meeting ended
+      setPosition(meeting.agendaItems.length);
+      return;
+    }
+  }
+
+  updateDelay(meeting.agendaItems, time, position);
 
   return (
     <>
@@ -108,7 +166,11 @@ export default function OngoingMeetingAdminScreen() {
               {getFormattedDateTime(meeting.startedAt)}
             </p>
             <div className="d-grid gap-2">
-              <Button variant="outline-primary" onClick={startZoom}>
+              <Button
+                variant="outline-primary"
+                onClick={startZoom}
+                enabled={meeting.type == 1 || meeting.type == 2}
+              >
                 Relaunch Zoom
               </Button>
             </div>
@@ -121,18 +183,24 @@ export default function OngoingMeetingAdminScreen() {
                 : 'Time Ended:'}
             </p>
             <p className="Text__header">
-              {getEndTime(time, meeting.agendaItems)}
+              {getEndTime(time, meeting.agendaItems, position)}
             </p>
             <div className="d-grid gap-2">
               {isHost && !showError ? (
                 <AgendaToggle
+                  position={position}
                   agenda={meeting.agendaItems}
                   time={time}
                   id={meeting.id}
                   isHost={isHost}
+                  startMeeting={startMeeting}
+                  nextItem={nextItem}
                 />
               ) : (
-                <MeetingStatus agenda={meeting.agendaItems} />
+                <MeetingStatus
+                  position={position}
+                  agenda={meeting.agendaItems}
+                />
               )}
             </div>
             <div className="Buffer--20px" />
@@ -200,7 +268,7 @@ export default function OngoingMeetingAdminScreen() {
 
 // Agenda
 
-function AgendaToggle({ time, agenda, id }) {
+function AgendaToggle({ position, time, agenda, id, startMeeting, nextItem }) {
   if (position < 0) {
     return (
       <Button onClick={() => startMeeting(time, agenda, id)}>
@@ -208,34 +276,27 @@ function AgendaToggle({ time, agenda, id }) {
       </Button>
     );
   } else if (position < agenda.length) {
+    const isLastItem = position === agenda.length - 1;
+    const message = isLastItem ? "Finish Meeting" : "Next Item";
     return (
-      <Button onClick={() => nextItem(time, agenda, id)}>Next Item</Button>
+      <Button onClick={() => nextItem(time, agenda, id)}>{message}</Button>
     );
   } else {
-    return <Button disabled>Meeting Ended</Button>;
+    return (
+      <Button href={`/completed/${id}`}>
+        Meeting Ended - View Report
+      </Button>
+    );
   }
 }
 
-function MeetingStatus({ agenda }) {
+function MeetingStatus({ position, agenda }) {
   if (position < 0) {
     return <p className="Text__subheader">Meeting Not Started</p>;
   } else if (position < agenda.length) {
     return <p className="Text__subheader">Meeting Ongoing</p>;
   } else {
     return <p className="Text__subheader">Meeting Ended</p>;
-  }
-}
-
-async function startMeeting(time, agenda, id) {
-  if (agenda.length < 1) {
-    return;
-  }
-  try {
-    await callStartMeeting(id);
-    position++;
-    initializeAgenda(time, agenda);
-  } catch (err) {
-    console.log(err);
   }
 }
 
@@ -248,32 +309,17 @@ function initializeAgenda(time, agenda) {
   }
 }
 
-async function nextItem(time, agenda, id) {
-  const apiCall =
-    position + 1 < agenda.length ? callNextMeeting : callEndMeeting;
-  try {
-    await apiCall(id);
-    agenda[position].actualDuration = time - agenda[position].startTime;
-    position++;
-    if (position < agenda.length) {
-      agenda[position].startTime = time;
-    }
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-function updateDelay(agenda, time) {
+function updateDelay(agenda, time, position) {
   if (position < 0 || position >= agenda.length) return;
   const delay = Math.max(
     0,
     time - agenda[position].startTime - agenda[position].actualDuration,
   );
   agenda[position].actualDuration += delay;
-  updateAgenda(agenda);
+  updateAgenda(agenda, position);
 }
 
-function updateAgenda(agenda) {
+function updateAgenda(agenda, position) {
   for (let i = 0; i < agenda.length; i++) {
     agenda[i].isCurrent = i === position;
   }
@@ -285,39 +331,16 @@ function updateAgenda(agenda) {
   }
 }
 
-function syncMeeting(meeting) {
-  if (meeting.type === 1) {
-    // waiting to start
-    return;
-  } else if (meeting.type === 2) {
-    // started
-    const pos = getCurrentPosition(meeting);
-    const agenda = meeting.agendaItems;
-    var lastTiming = agenda[pos].startTime;
-    for (let i = pos; i < agenda.length; i++) {
-      agenda[i].startTime = lastTiming;
-      agenda[i].actualDuration = agenda[i].expectedDuration;
-      lastTiming += agenda[i].actualDuration;
-    }
-    return;
-  } else if (meeting.type === 3) {
-    // meeting ended
-    position = meeting.agendaItems.length;
-    return;
-  }
-}
-
 function getCurrentPosition(meeting) {
   const agenda = meeting.agendaItems;
   for (let i = 0; i < agenda.length; i++) {
     if (agenda[i].isCurrent) {
-      position = i;
       return i;
     }
   }
 }
 
-function getEndTime(time, agenda) {
+function getEndTime(time, agenda, position) {
   if (position < 0) {
     var duration = 0;
     agenda.forEach((item) => {
@@ -334,11 +357,21 @@ function getEndTime(time, agenda) {
 }
 
 function updateParticipants(participants, update) {
-  return participants.map((ppl) => {
+  let hasUpdate = false;
+  participants = participants.map((ppl) => {
     if (ppl.userEmail === update.userEmail) {
+      hasUpdate = true;
       return update;
     } else {
       return ppl;
     }
   });
+
+  if (!hasUpdate) {
+    return [update, ...participants].sort((p1, p2) => {
+      return (' ' + p1.userName).localeCompare(p2.userName);
+    });
+  } else {
+    return participants;
+  }
 }

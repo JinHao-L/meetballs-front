@@ -46,7 +46,7 @@ export const AppNavbar = () => {
         >
           <Image src={Logo} style={{ height: 30 }} />
         </Navbar.Brand>
-        {option.button == TOGGLES.CHOOSE && !user ? (
+        {option.button === TOGGLES.CHOOSE && !user ? (
           <Button
             variant="outline-primary"
             size="sm"

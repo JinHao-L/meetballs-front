@@ -26,6 +26,8 @@ export default function CompletedMeetingScreen() {
   }, []);
 
   if (loading) return <FullLoadingIndicator />;
+  
+  console.log(meeting);
 
   const type = meeting.type;
   if (type === 0) {
