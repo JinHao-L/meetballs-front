@@ -7,7 +7,7 @@ import { zoomLogin } from '../../services/auth';
 const CODE_PARAM_KEY = 'code';
 const STATE_PARAM_KEY = 'state';
 
-const MESSAGE = "Please hold on while we log you in."
+const MESSAGE = 'Please hold on while we log you in.';
 
 export default function ZoomRedirectPage() {
   const { search } = useLocation();

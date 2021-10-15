@@ -64,7 +64,7 @@ export default function UpcomingMeetingScreen() {
     );
     setInviteLoading(false);
     const res = await server.get(`/participant/${meeting.id}`);
-    setMeeting((prev) => ({...prev, participants: res.data}))
+    setMeeting((prev) => ({ ...prev, participants: res.data }));
   }
 
   function Content() {

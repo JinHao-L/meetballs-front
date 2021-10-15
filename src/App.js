@@ -9,11 +9,6 @@ import {
 import UpcomingMeetingScreen from './screens/UpcomingMeeting/UpcomingMeetingScreen';
 import OngoingMeetingAdminScreen from './screens/OngoingMeetingAdmin.js/OngoingMeetingAdminScreen';
 import DashboardScreen from './screens/Dashboard/DashboardScreen';
-import EmailConfirmationScreen from './screens/Login/EmailConfirmationScreen';
-import LoginScreen from './screens/Login/LoginScreen';
-import RegistrationScreen from './screens/Login/RegistrationScreen';
-import ForgotPasswordScreen from './screens/Login/ForgotPasswordScreen';
-import ResetPasswordScreen from './screens/Login/ResetPasswordScreen';
 import CompletedMeetingScreen from './screens/CompletedMeeting/CompletedMeetingScreen';
 import { UserContext } from './context/UserContext';
 import LandingScreen from './screens/LandingPage/LandingScreen';
