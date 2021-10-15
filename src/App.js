@@ -7,7 +7,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import UpcomingMeetingScreen from './screens/UpcomingMeeting/UpcomingMeetingScreen';
-import OngoingMeetingAdminScreen from './screens/OngoingMeetingAdmin.js/OngoingMeetingAdminScreen';
+import OngoingMeetingAdminScreen from './screens/OngoingMeetingAdmin/OngoingMeetingAdminScreen';
 import DashboardScreen from './screens/Dashboard/DashboardScreen';
 import CompletedMeetingScreen from './screens/CompletedMeeting/CompletedMeetingScreen';
 import { UserContext } from './context/UserContext';
@@ -18,6 +18,7 @@ import ZoomLoginScreen from './screens/Login/ZoomLoginScreen';
 import PrivacyPolicyScreen from './screens/LandingPage/PrivacyPolicyScreen';
 import ZoomRedirectPage from './screens/Login/ZoomRedirectPage';
 import TermsNConditionScreen from './screens/LandingPage/TermsNConditionScreen';
+import MeetingRedirectScreen from './screens/OngoingMeetingAdmin/MeetingRedirectScreen';
 import SupportPage from './screens/LandingPage/SupportPage';
 
 export default function App() {
