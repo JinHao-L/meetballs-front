@@ -15,13 +15,14 @@ import { defaultHeaders } from '../../utils/axiosConfig';
 export default function EditAgendaItem({
   setEditing,
   meeting,
-  setMeeting,
   position,
 }) {
   const item = meeting.agendaItems[position];
   const [duration, setDuration] = useState(item.expectedDuration);
   const [name, setName] = useState(item.name);
   const [description, setDescription] = useState(item.description);
+  const [speaker, setSpeaker] = useState('');
+  const [materials, setMaterials] = useState('');
 
   function DurationItems() {
     const items = [];
@@ -48,10 +49,14 @@ export default function EditAgendaItem({
       name,
       duration,
       description,
+      speaker,
+      materials
     );
     meeting.agendaItems[position].name = name;
     meeting.agendaItems[position].expectedDuration = duration;
     meeting.agendaItems[position].description = description;
+    meeting.agendaItems[position].speakerName = speaker;
+    meeting.agendaItems[position].speakerMaterials = materials;
     setEditing(false);
   }
 
@@ -103,6 +108,8 @@ async function updateDatabase(
   name,
   duration,
   description,
+  speakerName,
+  materials,
 ) {
   await server.put(
     `/agenda-item/${meetingId}/${position}`,
@@ -113,6 +120,8 @@ async function updateDatabase(
       expectedDuration: duration,
       actualDuration: null,
       isCurrent: false,
+      speakerName: speakerName,
+      speakerMaterials: materials
     },
     defaultHeaders,
   );
