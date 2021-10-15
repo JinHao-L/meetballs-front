@@ -27,6 +27,7 @@ export default function UpcomingMeetingScreen() {
   const [inviteList, setInviteList] = useState([]);
   const [inviteLoading, setInviteLoading] = useState(false);
   const [isReordering, setReordering] = useState(false);
+  const [error, setError] = useState(false); // todo: add error toast
   const history = useHistory();
 
   const { id } = useParams();
@@ -62,14 +63,19 @@ export default function UpcomingMeetingScreen() {
 
   async function sendInvitationToAll(participants) {
     setInviteLoading(true);
-    await server.post(
-      `/participant/send-multiple-invites`,
-      { participants },
-      defaultHeaders,
-    );
-    setInviteLoading(false);
-    const res = await server.get(`/participant/${meeting.id}`);
-    setMeeting((prev) => ({ ...prev, participants: res.data }));
+    try {
+      await server.post(
+        `/participant/send-multiple-invites`,
+        { participants },
+        defaultHeaders,
+      );
+      const res = await server.get(`/participant/${meeting.id}`);
+      setMeeting((prev) => ({ ...prev, participants: res.data }));
+    } catch (error) {
+      setError(true);
+    } finally {
+      setInviteLoading(false);
+    }
   }
 
   function Content() {

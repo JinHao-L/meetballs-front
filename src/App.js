@@ -81,12 +81,12 @@ export default function App() {
           <RouteIfLoggedIn path="/home">
             <DashboardScreen />
           </RouteIfLoggedIn>
-          <Route path="/meeting">
-            <MeetingRedirectScreen />
-          </Route>
           <RouteIfLoggedIn path="/meeting/:id">
             <UpcomingMeetingScreen />
           </RouteIfLoggedIn>
+          <Route path="/meeting">
+            <MeetingRedirectScreen />
+          </Route>
           <Route path="/ongoing/:id">
             <OngoingMeetingAdminScreen />
           </Route>
