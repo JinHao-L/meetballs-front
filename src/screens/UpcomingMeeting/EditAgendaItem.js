@@ -11,11 +11,12 @@ import { useState } from 'react';
 import { getFormattedDuration } from '../../common/CommonFunctions';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import { toast } from 'react-toastify';
 
 export default function EditAgendaItem({
+  setLoading,
   setEditing,
   meeting,
-  setMeeting,
   position,
 }) {
   const item = meeting.agendaItems[position];
@@ -41,18 +42,25 @@ export default function EditAgendaItem({
   }
 
   async function updateChanges() {
-    const actualPosition = meeting.agendaItems[position].position;
-    await updateDatabase(
-      meeting.id,
-      actualPosition,
-      name,
-      duration,
-      description,
-    );
-    meeting.agendaItems[position].name = name;
-    meeting.agendaItems[position].expectedDuration = duration;
-    meeting.agendaItems[position].description = description;
-    setEditing(false);
+    try {
+      setLoading(true);
+      const actualPosition = meeting.agendaItems[position].position;
+      await updateDatabase(
+        meeting.id,
+        actualPosition,
+        name,
+        duration,
+        description,
+      );
+      meeting.agendaItems[position].name = name;
+      meeting.agendaItems[position].expectedDuration = duration;
+      meeting.agendaItems[position].description = description;
+      setEditing(false);
+    } catch (err) {
+      toast.error(err.response?.data?.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

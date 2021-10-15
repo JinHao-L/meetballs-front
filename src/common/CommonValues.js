@@ -1,4 +1,5 @@
-export const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+// export const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+export const apiUrl = 'http://localhost:3001';
 export const zoomClientId = process.env.REACT_APP_ZOOM_CLIENT_ID;
 export const zoomRedirectUrl = process.env.REACT_APP_ZOOM_REDIRECT_URL;
 

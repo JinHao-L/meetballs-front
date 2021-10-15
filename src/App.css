@@ -176,6 +176,7 @@
 
 .Fab:hover {
   background-color: #725546;
+  cursor: pointer;
 }
 
 /* Miscs */

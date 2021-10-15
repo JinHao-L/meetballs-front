@@ -7,6 +7,7 @@ import AddMeetingOverlay from './AddMeetingOverlay';
 import server from '../../services/server';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import CompletedMeetingItem from './CompletedMeetingItem';
+import { toast } from 'react-toastify';
 
 export default function DashboardScreen() {
   const [upcoming, setUpcoming] = useState([]);
@@ -20,12 +21,16 @@ export default function DashboardScreen() {
     return pullMeetings();
   }, []);
 
-  function pullMeetings() {
-    pullPastMeetings();
-    pullUpcomingMeetings();
+  async function pullMeetings() {
+    try {
+      await pullPastMeetings();
+      await pullUpcomingMeetings();
+    } catch (err) {
+      toast.error(err.response?.data?.message);
+    }
   }
 
-  function pullUpcomingMeetings() {
+  async function pullUpcomingMeetings() {
     function sortMeetings(meetingA, meetingB) {
       const startA = meetingA.startedAt;
       const startB = meetingB.startedAt;
@@ -49,7 +54,7 @@ export default function DashboardScreen() {
       .finally(() => setLoadingUpcoming(false));
   }
 
-  function pullPastMeetings() {
+  async function pullPastMeetings() {
     function sortMeetings(meetingA, meetingB) {
       const startA = meetingA.startedAt;
       const startB = meetingB.startedAt;
