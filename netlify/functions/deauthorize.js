@@ -1,17 +1,19 @@
 const axios = require('axios');
 
-exports.handler = function ({ headers, body }, context, callback) {
-  const endpoint = `https://meetballs-dev.herokuapp.com/zoom/deauthorize`;
+exports.handler = async function (event, context, callback) {
+  const endpoint = `${process.env.REACT_APP_API_URL}/zoom/deauthorize`;
 
+  const body = await JSON.parse(event.body)
+  console.log(body)
   return axios
-    .post(endpoint, JSON.parse(body), {
+    .post(endpoint, body, {
       headers: {
-        Authorization: headers.authorization,
-        Accept: 'application/json',
+        Authorization: event.headers['authorization'],
         'Content-Type': 'application/json',
       },
     })
     .then((result) => {
+      // console.log('success', result)
       return {
         statusCode: result.status,
         body: JSON.stringify({ message: result.data }),
@@ -19,25 +21,23 @@ exports.handler = function ({ headers, body }, context, callback) {
     })
     .catch((error) => {
       if (error.response) {
+        // console.log('Response failed', error.response)
         return {
           statusCode: error.response.status,
           body: JSON.stringify({ message: error.response.data }),
         };
       } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
+        // console.log('Request failed', error.request)
         return {
           statusCode: 500,
-          body: JSON.stringify({ message: 'Netlify function error' }),
+          body: JSON.stringify({ message: `Oops! Something went wrong. ${error}` }),
         };
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.log('Error', error.message);
+        // console.log('Error', error.message);
         return {
-          statusCode: 500,
-          body: JSON.stringify({ message: error.message }),
+          statusCode: 443,
+          body: JSON.stringify({ message: `Oops! Something went wrong. ${error}` }),
         };
       }
     });
