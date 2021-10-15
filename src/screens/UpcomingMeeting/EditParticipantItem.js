@@ -29,7 +29,13 @@ export default function EditParticipantItem({
 
   function close() {
     const oldEmail = meeting.participants[position].userEmail;
-    if (oldEmail.length > 0) {
+    if (oldEmail === '') {
+      const newMeeting = Object.assign({}, meeting);
+      const newParticipants = newMeeting.participants;
+      newParticipants.splice(position, 1);
+      newMeeting.participants = newParticipants;
+      setMeeting(newMeeting);
+    } else if (oldEmail.length > 0) {
       setEditing(false);
     } else {
       removeParticipant(setMeeting, meeting, position);

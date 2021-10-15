@@ -10,7 +10,6 @@ import UpcomingMeetingScreen from './screens/UpcomingMeeting/UpcomingMeetingScre
 import OngoingMeetingAdminScreen from './screens/OngoingMeetingAdmin.js/OngoingMeetingAdminScreen';
 import DashboardScreen from './screens/Dashboard/DashboardScreen';
 import EmailConfirmationScreen from './screens/Login/EmailConfirmationScreen';
-import LoginScreen from './screens/Login/LoginScreen';
 import RegistrationScreen from './screens/Login/RegistrationScreen';
 import ForgotPasswordScreen from './screens/Login/ForgotPasswordScreen';
 import ResetPasswordScreen from './screens/Login/ResetPasswordScreen';
@@ -22,6 +21,8 @@ import CustomBootstrapStyle from './common/CustomBootstrapStyle';
 import ZoomLoginScreen from './screens/Login/ZoomLoginScreen';
 import PrivacyPolicyScreen from './screens/LandingPage/PrivacyPolicyScreen';
 import ZoomRedirectPage from './screens/Login/ZoomRedirectPage';
+import TermsNConditionScreen from './screens/LandingPage/TermsNConditionScreen';
+import SupportPage from './screens/LandingPage/SupportPage';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -51,16 +52,19 @@ export default function App() {
           <Route exact path="/privacy-policy">
             <PrivacyPolicyScreen />
           </Route>
+          <Route exact path="/terms">
+            <TermsNConditionScreen />
+          </Route>
           <Route exact path="/authorize">
             <ZoomRedirectPage />
+          </Route>
+          <Route exact path="/support">
+            <SupportPage />
           </Route>
           <Route path="/confirm-email">
             <EmailConfirmationScreen />
           </Route>
           <Route path="/login">
-            <LoginScreen />
-          </Route>
-          <Route path="/login-zoom">
             <ZoomLoginScreen />
           </Route>
           <Route path="/forgot-password">

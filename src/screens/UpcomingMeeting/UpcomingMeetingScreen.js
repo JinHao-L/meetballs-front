@@ -47,6 +47,11 @@ export default function UpcomingMeetingScreen() {
         item.prevPosition = item.position;
       });
     }
+    if (result.participants && result.participants.length > 1) {
+      result.participants.sort((p1, p2) => {
+        return p1.userName.localeCompare(p2.userName);
+      });
+    }
     setMeeting(result);
   }
 
