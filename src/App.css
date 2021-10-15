@@ -104,7 +104,6 @@
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   -webkit-line-clamp: 1;
-  color: --text;
 }
 
 .Text__elipsized--5-lines {
@@ -117,7 +116,6 @@
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   -webkit-line-clamp: 5;
-  color: var(--text);
 }
 
 .Text__card-header {

@@ -7,6 +7,10 @@ import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import { SmallLoadingIndicator } from '../../components/SmallLoadingIndicator';
 import { toast } from 'react-toastify';
+import {
+  MaterialsSection,
+  SpeakerSection,
+} from '../../components/AgendaItemComponents';
 
 export default function AgendaItem({
   meeting,
@@ -71,6 +75,28 @@ export default function AgendaItem({
           </Draggable>
         )}
       </>
+    );
+  }
+
+  function AgendaButtons() {
+    if (isReordering) return null;
+    return (
+      <Row>
+        <Col>
+          <div className="d-grid gap-2">
+            <Button variant="danger" onClick={removeAgendaItem}>
+              Remove
+            </Button>
+          </div>
+        </Col>
+        <Col>
+          <div className="d-grid gap-2">
+            <Button variant="primary" onClick={() => setEditing(true)}>
+              Edit
+            </Button>
+          </div>
+        </Col>
+      </Row>
     );
   }
 
