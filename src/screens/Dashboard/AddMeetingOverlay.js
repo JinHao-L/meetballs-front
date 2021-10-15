@@ -53,7 +53,7 @@ export default function AddMeetingOverlay({
       joinUrl: link,
       enableTranscription: true,
     };
-    const key = isZoomMeeting ? `/zoom/meetings/${meetingId}` : '/meeting'
+    const key = isZoomMeeting ? `/zoom/meetings/${meetingId}` : '/meeting';
     return server
       .post(key, newMeeting, defaultHeaders)
       .then((res) => {

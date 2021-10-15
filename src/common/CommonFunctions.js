@@ -86,3 +86,13 @@ export function agendaReviver(key, value) {
   }
   return value;
 }
+
+export function isValidUrl(url) {
+  try {
+    const link = new URL(url);
+    const protocol = link.protocol;
+    return protocol === 'http:' || protocol === 'https:';
+  } catch (_) {
+    return false;
+  }
+}

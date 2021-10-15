@@ -5,6 +5,10 @@ import { getFormattedDuration } from '../../common/CommonFunctions';
 import EditAgendaItem from './EditAgendaItem';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import {
+  MaterialsSection,
+  SpeakerSection,
+} from '../../components/AgendaItemComponents';
 
 export default function AgendaItem({
   meeting,
@@ -58,6 +62,28 @@ export default function AgendaItem({
     );
   }
 
+  function AgendaButtons() {
+    if (isReordering) return null;
+    return (
+      <Row>
+        <Col>
+          <div className="d-grid gap-2">
+            <Button variant="danger" onClick={removeAgendaItem}>
+              Remove
+            </Button>
+          </div>
+        </Col>
+        <Col>
+          <div className="d-grid gap-2">
+            <Button variant="primary" onClick={() => setEditing(true)}>
+              Edit
+            </Button>
+          </div>
+        </Col>
+      </Row>
+    );
+  }
+
   // Not editing
   return (
     <Draggable
@@ -79,27 +105,9 @@ export default function AgendaItem({
               <Card.Body>
                 <Card.Title>{item.name}</Card.Title>
                 <Card.Text>{item.description}</Card.Text>
-                {isReordering || (
-                  <Row>
-                    <Col>
-                      <div className="d-grid gap-2">
-                        <Button variant="danger" onClick={removeAgendaItem}>
-                          Remove
-                        </Button>
-                      </div>
-                    </Col>
-                    <Col>
-                      <div className="d-grid gap-2">
-                        <Button
-                          variant="primary"
-                          onClick={() => setEditing(true)}
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
-                )}
+                <SpeakerSection item={item} />
+                <MaterialsSection item={item} />
+                <AgendaButtons />
               </Card.Body>
             </Card>
           </Col>
