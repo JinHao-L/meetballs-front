@@ -20,6 +20,7 @@ import ZoomRedirectPage from './screens/Login/ZoomRedirectPage';
 import TermsNConditionScreen from './screens/LandingPage/TermsNConditionScreen';
 import MeetingRedirectScreen from './screens/OngoingMeetingAdmin/MeetingRedirectScreen';
 import SupportPage from './screens/LandingPage/SupportPage';
+import DocumentationScreen from './screens/LandingPage/DocumentationScreen';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -48,6 +49,9 @@ export default function App() {
           </Route>
           <Route exact path="/privacy-policy">
             <PrivacyPolicyScreen />
+          </Route>
+          <Route exact path="/documentation">
+            <DocumentationScreen />
           </Route>
           <Route exact path="/terms">
             <TermsNConditionScreen />
