@@ -9,10 +9,6 @@ import {
 import UpcomingMeetingScreen from './screens/UpcomingMeeting/UpcomingMeetingScreen';
 import OngoingMeetingAdminScreen from './screens/OngoingMeetingAdmin.js/OngoingMeetingAdminScreen';
 import DashboardScreen from './screens/Dashboard/DashboardScreen';
-import EmailConfirmationScreen from './screens/Login/EmailConfirmationScreen';
-import RegistrationScreen from './screens/Login/RegistrationScreen';
-import ForgotPasswordScreen from './screens/Login/ForgotPasswordScreen';
-import ResetPasswordScreen from './screens/Login/ResetPasswordScreen';
 import CompletedMeetingScreen from './screens/CompletedMeeting/CompletedMeetingScreen';
 import { UserContext } from './context/UserContext';
 import LandingScreen from './screens/LandingPage/LandingScreen';
@@ -61,21 +57,21 @@ export default function App() {
           <Route exact path="/support">
             <SupportPage />
           </Route>
-          <Route path="/confirm-email">
+          {/* <Route path="/confirm-email">
             <EmailConfirmationScreen />
-          </Route>
+          </Route> */}
           <Route path="/login">
             <ZoomLoginScreen />
           </Route>
-          <Route path="/forgot-password">
+          {/* <Route path="/forgot-password">
             <ForgotPasswordScreen />
-          </Route>
-          <Route path="/password-reset">
+          </Route> */}
+          {/* <Route path="/password-reset">
             <ResetPasswordScreen />
-          </Route>
-          <Route path="/signup">
+          </Route> */}
+          {/* <Route path="/signup">
             <RegistrationScreen />
-          </Route>
+          </Route> */}
           <RouteIfLoggedIn path="/home">
             <DashboardScreen />
           </RouteIfLoggedIn>

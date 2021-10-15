@@ -6,7 +6,6 @@ import { zoomLogin } from '../../services/auth';
 import ImageRedirect from '../../assets/redirecting.jpg';
 
 const CODE_PARAM_KEY = 'code';
-const STATE_PARAM_KEY = 'state';
 
 export default function ZoomRedirectPage() {
   const { search } = useLocation();
@@ -14,12 +13,10 @@ export default function ZoomRedirectPage() {
   const history = useHistory();
   const query = new URLSearchParams(search);
   const code = query.get(CODE_PARAM_KEY);
-  const state = query.get(STATE_PARAM_KEY);
 
   useEffect(() => {
-    if (!code || state === 'type=dev') {
-      console.log(code);
-      history.push('/login-zoom');
+    if (!code) {
+      history.push('/login');
       return;
     }
     zoomLogin(code)
@@ -27,15 +24,14 @@ export default function ZoomRedirectPage() {
         console.log(result);
       })
       .catch((err) => {
-        console.log(err);
-        //TODO: error feedback
-        history.push('/login-zoom');
+        console.log(code);
+        history.push('/login');
       });
   }, []);
 
   useEffect(() => {
     if (user) {
-      history.push('/dashboard');
+      history.push('/home');
     }
   }, [user]);
 
