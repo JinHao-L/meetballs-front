@@ -7,7 +7,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import UpcomingMeetingScreen from './screens/UpcomingMeeting/UpcomingMeetingScreen';
-import OngoingMeetingAdminScreen from './screens/OngoingMeetingAdmin.js/OngoingMeetingAdminScreen';
+import OngoingMeetingAdminScreen from './screens/OngoingMeetingAdmin/OngoingMeetingAdminScreen';
 import DashboardScreen from './screens/Dashboard/DashboardScreen';
 import CompletedMeetingScreen from './screens/CompletedMeeting/CompletedMeetingScreen';
 import { UserContext } from './context/UserContext';
@@ -18,6 +18,7 @@ import ZoomLoginScreen from './screens/Login/ZoomLoginScreen';
 import PrivacyPolicyScreen from './screens/LandingPage/PrivacyPolicyScreen';
 import ZoomRedirectPage from './screens/Login/ZoomRedirectPage';
 import TermsNConditionScreen from './screens/LandingPage/TermsNConditionScreen';
+import MeetingRedirectScreen from './screens/OngoingMeetingAdmin/MeetingRedirectScreen';
 import SupportPage from './screens/LandingPage/SupportPage';
 
 export default function App() {
@@ -51,33 +52,41 @@ export default function App() {
           <Route exact path="/terms">
             <TermsNConditionScreen />
           </Route>
-          <Route exact path="/authorize">
-            <ZoomRedirectPage />
-          </Route>
           <Route exact path="/support">
             <SupportPage />
           </Route>
-          {/* <Route path="/confirm-email">
-            <EmailConfirmationScreen />
-          </Route> */}
+          <Route exact path="/authorize">
+            <ZoomRedirectPage />
+          </Route>
           <Route path="/login">
             <ZoomLoginScreen />
           </Route>
-          {/* <Route path="/forgot-password">
+          {/*
+          <Route path="/confirm-email">
+            <EmailConfirmationScreen />
+          </Route>
+          <Route path="/login">
+            <LoginScreen />
+          </Route>
+          <Route path="/forgot-password">
             <ForgotPasswordScreen />
-          </Route> */}
-          {/* <Route path="/password-reset">
+          </Route>
+          <Route path="/password-reset">
             <ResetPasswordScreen />
-          </Route> */}
-          {/* <Route path="/signup">
+          </Route>
+          <Route path="/signup">
             <RegistrationScreen />
-          </Route> */}
+          </Route>
+          */}
           <RouteIfLoggedIn path="/home">
             <DashboardScreen />
           </RouteIfLoggedIn>
           <RouteIfLoggedIn path="/meeting/:id">
             <UpcomingMeetingScreen />
           </RouteIfLoggedIn>
+          <Route path="/meeting">
+            <MeetingRedirectScreen />
+          </Route>
           <Route path="/ongoing/:id">
             <OngoingMeetingAdminScreen />
           </Route>
