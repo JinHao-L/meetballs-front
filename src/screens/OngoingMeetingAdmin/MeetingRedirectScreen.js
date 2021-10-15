@@ -33,7 +33,7 @@ export default function RedirectScreen() {
         defaultHeaders,
       );
       setError(false);
-      const id = response.data.id;
+      const id = response.data?.meeting?.id;
       setLoading(false);
       history.push(`/ongoing/${id}`);
     } catch (error) {
