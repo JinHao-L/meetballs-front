@@ -16,7 +16,7 @@ import EditMeetingOverlay from './EditMeetingOverlay';
 import { useHistory, Redirect, useParams } from 'react-router';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
-import ConfirmInviteModel from '../OngoingMeetingAdmin.js/ConfirmInviteModel';
+import ConfirmInviteModel from '../OngoingMeetingAdmin/ConfirmInviteModel';
 import { toast } from 'react-toastify';
 
 export default function UpcomingMeetingScreen() {
