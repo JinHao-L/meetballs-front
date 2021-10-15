@@ -75,12 +75,12 @@ export default function DashboardScreen() {
 
   function checkIfExist(id) {
     for (let i = 0; i < upcoming.length; i++) {
-      if (upcoming[i].zoomUuid === id.toString()) {
+      if (upcoming[i].zoomUuid === id) {
         return true;
       }
     }
     for (let i = 0; i < meetingHistory.length; i++) {
-      if (meetingHistory[i].zoomUuid === id.toString()) {
+      if (meetingHistory[i].zoomUuid === id) {
         return true;
       }
     }
