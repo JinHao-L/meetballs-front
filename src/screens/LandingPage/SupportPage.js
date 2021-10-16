@@ -1,5 +1,6 @@
 import { Image, Row, Col, Container } from 'react-bootstrap';
 import Banner from '../../assets/banner_privacy.jpg';
+import AppFooter from '../../components/AppFooter';
 
 export default function SupportPage() {
   return (
@@ -29,8 +30,16 @@ export default function SupportPage() {
           </p>
         </div>
       </div>
-      <Row className="Container__padding--vertical Container__padding--horizontal">
-        <Col sm={12} md={12} lg={{ span: 6, offset: 3 }}>
+      <Row
+        className="Container__padding--vertical Container__padding--horizontal"
+        style={{ marginLeft: 0, marginRight: 0 }}
+      >
+        <Col
+          sm={12}
+          md={12}
+          lg={{ span: 6, offset: 3 }}
+          style={{ paddingLeft: 0, paddingRight: 0 }}
+        >
           <div className="Buffer--20px" />
           <p className="Text__header">Got any questions?</p>
           <p className="Text__paragraph">
@@ -51,6 +60,7 @@ export default function SupportPage() {
           </p>
         </Col>
       </Row>
+      <AppFooter />
     </>
   );
 }

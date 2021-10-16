@@ -23,6 +23,7 @@ import MeetingRedirectScreen from './screens/OngoingMeetingAdmin/MeetingRedirect
 import SupportPage from './screens/LandingPage/SupportPage';
 import { ToastContainer } from 'react-toastify';
 import DocumentationScreen from './screens/LandingPage/DocumentationScreen';
+import ScrollToTop from './ScrollToTop';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -42,6 +43,7 @@ export default function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <AppNavbar />
       <CustomBootstrapStyle />
       <div className="Container__content">

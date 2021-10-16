@@ -6,6 +6,7 @@ import DashboardImage from '../../assets/guide_dashboard.png';
 import OngoingMeetingImage from '../../assets/guide_ongoing_meeting.png';
 import MeetingReportImage from '../../assets/guide_report.png';
 import SampleEmailImage from '../../assets/guide_sample_email.png';
+import AppFooter from '../../components/AppFooter';
 
 export default function DocumentationScreen() {
   return (
@@ -38,8 +39,16 @@ export default function DocumentationScreen() {
           </p>
         </div>
       </div>
-      <Row className="Container__padding--vertical Container__padding--horizontal">
-        <Col sm={12} md={12} lg={{ span: 6, offset: 3 }}>
+      <Row
+        className="Container__padding--vertical Container__padding--horizontal"
+        style={{ marginLeft: 0, marginRight: 0 }}
+      >
+        <Col
+          sm={12}
+          md={12}
+          lg={{ span: 6, offset: 3 }}
+          style={{ paddingLeft: 0, paddingRight: 0 }}
+        >
           <p className="Text__subsubheader">Last updated: October 15, 2021</p>
 
           <p className="Text__paragraph">
@@ -342,7 +351,7 @@ export default function DocumentationScreen() {
               Marketplace.
             </li>
             <li>
-              Click <b>Manage > Installed Apps</b> or search for the{' '}
+              Click <b>Manage {'>'} Installed Apps</b> or search for the{' '}
               <b>MeetBalls</b> app.
             </li>
             <li>
@@ -354,6 +363,7 @@ export default function DocumentationScreen() {
           </ol>
         </Col>
       </Row>
+      <AppFooter />
     </>
   );
 }

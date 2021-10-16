@@ -218,6 +218,11 @@
   height: 20px;
 }
 
+.Buffer--50px {
+  width: 50px;
+  height: 50px;
+}
+
 .Buffer--100px {
   width: 100px;
   height: 100px;
