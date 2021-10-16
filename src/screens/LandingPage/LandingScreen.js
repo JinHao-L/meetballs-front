@@ -3,9 +3,9 @@ import { Facebook } from 'react-bootstrap-icons';
 import LandingImage from '../../assets/landing_image.png';
 import BackgroundImage from '../../assets/background_pattern.jpg';
 import PatternImage from '../../assets/pattern.png';
-import AgendaImage from '../../assets/guide_agenda_list.png';
-import MeetingImage from '../../assets/guide_ongoing_meeting.png';
-import StatisticsImage from '../../assets/guide_report.png';
+import AgendaImage from '../../assets/guide_agenda_list.jpg';
+import MeetingImage from '../../assets/guide_ongoing_meeting.jpg';
+import StatisticsImage from '../../assets/guide_report.jpg';
 import { useHistory } from 'react-router';
 import AppFooter from '../../components/AppFooter';
 
