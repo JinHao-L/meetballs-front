@@ -1,9 +1,16 @@
-import { Container, Image, Button, Row, Col } from 'react-bootstrap';
+import { Container, Image, Button, Row, Col, Card } from 'react-bootstrap';
 import { Facebook } from 'react-bootstrap-icons';
 import LandingImage from '../../assets/landing_image.png';
 import PatternImage from '../../assets/pattern.png';
+import AgendaImage from '../../assets/guide_agenda_list.png';
+import MeetingImage from '../../assets/guide_ongoing_meeting.png';
+import StatisticsImage from '../../assets/guide_report.png';
+import { useHistory } from 'react-router';
+import AppFooter from '../../components/AppFooter';
 
 export default function LandingScreen() {
+  const history = useHistory();
+
   return (
     <div>
       <Container fluid style={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -40,7 +47,8 @@ export default function LandingScreen() {
                 </p>
                 <p>• Keep track of attendance</p>
                 <p>• Pace your meetings with intelligent agenda</p>
-                <p>• Mass email participants (Coming Soon)</p>
+                <p>• Mass email participants</p>
+                <p>• Analyse meeting statistics</p>
                 <p>• Save audio transcripts from zoom (Coming Soon)</p>
                 <div className="Buffer--20px" />
                 <Button
@@ -66,7 +74,86 @@ export default function LandingScreen() {
           </Col>
         </Row>
         <div className="Buffer--100px" />
+        <div style={{ backgroundColor: '#8F6B58' }}>
+          <div className="Buffer--50px" />
+          <p
+            className="Text__header"
+            style={{ textAlign: 'center', color: 'white' }}
+          >
+            Key Features
+          </p>
+          <div className="Buffer--20px" />
+          <Container>
+            <Row>
+              <Col
+                sm={12}
+                md={6}
+                lg={4}
+                className="Container__padding--vertical-small"
+              >
+                <Card>
+                  <Card.Img variant="top" src={AgendaImage} />
+                  <div className="Line--horizontal" />
+                  <Card.Body>
+                    <Card.Title>Plan Your Meetings</Card.Title>
+                    <Card.Text>
+                      Add attendees and agenda before meeting, and send out mass
+                      emails to all participants.
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col
+                sm={12}
+                md={6}
+                lg={4}
+                className="Container__padding--vertical-small"
+              >
+                <Card>
+                  <Card.Img variant="top" src={MeetingImage} />
+                  <div className="Line--horizontal" />
+                  <Card.Body>
+                    <Card.Title>Stay Focused</Card.Title>
+                    <Card.Text>
+                      MeetBalls helps you to mark attendance, and track timing
+                      for each agenda item during the meeting.
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col
+                sm={12}
+                md={6}
+                lg={4}
+                className="Container__padding--vertical-small"
+              >
+                <Card>
+                  <Card.Img variant="top" src={StatisticsImage} />
+                  <div className="Line--horizontal" />
+                  <Card.Body>
+                    <Card.Title>Gain Insights</Card.Title>
+                    <Card.Text>
+                      After the meeting, view who was absent from the meeting,
+                      as well as how long each item took.
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </Container>
+          <div className="Buffer--20px" />
+          <div className="Container__center--horizontal">
+            <Button
+              variant="secondary"
+              onClick={() => history.push('/documentation')}
+            >
+              Learn More
+            </Button>
+          </div>
+          <div className="Buffer--50px" />
+        </div>
       </Container>
+      <AppFooter />
     </div>
   );
 }

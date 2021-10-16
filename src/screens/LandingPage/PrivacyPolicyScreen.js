@@ -1,5 +1,6 @@
 import { Image, Row, Col } from 'react-bootstrap';
 import Banner from '../../assets/banner_privacy.jpg';
+import AppFooter from '../../components/AppFooter';
 
 export default function PrivacyPolicyScreen() {
   return (
@@ -30,8 +31,16 @@ export default function PrivacyPolicyScreen() {
         </div>
       </div>
 
-      <Row className="Container__padding--vertical Container__padding--horizontal">
-        <Col sm={12} md={12} lg={{ span: 6, offset: 3 }}>
+      <Row
+        className="Container__padding--vertical Container__padding--horizontal"
+        style={{ marginLeft: 0, marginRight: 0 }}
+      >
+        <Col
+          sm={12}
+          md={12}
+          lg={{ span: 6, offset: 3 }}
+          style={{ paddingLeft: 0, paddingRight: 0 }}
+        >
           <p className="Text__subsubheader">Last updated: October 13, 2021</p>
           <p>
             This Privacy Policy describes Our policies and procedures on the
@@ -581,6 +590,7 @@ export default function PrivacyPolicyScreen() {
           </ul>
         </Col>
       </Row>
+      <AppFooter />
     </>
   );
 }
