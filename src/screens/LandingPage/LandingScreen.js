@@ -1,6 +1,7 @@
 import { Container, Image, Button, Row, Col, Card } from 'react-bootstrap';
 import { Facebook } from 'react-bootstrap-icons';
 import LandingImage from '../../assets/landing_image.png';
+import BackgroundImage from '../../assets/background_pattern.jpg';
 import PatternImage from '../../assets/pattern.png';
 import AgendaImage from '../../assets/guide_agenda_list.png';
 import MeetingImage from '../../assets/guide_ongoing_meeting.png';
@@ -74,7 +75,12 @@ export default function LandingScreen() {
           </Col>
         </Row>
         <div className="Buffer--100px" />
-        <div style={{ backgroundColor: '#8F6B58' }}>
+        <div
+          style={{
+            backgroundImage: `url(${BackgroundImage})`,
+            backgroundPosition: 'center',
+          }}
+        >
           <div className="Buffer--50px" />
           <p
             className="Text__header"
