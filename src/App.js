@@ -21,6 +21,7 @@ import TermsNConditionScreen from './screens/LandingPage/TermsNConditionScreen';
 import MeetingRedirectScreen from './screens/OngoingMeetingAdmin/MeetingRedirectScreen';
 import SupportPage from './screens/LandingPage/SupportPage';
 import DocumentationScreen from './screens/LandingPage/DocumentationScreen';
+import ScrollToTop from './ScrollToTop';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -40,6 +41,7 @@ export default function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <AppNavbar />
       <CustomBootstrapStyle />
       <div className="Container__content">
