@@ -41,6 +41,9 @@ export default function ParticipantList({
 
 function AwaitItem({ meeting, setMeeting, position, showButton }) {
   const participant = meeting.participants[position];
+  const displayName = participant.userName && participant.userName.length > 0
+    ? participant.userName
+    : 'Guest';
   return (
     <Col className="Container__padding--vertical-small">
       <Card
@@ -49,9 +52,7 @@ function AwaitItem({ meeting, setMeeting, position, showButton }) {
       >
         <Card.Body>
           <Card.Title>
-            {participant.userName != null && participant.userName.length > 0
-              ? participant.userName
-              : 'Guest'}
+            {displayName}
           </Card.Title>
           <Card.Text>{participant.userEmail}</Card.Text>
           {showButton && (
@@ -82,7 +83,7 @@ function PresentItem({ meeting, setMeeting, position, showButton }) {
               : 'Guest'}
           </Card.Title>
           <Card.Text>{participant.userEmail}</Card.Text>
-          {showButton && (
+          {showButton && participant.role !== 2 && (
             <div className="d-grid gap-2">
               <Button
                 variant="outline-light"
