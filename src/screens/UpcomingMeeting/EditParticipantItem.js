@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { isNil } from 'lodash';
 import {
   Button,
+  Row,
   Col,
   Card,
   CloseButton,
   Form,
-  Modal,
   Spinner,
 } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -82,15 +82,7 @@ export default function EditParticipantItem({
       ) : (
         <Card>
           <Card.Header>
-            <div className="Container__row--space-between">
-              <p className="Text__card-header">Editing Participant</p>
-              <CloseButton
-                variant="outline-primary"
-                size="sm"
-                style={{ borderRadius: 50 }}
-                onClick={close}
-              />
-            </div>
+            <p className="Text__card-header">Editing Participant</p>
           </Card.Header>
           <Card.Body>
             <Form.Group>
@@ -105,11 +97,22 @@ export default function EditParticipantItem({
                 onChange={(event) => setEmail(event.target.value)}
               />
               <div className="Buffer--20px" />
-              <div className="d-grid gap-2">
-                <Button variant="primary" onClick={updateChanges}>
-                  Confirm
-                </Button>
-              </div>
+              <Row>
+                <Col>
+                  <div className="d-grid gap-2">
+                    <Button variant="outline-primary" onClick={close}>
+                      Cancel
+                    </Button>
+                  </div>
+                </Col>
+                <Col>
+                  <div className="d-grid gap-2">
+                    <Button variant="primary" onClick={updateChanges}>
+                      Confirm
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
             </Form.Group>
           </Card.Body>
         </Card>

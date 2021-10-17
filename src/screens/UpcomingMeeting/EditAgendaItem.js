@@ -1,4 +1,5 @@
 import {
+  Row,
   Col,
   Card,
   DropdownButton,
@@ -121,10 +122,7 @@ export default function EditAgendaItem({
     <Col className="Container__padding--vertical-small">
       <Card>
         <Card.Header>
-          <div className="Container__row--space-between">
-            <p className="Text__card-header">Editing Agenda Item</p>
-            <CloseButton onClick={close} />
-          </div>
+          <p className="Text__card-header">Editing Agenda Item</p>
         </Card.Header>
         <Card.Body>
           <Form.Group>
@@ -162,11 +160,22 @@ export default function EditAgendaItem({
               onChange={(event) => setMaterials(event.target.value)}
             />
             <div className="Buffer--20px" />
-            <div className="d-grid gap-2">
-              <Button variant="primary" onClick={() => updateChanges()}>
-                Confirm
-              </Button>
-            </div>
+            <Row>
+              <Col>
+                <div className="d-grid gap-2">
+                  <Button variant="outline-primary" onClick={close}>
+                    Cancel
+                  </Button>
+                </div>
+              </Col>
+              <Col>
+                <div className="d-grid gap-2">
+                  <Button variant="primary" onClick={() => updateChanges()}>
+                    Confirm
+                  </Button>
+                </div>
+              </Col>
+            </Row>
           </Form.Group>
         </Card.Body>
       </Card>
