@@ -5,9 +5,15 @@ import server from '../../services/server';
 import AttendanceList from './AttendanceList';
 import CompletedAgendaCard from './CompletedAgendaCard';
 import { Col, Nav, Row, Button, Container } from 'react-bootstrap';
-import { getDateInfo, getFormattedDate } from '../../common/CommonFunctions';
+import {
+  getDateInfo,
+  getFormattedDate,
+  openLinkInNewTab,
+} from '../../common/CommonFunctions';
 import Statistics from './Statistics';
-import RedirectionScreen, { MEETING_NOT_FOUND_ERR } from '../../components/RedirectionScreen';
+import RedirectionScreen, {
+  MEETING_NOT_FOUND_ERR,
+} from '../../components/RedirectionScreen';
 
 export default function CompletedMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -71,7 +77,7 @@ export default function CompletedMeetingScreen() {
       'Thank you.';
     const encodedBody = encodeURI(body);
     const href = `mailto:${recipients}?subject=${title}&body=${encodedBody}`;
-    window.location = href;
+    openLinkInNewTab(href);
   }
 
   const startTimeIso = meeting.startedAt;
@@ -94,7 +100,7 @@ export default function CompletedMeetingScreen() {
               {date}, {startTime} - {endTime}
             </p>
             <div className="d-grid gap-2">
-              <Button>Get Meeting Recording</Button>
+              {/* <Button>Get Meeting Recording</Button> */}
               <Button variant="outline-primary" onClick={emailParticipants}>
                 Email Participants
               </Button>
@@ -104,12 +110,12 @@ export default function CompletedMeetingScreen() {
             </div>
             <div className="Container__row--space-between">
               <p className="Text__subsubheader">Description</p>
-              <a
-                className="Text__toggle"
+              <p
+                className="Text__toggle Clickable"
                 onClick={() => setRestrictDescription(!restrictDescription)}
               >
                 {restrictDescription ? 'Show More' : 'Show Less'}
-              </a>
+              </p>
             </div>
             <p
               className={
