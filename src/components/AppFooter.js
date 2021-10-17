@@ -22,7 +22,11 @@ export default function AppFooter() {
             sm={12}
             md={12}
             lg={12}
-            style={{ display: 'flex', flexDirection: 'row' }}
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+            }}
           >
             <Facebook
               size={24}
@@ -51,6 +55,19 @@ export default function AppFooter() {
                 Terms {'&'} Conditions
               </Nav.Link>
             </Nav>
+          </Col>
+          <div className="Buffer--20px" />
+          <Col
+            style={{
+              textAlign: 'center',
+              fontSize: '14px',
+            }}
+          >
+            <footer>
+              <small>
+                &copy; Copyright {new Date().getFullYear()}, MeetBalls
+              </small>
+            </footer>
           </Col>
         </Row>
       </Container>
