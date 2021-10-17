@@ -15,6 +15,8 @@ import {
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
+import { logEvent } from '@firebase/analytics';
+import { googleAnalytics } from '../../services/firebase';
 
 export default function AddMeetingOverlay({
   show,
@@ -85,6 +87,7 @@ export default function AddMeetingOverlay({
         console.log('New meeting created with ID = ' + id);
         setShow(false);
         history.push('/meeting/' + id);
+        logEvent(googleAnalytics, 'created_meeting');
       })
       .catch(() => {
         toast.error('Failed to create.');

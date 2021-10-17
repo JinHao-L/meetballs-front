@@ -8,9 +8,16 @@ import MeetingImage from '../../assets/guide_ongoing_meeting.jpg';
 import StatisticsImage from '../../assets/guide_report.jpg';
 import { useHistory } from 'react-router';
 import AppFooter from '../../components/AppFooter';
+import { useEffect } from 'react';
+import { logEvent } from '@firebase/analytics';
+import { googleAnalytics } from '../../services/firebase';
 
 export default function LandingScreen() {
   const history = useHistory();
+
+  useEffect(() => {
+    logEvent(googleAnalytics, 'visit_landing_page');
+  }, []);
 
   return (
     <div>
