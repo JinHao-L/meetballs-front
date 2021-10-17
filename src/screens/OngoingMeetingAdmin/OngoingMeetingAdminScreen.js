@@ -23,6 +23,9 @@ export default function OngoingMeetingAdminScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
   const [currentTab, setCurrentTab] = useState('agenda');
   const [time, setTime] = useState(new Date().getTime());
+  const [showError, setShowError] = useState(false);
+  const [hasLaunched, setHasLaunched] = useState(false);
+
   const { socket } = useSocket(meeting.id);
   const user = useContext(UserContext);
   const { id } = useParams();
@@ -31,7 +34,6 @@ export default function OngoingMeetingAdminScreen() {
     return meeting?.hostId === user?.uuid;
   }, [meeting.hostId, user]);
   const history = useHistory();
-  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     console.log(meeting);
@@ -72,6 +74,7 @@ export default function OngoingMeetingAdminScreen() {
   }, [socket]);
 
   function startZoom() {
+    if (!hasLaunched) setHasLaunched(true);
     window.open(meeting.joinUrl, '_blank');
   }
 
@@ -171,7 +174,7 @@ export default function OngoingMeetingAdminScreen() {
                 onClick={startZoom}
                 enabled={meeting.type === 1 || meeting.type === 2}
               >
-                Relaunch Zoom
+                { hasLaunched ? "Relaunch" : "Launch" } Zoom
               </Button>
             </div>
             <div className="Buffer--20px" />
