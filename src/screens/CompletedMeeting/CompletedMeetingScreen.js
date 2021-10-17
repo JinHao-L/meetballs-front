@@ -24,7 +24,7 @@ export default function CompletedMeetingScreen() {
       .get(`/meeting/${id}`)
       .then((res) => setMeeting(res.data))
       .catch((err) => {
-        toast(extractError(err));
+        toast.error(extractError(err));
       })
       .finally(() => setLoading(false));
   }, []);
