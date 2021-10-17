@@ -103,7 +103,7 @@ export default function AgendaItem({
                 <Card>
                   <Card.Header className="Container__row--space-between">
                     {getFormattedDuration(item.expectedDuration)}
-                    {item.speakerMaterials ? (
+                    {item.speakerMaterials && item.speaker ? (
                       <Link45deg
                         size={24}
                         className="Clickable"
@@ -111,8 +111,10 @@ export default function AgendaItem({
                           openFile(
                             item.speakerMaterials,
                             meeting.id,
-                            item.speakerId,
-                          )
+                            item.speaker.id,
+                          ).catch((err) => {
+                            toast.error('File not found')
+                          })
                         }
                       />
                     ) : null}
@@ -120,8 +122,8 @@ export default function AgendaItem({
                   <Card.Body>
                     <Card.Title>{item.name}</Card.Title>
                     <Card.Subtitle>
-                      {item.speakerName
-                        ? 'Presented by ' + item.speakerName
+                      {item.speaker?.userName
+                        ? 'Presented by ' + item.speaker.userName
                         : ''}
                     </Card.Subtitle>
                     <div className="Buffer--10px" />

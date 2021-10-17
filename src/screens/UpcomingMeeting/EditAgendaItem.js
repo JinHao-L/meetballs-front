@@ -26,8 +26,7 @@ export default function EditAgendaItem({
   const [duration, setDuration] = useState(item.expectedDuration);
   const [name, setName] = useState(item.name);
   const [description, setDescription] = useState(item.description);
-  const [speaker, setSpeaker] = useState(item.speakerName || '');
-  const [speakerId, setSpeakerId] = useState(item.speakerId || '');
+  const [speaker, setSpeaker] = useState(item.speaker || null);
   const [materials, setMaterials] = useState(item.speakerMaterials || '');
   const [file, setFile] = useState('');
   const [isUpload, setIsUpload] = useState(false);
@@ -50,12 +49,12 @@ export default function EditAgendaItem({
     let speakerMaterials = materials;
     if (speaker && isUpload) {
       try {
-        const fileName = await uploadFile(file, meeting.id, speakerId);
+        const fileName = await uploadFile(file, meeting.id, speaker.id);
         setMaterials(fileName);
         speakerMaterials = fileName;
       } catch (err) {
         if (err.response?.status === 400) {
-          toast.error(err.response?.data?.message || 'Failed to upload file');
+          toast.error(extractError(err) || 'Failed to upload file');
         } else {
           toast.error('Failed to upload file');
           console.log(err);
@@ -84,14 +83,13 @@ export default function EditAgendaItem({
         duration,
         description,
         speaker,
-        speakerId,
         speakerMaterials,
       );
       meeting.agendaItems[position].name = name;
       meeting.agendaItems[position].expectedDuration = duration;
       meeting.agendaItems[position].description = description;
-      if (speaker !== item.speaker) meeting.agendaItems[position].speakerName = speaker;
-      if (speakerId !== item.speakerId) meeting.agendaItems[position].speakerId = speakerId;
+      if (speaker !== item.speaker)
+        meeting.agendaItems[position].speaker = speaker;
       if (speakerMaterials !== item.speakerMaterials)
         meeting.agendaItems[position].speakerMaterials = speakerMaterials;
       setEditing(false);
@@ -107,8 +105,10 @@ export default function EditAgendaItem({
       <Dropdown.Item
         key={participant.userEmail}
         onClick={() => {
-          setSpeaker(participant.userName);
-          setSpeakerId(participant.id);
+          setSpeaker(participant);
+          if (!isValidUrl(materials)) {
+            setMaterials('');
+          }
         }}
       >
         {participant.userName}
@@ -118,8 +118,7 @@ export default function EditAgendaItem({
       <Dropdown.Item
         key="null choice"
         onClick={() => {
-          setSpeaker('');
-          setSpeakerId('');
+          setSpeaker(null);
           setMaterials('');
         }}
       >
@@ -162,17 +161,17 @@ export default function EditAgendaItem({
             <DropdownButton
               variant="outline-primary  "
               placeholder="Add presenter"
-              title={speaker || '(No speaker assigned)'}
+              title={speaker?.userName || '(No speaker assigned)'}
             >
               <SpeakerItems />
             </DropdownButton>
-            <Form.Group as={Row} hidden={speaker === ''}>
+            <Form.Group as={Row} hidden={speaker === null}>
               <Form.Label column>Materials (optional)</Form.Label>
               <Form.Label
                 column
                 onClick={() => setIsUpload((prev) => !prev)}
                 className="Clickable"
-                disabled={speaker === ''}
+                disabled={speaker === null}
                 variant="primary"
                 style={{ textAlign: 'right', color: '#725546' }}
               >
@@ -181,15 +180,15 @@ export default function EditAgendaItem({
             </Form.Group>
             <Form.Control
               type="file"
-              disabled={speaker === ''}
-              hidden={speaker === '' || !isUpload}
+              disabled={speaker === null}
+              hidden={speaker === null || !isUpload}
               onChange={(e) => setFile(e.target.files[0])}
             />
             <Form.Control
               value={materials}
-              hidden={speaker === '' || isUpload}
+              hidden={speaker === null || isUpload}
               placeholder="Add a URL to your presentation materials"
-              disabled={speaker === ''}
+              disabled={speaker === null}
               onChange={(event) => setMaterials(event.target.value)}
             />
             <div className="Buffer--20px" />
@@ -212,7 +211,6 @@ async function updateDatabase(
   duration,
   description,
   speaker,
-  speakerId,
   materials,
 ) {
   const data = {
@@ -223,10 +221,8 @@ async function updateDatabase(
     actualDuration: null,
     isCurrent: false,
   };
-  if (speaker !== '') data.speakerName = speaker;
-  if (speakerId !== '') data.speakerId = speakerId;
+  if (speaker !== null) data.speakerId = speaker.id;
   if (materials !== '') data.speakerMaterials = materials;
-  console.log(data);
   await server.put(
     `/agenda-item/${meetingId}/${position}`,
     data,

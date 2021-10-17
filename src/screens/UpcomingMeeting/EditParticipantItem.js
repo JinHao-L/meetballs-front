@@ -47,9 +47,8 @@ export default function EditParticipantItem({
     const oldEmail = meeting.participants[position].userEmail;
     try {
       setLoading(true);
-      await updateDatabase(meeting.id, email, username, oldEmail);
-      meeting.participants[position].userName = username;
-      meeting.participants[position].userEmail = email;
+      const newParticipant = await updateDatabase(meeting.id, email, username, oldEmail);
+      meeting.participants[position] = newParticipant;
       setEditing(false);
     } catch (err) {
       toast.error(extractError(err));
@@ -151,7 +150,7 @@ async function updateDatabase(meetingId, newEmail, newUsername, oldEmail) {
       ...defaultHeaders,
     });
   }
-  await server.post(
+  const result = await server.post(
     '/participant',
     {
       meetingId: meetingId,
@@ -160,4 +159,5 @@ async function updateDatabase(meetingId, newEmail, newUsername, oldEmail) {
     },
     defaultHeaders,
   );
+  return result.data
 }
