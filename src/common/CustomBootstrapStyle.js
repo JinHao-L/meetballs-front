@@ -43,37 +43,21 @@ export default function CustomBootstrapStyle() {
     }
 
     .btn-secondary {
-      background-color: #f28f71;
-      color: #white;
-      border-color: #f28f71;
+      background-color: white;
+      color: #8F6B58;
+      border-color: #8F6B58;
     }
 
     .btn-secondary:hover, .btn-secondary:active, .btn-secondary:focus {
-      background-color: #ed7153;
+      background-color: #725546;
       color: white;
-      border-color: #ed7153;
+      border-color: #725546;
     }
 
     .btn-secondary:disabled {
-      background-color: #e3a38f;
+      background-color: #8f7c72;
       color: #white;
-      border-color: #e3a38f;
-    }
-
-    .btn-outline-secondary {
-      color: #f28f71;
-      border-color: #f28f71;
-    }
-
-    .btn-outline-secondary:hover, .btn-outline-secondary:active, .btn-outline-secondary:focus {
-      background-color: #f28f71;
-      color: white;
-      border-color: #f28f71;
-    }
-
-    .btn-outline-secondary:disabled {
-      color: #e3a38f;
-      border-color: #e3a38f;
+      border-color: #8f7c72;
     }
 
     .btn-danger {
@@ -161,6 +145,15 @@ export default function CustomBootstrapStyle() {
     .nav-tabs .nav-link {
       color: #c5c5c5;
       font-weight: 500;
+    }
+
+    .nav .nav-link {
+      color: #8F6B58;
+      padding: 0;
+    }
+
+    .nav .nav-link:hover {
+      color: #000000;
     }
 
     `}

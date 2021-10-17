@@ -8,7 +8,10 @@ import { Formik } from 'formik';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import server from '../../services/server';
-import { getFormattedDateTime } from '../../common/CommonFunctions';
+import {
+  getFormattedDateTime,
+  openLinkInNewTab,
+} from '../../common/CommonFunctions';
 
 export default function AddMeetingOverlay({
   show,
@@ -183,7 +186,7 @@ export default function AddMeetingOverlay({
       const startTime = meeting.start_time;
       const dateStr = startTime
         ? getFormattedDateTime(new Date(startTime))
-        : "No date available";
+        : 'No date available';
       items.push(
         <div className="Container__padding--vertical-small Clickable" key={idx}>
           <Card
@@ -231,17 +234,38 @@ export default function AddMeetingOverlay({
           <Offcanvas.Body>
             <div className="d-grid gap-2">
               <Button
-                variant="outline-primary"
+                variant="primary"
                 onClick={() => setShowZoomList(!showZoomList)}
               >
                 {showZoomList ? 'Cancel' : 'Select from Zoom'}
               </Button>
+              {!showZoomList || (
+                <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    openLinkInNewTab('https://zoom.us/meeting/schedule');
+                  }}
+                >
+                  New Zoom Meeting
+                </Button>
+              )}
             </div>
             <div className="Buffer--20px" />
             <div className="Line--horizontal" />
             <div className="Buffer--20px" />
             {showZoomList ? (
-              <ZoomMeetingList setFieldValue={setFieldValue} />
+              <>
+                <div className="d-grid gap-2">
+                  <Button
+                    variant="outline-primary"
+                    onClick={getZoomMeetingList}
+                  >
+                    Refresh
+                  </Button>
+                </div>
+                <div className="Buffer--20px" />
+                <ZoomMeetingList setFieldValue={setFieldValue} />
+              </>
             ) : (
               <ManualInput
                 handleSubmit={handleSubmit}
