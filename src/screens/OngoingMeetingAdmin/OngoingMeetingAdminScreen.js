@@ -152,6 +152,29 @@ export default function OngoingMeetingAdminScreen() {
     }
   }
 
+  function LaunchZoomButton() {
+    return (
+      <Button
+        variant="outline-primary"
+        onClick={startZoom}
+        enabled={meeting.type === 1 || meeting.type === 2}
+      >
+        { hasLaunched ? "Relaunch" : "Launch" } Zoom
+      </Button>
+    );
+  }
+
+  function ReturnToEditPageButton() {
+    return (
+      <Button
+        variant="outline-primary"
+        href={`/meeting/${id}`}
+      >
+        Back to Editing
+      </Button>
+    );
+  }
+
   updateDelay(meeting.agendaItems, time, position);
 
   return (
@@ -169,13 +192,8 @@ export default function OngoingMeetingAdminScreen() {
               {getFormattedDateTime(meeting.startedAt)}
             </p>
             <div className="d-grid gap-2">
-              <Button
-                variant="outline-primary"
-                onClick={startZoom}
-                enabled={meeting.type === 1 || meeting.type === 2}
-              >
-                { hasLaunched ? "Relaunch" : "Launch" } Zoom
-              </Button>
+              <LaunchZoomButton />
+              {meeting.type === 2 ? null : <ReturnToEditPageButton />}
             </div>
             <div className="Buffer--20px" />
             <div className="Line--horizontal" />
@@ -214,14 +232,7 @@ export default function OngoingMeetingAdminScreen() {
               </Toast.Body>
               <Toast.Body>
                 <div className="d-grid gap-2">
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => {
-                      history.push('/meeting/' + id);
-                    }}
-                  >
-                    Back to Editing
-                  </Button>
+                  <ReturnToEditPageButton />
                 </div>
               </Toast.Body>
             </Toast>
