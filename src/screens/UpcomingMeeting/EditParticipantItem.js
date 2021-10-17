@@ -35,6 +35,18 @@ export default function EditParticipantItem({
     );
   };
 
+  function syncAgenda(prevParticipantId) {
+    setMeeting((meeting) => ({
+      ...meeting,
+      agendaItems: meeting.agendaItems.map((item) => {
+        if (item?.speaker?.id === prevParticipantId) {
+          item.speaker = null;
+        }
+        return item;
+      }),
+    }));
+  }
+
   async function updateChanges() {
     if (email.length === 0) {
       setShowModal(true);
@@ -45,11 +57,17 @@ export default function EditParticipantItem({
       return;
     }
     const oldEmail = meeting.participants[position].userEmail;
+    const oldId = meeting.participants[position]?.id;
     try {
       setLoading(true);
-      await updateDatabase(meeting.id, email, username, oldEmail);
-      meeting.participants[position].userName = username;
-      meeting.participants[position].userEmail = email;
+      const newParticipant = await updateDatabase(
+        meeting.id,
+        email,
+        username,
+        oldEmail,
+      );
+      meeting.participants[position] = newParticipant;
+      syncAgenda(oldId);
       setEditing(false);
     } catch (err) {
       toast.error(extractError(err));
@@ -87,7 +105,6 @@ export default function EditParticipantItem({
             <div className="Container__row--space-between">
               <p className="Text__card-header">Editing Participant</p>
               <CloseButton
-                variant="outline-primary"
                 size="sm"
                 style={{ borderRadius: 50 }}
                 onClick={close}
@@ -152,7 +169,7 @@ async function updateDatabase(meetingId, newEmail, newUsername, oldEmail) {
       ...defaultHeaders,
     });
   }
-  await server.post(
+  const result = await server.post(
     '/participant',
     {
       meetingId: meetingId,
@@ -161,4 +178,5 @@ async function updateDatabase(meetingId, newEmail, newUsername, oldEmail) {
     },
     defaultHeaders,
   );
+  return result.data;
 }

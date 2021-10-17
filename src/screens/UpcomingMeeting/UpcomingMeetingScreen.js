@@ -16,7 +16,7 @@ import EditMeetingOverlay from './EditMeetingOverlay';
 import { useHistory, Redirect, useParams } from 'react-router';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
-import ConfirmInviteModel from '../OngoingMeetingAdmin/ConfirmInviteModel';
+import ConfirmInviteModel from './ConfirmInviteModel';
 import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
 import RedirectionScreen, { MEETING_NOT_FOUND_ERR } from '../../components/RedirectionScreen';

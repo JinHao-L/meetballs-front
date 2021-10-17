@@ -2,7 +2,7 @@ import { Card, Button } from 'react-bootstrap';
 import { openLinkInNewTab } from '../common/CommonFunctions';
 
 export function SpeakerSection({ item }) {
-  const speaker = item.speakerName;
+  const speaker = item?.speaker?.userName;
   if (!speaker) return null;
   return <Card.Subtitle>Presented by {speaker}</Card.Subtitle>;
 }

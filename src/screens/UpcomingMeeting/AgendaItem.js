@@ -1,21 +1,15 @@
 import { Button, Row, Col, Card } from 'react-bootstrap';
 import { Draggable } from 'react-beautiful-dnd';
 import { useState } from 'react';
-import {
-  getFormattedDuration,
-  openLinkInNewTab,
-} from '../../common/CommonFunctions';
+import { getFormattedDuration } from '../../common/CommonFunctions';
 import EditAgendaItem from './EditAgendaItem';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import { SmallLoadingIndicator } from '../../components/SmallLoadingIndicator';
 import { toast } from 'react-toastify';
 import { Link45deg } from 'react-bootstrap-icons';
-import {
-  MaterialsSection,
-  SpeakerSection,
-} from '../../components/AgendaItemComponents';
 import { extractError } from '../../utils/extractError';
+import { openFile } from '../../services/files';
 
 export default function AgendaItem({
   meeting,
@@ -109,19 +103,27 @@ export default function AgendaItem({
                 <Card>
                   <Card.Header className="Container__row--space-between">
                     {getFormattedDuration(item.expectedDuration)}
-                    {item.speakerMaterials ? (
+                    {item.speakerMaterials && item.speaker ? (
                       <Link45deg
                         size={24}
                         className="Clickable"
-                        onClick={() => openLinkInNewTab(item.speakerMaterials)}
+                        onClick={() =>
+                          openFile(
+                            item.speakerMaterials,
+                            meeting.id,
+                            item.speaker.id,
+                          ).catch((err) => {
+                            toast.error('File not found')
+                          })
+                        }
                       />
                     ) : null}
                   </Card.Header>
                   <Card.Body>
                     <Card.Title>{item.name}</Card.Title>
                     <Card.Subtitle>
-                      {item.speakerName
-                        ? 'Presented by ' + item.speakerName
+                      {item.speaker?.userName
+                        ? 'Presented by ' + item.speaker.userName
                         : ''}
                     </Card.Subtitle>
                     <div className="Buffer--10px" />
