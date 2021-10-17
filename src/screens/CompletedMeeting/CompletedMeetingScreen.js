@@ -8,6 +8,8 @@ import CompletedAgendaCard from './CompletedAgendaCard';
 import { Col, Nav, Row, Button, Container } from 'react-bootstrap';
 import { getDateInfo, getFormattedDate } from '../../common/CommonFunctions';
 import Statistics from './Statistics';
+import { toast } from 'react-toastify';
+import { extractError } from '../../utils/extractError';
 
 export default function CompletedMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -21,7 +23,9 @@ export default function CompletedMeetingScreen() {
     return server
       .get(`/meeting/${id}`)
       .then((res) => setMeeting(res.data))
-      .catch(console.error)
+      .catch((err) => {
+        toast.error(extractError(err));
+      })
       .finally(() => setLoading(false));
   }, []);
 

@@ -3,23 +3,34 @@ import { useState } from 'react';
 import EditParticipantItem from './EditParticipantItem';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import { toast } from 'react-toastify';
+import { SmallLoadingIndicator } from '../../components/SmallLoadingIndicator';
+import { extractError } from '../../utils/extractError';
 
 export default function ParticipantItem({ setMeeting, meeting, position }) {
+  const [removing, setRemoving] = useState(false);
   const [editing, setEditing] = useState(false);
   const participant = meeting.participants[position];
 
-  if (!editing && participant.userEmail.length === 0) {
+  if (!editing && participant?.userEmail?.length === 0) {
     setEditing(true);
   }
 
   async function removeParticipant() {
-    const newMeeting = Object.assign({}, meeting);
-    const newParticipants = newMeeting.participants;
-    const email = newParticipants[position].userEmail;
-    newParticipants.splice(position, 1);
-    newMeeting.participants = newParticipants;
-    await removeFromDatabase(email, meeting.id);
-    setMeeting(newMeeting);
+    try {
+      setRemoving(true);
+      const newMeeting = Object.assign({}, meeting);
+      const newParticipants = newMeeting.participants;
+      const email = newParticipants[position].userEmail;
+      await removeFromDatabase(email, meeting.id);
+      newParticipants.splice(position, 1);
+      newMeeting.participants = newParticipants;
+      setMeeting(newMeeting);
+    } catch (err) {
+      toast.error(extractError(err));
+    } finally {
+      setRemoving(false);
+    }
   }
 
   if (editing) {
@@ -37,32 +48,36 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
   // Not editing
   return (
     <Col className="Container__padding--vertical-small">
-      <Card>
-        <Card.Body>
-          <Card.Title>
-            {participant.userName != null && participant.userName.length > 0
-              ? participant.userName
-              : 'Guest'}
-          </Card.Title>
-          <Card.Text>{participant.userEmail}</Card.Text>
-          <Row>
-            <Col>
-              <div className="d-grid gap-2">
-                <Button variant="danger" onClick={removeParticipant}>
-                  Remove
-                </Button>
-              </div>
-            </Col>
-            <Col>
-              <div className="d-grid gap-2">
-                <Button variant="primary" onClick={() => setEditing(true)}>
-                  Edit
-                </Button>
-              </div>
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
+      {removing ? (
+        <SmallLoadingIndicator />
+      ) : (
+        <Card>
+          <Card.Body>
+            <Card.Title>
+              {participant?.userName != null && participant?.userName.length > 0
+                ? participant?.userName
+                : 'Guest'}
+            </Card.Title>
+            <Card.Text>{participant?.userEmail}</Card.Text>
+            <Row>
+              <Col>
+                <div className="d-grid gap-2">
+                  <Button variant="danger" onClick={removeParticipant}>
+                    Remove
+                  </Button>
+                </div>
+              </Col>
+              <Col>
+                <div className="d-grid gap-2">
+                  <Button variant="primary" onClick={() => setEditing(true)}>
+                    Edit
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+      )}
     </Col>
   );
 }

@@ -1,5 +1,9 @@
 import { Col, Card } from 'react-bootstrap';
 import { getFormattedDuration } from '../../common/CommonFunctions';
+import {
+  MaterialsSection,
+  SpeakerSection,
+} from '../../components/AgendaItemComponents';
 
 export default function AgendaList({ time, agenda, position }) {
   const items = [];
@@ -29,7 +33,10 @@ function NotStartedItem({ item }) {
       <Card>
         <Card.Body>
           <Card.Title>{item.name}</Card.Title>
+          <SpeakerSection item={item} />
+          <div className="Buffer--10px" />
           <Card.Text>{item.description}</Card.Text>
+          <MaterialsSection item={item} />
         </Card.Body>
         <Card.Footer>
           <Card.Text>
@@ -50,6 +57,8 @@ function CurrentItem({ item, time }) {
         <Card.Body>
           <Card.Title>{item.name}</Card.Title>
           <Card.Text>{item.description}</Card.Text>
+          <SpeakerSection item={item} />
+          <MaterialsSection item={item} />
         </Card.Body>
         <Card.Footer>
           <Card.Text>
@@ -69,6 +78,8 @@ function ActiveItem({ item }) {
         <Card.Body>
           <Card.Title>{item.name}</Card.Title>
           <Card.Text>{item.description}</Card.Text>
+          <SpeakerSection item={item} />
+          <MaterialsSection item={item} />
         </Card.Body>
         <Card.Footer>
           <Card.Text>

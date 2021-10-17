@@ -147,10 +147,6 @@
   cursor: pointer;
 }
 
-.Text__toggle:hover {
-  color: #c5c5c5;
-}
-
 /* Toggles */
 
 .Toggle-card {
@@ -186,6 +182,7 @@
 
 .Fab:hover {
   background-color: #725546;
+  cursor: pointer;
 }
 
 /* Miscs */
@@ -229,4 +226,8 @@
 
 .Clickable {
   cursor: pointer;
+}
+
+.Clickable:hover {
+  opacity: 0.7;
 }

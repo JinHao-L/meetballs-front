@@ -1,6 +1,6 @@
 import DatePicker from 'react-datepicker';
 import { useState, useEffect } from 'react';
-import { Offcanvas, Form, Button, Card, Toast } from 'react-bootstrap';
+import { Offcanvas, Form, Button, Card } from 'react-bootstrap';
 import { useHistory } from 'react-router';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import * as yup from 'yup';
@@ -12,16 +12,20 @@ import {
   getFormattedDateTime,
   openLinkInNewTab,
 } from '../../common/CommonFunctions';
+import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
+import { toast } from 'react-toastify';
+import { extractError } from '../../utils/extractError';
 
 export default function AddMeetingOverlay({
   show,
   setShow,
   onUpdate,
   checkIfExist,
+  cloneMeeting,
 }) {
+  const [loading, setLoading] = useState(false);
   const [showZoomList, setShowZoomList] = useState(false);
   const [zoomMeetingList, setZoomMeetingList] = useState([]);
-  const [showErrorToast, setShowErrorToast] = useState(false);
   const [isZoomMeeting, setIsZoomMeeting] = useState(false);
   const history = useHistory();
 
@@ -32,17 +36,33 @@ export default function AddMeetingOverlay({
   }, [show]);
 
   async function getZoomMeetingList() {
-    const response = await server.get(`/zoom/meetings`, defaultHeaders);
-    const result = response.data;
-    if (response.status !== 200) return;
-    const filteredList = [];
-    result.forEach((meeting) => {
-      if (!checkIfExist(meeting.uuid)) filteredList.push(meeting);
-    });
-    setZoomMeetingList(filteredList);
+    try {
+      setLoading(true);
+      const response = await server.get(`/zoom/meetings`, defaultHeaders);
+      const result = response.data;
+      if (response.status !== 200) return;
+      const filteredList = [];
+      result.forEach((meeting) => {
+        if (!checkIfExist(meeting.uuid)) {
+          filteredList.push(meeting);
+        }
+      });
+      setZoomMeetingList(filteredList);
+    } catch (err) {
+      toast.error(extractError(err));
+    } finally {
+      setLoading(false);
+    }
   }
 
-  function submit({ name, desc, date, meetingId, meetingPassword, link }) {
+  async function submit({
+    name,
+    desc,
+    date,
+    meetingId,
+    meetingPassword,
+    link,
+  }) {
     console.log(server.defaults.headers.common['Authorization']);
     const newMeeting = {
       name: name,
@@ -54,7 +74,9 @@ export default function AddMeetingOverlay({
       joinUrl: link,
       enableTranscription: true,
     };
+    await fillItems(newMeeting, cloneMeeting);
     const key = isZoomMeeting ? `/zoom/meetings/${meetingId}` : '/meeting';
+    setLoading(true);
     return server
       .post(key, newMeeting, defaultHeaders)
       .then((res) => {
@@ -65,25 +87,32 @@ export default function AddMeetingOverlay({
         history.push('/meeting/' + id);
       })
       .catch(() => {
-        setShowErrorToast(true);
+        toast.error('Failed to create.');
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
   async function selectMeeting(id, setFieldValue) {
-    const response = await server.get('/zoom/meetings/' + id, defaultHeaders);
-    const meeting = response.data;
-    if (response.status !== 200) return;
-
-    const zoomStartTime = meeting.start_time;
-    const date = zoomStartTime ? new Date(zoomStartTime) : new Date();
-    setFieldValue('name', meeting.topic);
-    setFieldValue('desc', meeting.agenda);
-    setFieldValue('meetingId', id);
-    setFieldValue('meetingPassword', meeting.password);
-    setFieldValue('link', meeting.join_url);
-    setFieldValue('date', date);
-    setIsZoomMeeting(true);
-    setShowZoomList(false);
+    try {
+      setLoading(true);
+      const response = await server.get('/zoom/meetings/' + id, defaultHeaders);
+      const meeting = response.data;
+      if (response.status !== 200) return;
+      setFieldValue('name', meeting.topic);
+      setFieldValue('desc', meeting.agenda);
+      setFieldValue('meetingId', id);
+      setFieldValue('meetingPassword', meeting.password);
+      setFieldValue('link', meeting.join_url);
+      setFieldValue('date', new Date(meeting.start_time));
+      setIsZoomMeeting(true);
+      setShowZoomList(false);
+    } catch (err) {
+      toast.error(extractError(err));
+    } finally {
+      setLoading(false);
+    }
   }
 
   function ManualInput({
@@ -165,17 +194,6 @@ export default function AddMeetingOverlay({
           </Button>
         </div>
         <div className="Buffer--20px" />
-        <Toast
-          show={showErrorToast}
-          onClose={() => setShowErrorToast(false)}
-          autohide
-          delay={2000}
-        >
-          <Toast.Header closeButton={false}>Error</Toast.Header>
-          <Toast.Body>
-            Unable to create meeting. Please check if it has already been added.
-          </Toast.Body>
-        </Toast>
       </>
     );
   }
@@ -229,7 +247,11 @@ export default function AddMeetingOverlay({
           }}
         >
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title>Add New Meeting</Offcanvas.Title>
+            <Offcanvas.Title>
+              {cloneMeeting === null
+                ? 'Add New Meeting'
+                : 'Cloning "' + cloneMeeting.name + '"'}
+            </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
             <div className="d-grid gap-2">
@@ -250,32 +272,38 @@ export default function AddMeetingOverlay({
                 </Button>
               )}
             </div>
-            <div className="Buffer--20px" />
-            <div className="Line--horizontal" />
-            <div className="Buffer--20px" />
-            {showZoomList ? (
-              <>
-                <div className="d-grid gap-2">
-                  <Button
-                    variant="outline-primary"
-                    onClick={getZoomMeetingList}
-                  >
-                    Refresh
-                  </Button>
-                </div>
-                <div className="Buffer--20px" />
-                <ZoomMeetingList setFieldValue={setFieldValue} />
-              </>
+            {loading ? (
+              <FullLoadingIndicator />
             ) : (
-              <ManualInput
-                handleSubmit={handleSubmit}
-                handleChange={handleChange}
-                setFieldValue={setFieldValue}
-                values={values}
-                touched={touched}
-                isValid={isValid}
-                errors={errors}
-              />
+              <>
+                <div className="Buffer--20px" />
+                <div className="Line--horizontal" />
+                <div className="Buffer--20px" />
+                {!loading && showZoomList ? (
+                  <>
+                    <div className="d-grid gap-2">
+                      <Button
+                        variant="outline-primary"
+                        onClick={getZoomMeetingList}
+                      >
+                        Refresh
+                      </Button>
+                    </div>
+                    <div className="Buffer--20px" />
+                    <ZoomMeetingList setFieldValue={setFieldValue} />
+                  </>
+                ) : (
+                  <ManualInput
+                    handleSubmit={handleSubmit}
+                    handleChange={handleChange}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    touched={touched}
+                    isValid={isValid}
+                    errors={errors}
+                  />
+                )}
+              </>
             )}
           </Offcanvas.Body>
         </Offcanvas>
@@ -301,3 +329,19 @@ const initialValue = {
   link: '',
   date: new Date(),
 };
+
+async function fillItems(newMeeting, cloneMeeting) {
+  if (cloneMeeting === null) return;
+  const response = await server.get(
+    `/meeting/${cloneMeeting.id}`,
+    defaultHeaders,
+  );
+  if (response.status !== 200) return;
+  const result = response.data;
+  if (result.agendaItems.length > 0) {
+    newMeeting.agendaItems = result.agendaItems;
+  }
+  if (result.participants.length > 0) {
+    newMeeting.participants = result.participants;
+  }
+}

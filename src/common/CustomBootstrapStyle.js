@@ -137,6 +137,15 @@ export default function CustomBootstrapStyle() {
       color: white;
     }
 
+    .nav-footer .nav-link {
+      color: #8F6B58;
+      padding: 0;
+    }
+
+    .nav-footer .nav-link:hover {
+      color: #000000;
+    }
+
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
       color: #8F6B58;
       font-weight: 500;
@@ -147,14 +156,7 @@ export default function CustomBootstrapStyle() {
       font-weight: 500;
     }
 
-    .nav .nav-link {
-      color: #8F6B58;
-      padding: 0;
-    }
-
-    .nav .nav-link:hover {
-      color: #000000;
-    }
+ 
 
     `}
     </style>
