@@ -46,7 +46,7 @@ export default function RedirectScreen() {
     }
   }, []);
 
-  const message = loading && error ? ERROR_MSG : LOADING_MSG;
+  const message = !loading && error ? ERROR_MSG : LOADING_MSG;
 
   return <RedirectionScreen message={message} />;
 }
