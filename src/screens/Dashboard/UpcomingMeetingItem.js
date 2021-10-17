@@ -5,10 +5,16 @@ import { useHistory } from 'react-router';
 import ConfirmDeleteModel from './ConfirmDeleteModel';
 import server from '../../services/server';
 import PropTypes from 'prop-types';
-import { Trash, CameraVideo, Pen } from 'react-bootstrap-icons';
+import { Trash, CameraVideo, Pen, Front } from 'react-bootstrap-icons';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
+import { toast } from 'react-toastify';
 
-export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
+export default function UpcomingMeetingItem({
+  meeting,
+  pullMeeting,
+  setCloneMeeting,
+  setShowOverlay,
+}) {
   const dateInfo = getDateInfo(meeting.startedAt, meeting.duration);
   const history = useHistory();
   const [deleting, setDeleting] = useState(false);
@@ -34,9 +40,8 @@ export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
         pullMeeting();
         history.push('/home');
       })
-      .catch((e) => {
-        // show toast error
-        console.error(e);
+      .catch(() => {
+        toast.error('Failed to delete');
       })
       .finally(() => setDeleting(false));
   }
@@ -70,6 +75,16 @@ export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
           <Pen />
           Edit
         </Col>
+        <Col
+          onClick={() => {
+            setCloneMeeting(meeting);
+            setShowOverlay(true);
+          }}
+          className="Toggle-card"
+        >
+          <Front />
+          Clone
+        </Col>
         <Col onClick={() => setShowConfirmDelete(true)} className="Toggle-card">
           <Trash />
           Delete
@@ -79,7 +94,13 @@ export default function UpcomingMeetingItem({ meeting, pullMeeting }) {
   }
 
   return (
-    <Col lg={4} md={6} sm={12} className="Container__padding--vertical-small">
+    <Col
+      xl={4}
+      lg={6}
+      md={6}
+      sm={12}
+      className="Container__padding--vertical-small"
+    >
       <Card style={{ height: 300 }}>
         {deleting ? (
           <FullLoadingIndicator />

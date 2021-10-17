@@ -16,6 +16,7 @@ export default function DashboardScreen() {
   const [loadingUpcoming, setLoadingUpcoming] = useState(true);
   const [loadingPast, setLoadingPast] = useState(true);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [cloneMeeting, setCloneMeeting] = useState(null);
 
   useEffect(() => {
     getBanner();
@@ -99,6 +100,8 @@ export default function DashboardScreen() {
         key={idx}
         meeting={meeting}
         pullMeeting={pullMeetings}
+        setCloneMeeting={setCloneMeeting}
+        setShowOverlay={setShowOverlay}
       />
     ) : (
       <OngoingMeetingItem key={idx} meeting={meeting} />
@@ -106,7 +109,12 @@ export default function DashboardScreen() {
   );
 
   const historyList = meetingHistory.map((meeting, idx) => (
-    <CompletedMeetingItem key={idx} meeting={meeting} />
+    <CompletedMeetingItem
+      key={idx}
+      meeting={meeting}
+      setCloneMeeting={setCloneMeeting}
+      setShowOverlay={setShowOverlay}
+    />
   ));
 
   if (loadingUpcoming || loadingPast) {
@@ -152,14 +160,22 @@ export default function DashboardScreen() {
           {upcomingList}
           {historyList}
         </Row>
+        <div className="Buffer--100px" />
       </Container>
       <AddMeetingOverlay
         show={showOverlay}
         setShow={setShowOverlay}
         onUpdate={pullMeetings}
         checkIfExist={checkIfExist}
+        cloneMeeting={cloneMeeting}
       />
-      <div className="Fab" onClick={() => setShowOverlay(true)}>
+      <div
+        className="Fab"
+        onClick={() => {
+          setCloneMeeting(null);
+          setShowOverlay(true);
+        }}
+      >
         <CalendarPlusFill size={22} color="white" />
       </div>
     </>

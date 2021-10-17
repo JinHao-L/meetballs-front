@@ -39,8 +39,8 @@ export default function UpcomingMeetingScreen() {
 
   async function pullMeeting() {
     const response = await server.get(`/meeting/${id}`, defaultHeaders);
-    const result = response.data;
     if (response.status !== 200) return;
+    const result = response.data;
     if (result.agendaItems && result.agendaItems.length > 1) {
       result.agendaItems.sort((p1, p2) => {
         return p1.position - p2.position;

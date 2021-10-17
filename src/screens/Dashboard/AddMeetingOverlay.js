@@ -1,6 +1,6 @@
 import DatePicker from 'react-datepicker';
 import { useState, useEffect } from 'react';
-import { Offcanvas, Form, Button, Card, Toast } from 'react-bootstrap';
+import { Offcanvas, Form, Button, Card } from 'react-bootstrap';
 import { useHistory } from 'react-router';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import * as yup from 'yup';
@@ -15,17 +15,16 @@ import {
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import { toast } from 'react-toastify';
 
-
 export default function AddMeetingOverlay({
   show,
   setShow,
   onUpdate,
   checkIfExist,
+  cloneMeeting,
 }) {
   const [loading, setLoading] = useState(false);
   const [showZoomList, setShowZoomList] = useState(false);
   const [zoomMeetingList, setZoomMeetingList] = useState([]);
-  const [showErrorToast, setShowErrorToast] = useState(false);
   const [isZoomMeeting, setIsZoomMeeting] = useState(false);
   const history = useHistory();
 
@@ -38,7 +37,6 @@ export default function AddMeetingOverlay({
   async function getZoomMeetingList() {
     try {
       setLoading(true);
-      setShowErrorToast(true);
       const response = await server.get(`/zoom/meetings`, defaultHeaders);
       const result = response.data;
       if (response.status !== 200) return;
@@ -75,6 +73,7 @@ export default function AddMeetingOverlay({
       joinUrl: link,
       enableTranscription: true,
     };
+    await fillItems(newMeeting, cloneMeeting);
     const key = isZoomMeeting ? `/zoom/meetings/${meetingId}` : '/meeting';
     setLoading(true);
     return server
@@ -87,7 +86,7 @@ export default function AddMeetingOverlay({
         history.push('/meeting/' + id);
       })
       .catch(() => {
-        setShowErrorToast(true);
+        toast.error('Failed to create.');
       })
       .finally(() => {
         setLoading(false);
@@ -194,17 +193,6 @@ export default function AddMeetingOverlay({
           </Button>
         </div>
         <div className="Buffer--20px" />
-        <Toast
-          show={showErrorToast}
-          onClose={() => setShowErrorToast(false)}
-          autohide
-          delay={2000}
-        >
-          <Toast.Header closeButton={false}>Error</Toast.Header>
-          <Toast.Body>
-            Unable to create meeting. Please check if it has already been added.
-          </Toast.Body>
-        </Toast>
       </>
     );
   }
@@ -258,7 +246,11 @@ export default function AddMeetingOverlay({
           }}
         >
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title>Add New Meeting</Offcanvas.Title>
+            <Offcanvas.Title>
+              {cloneMeeting === null
+                ? 'Add New Meeting'
+                : 'Cloning "' + cloneMeeting.name + '"'}
+            </Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
             <div className="d-grid gap-2">
@@ -336,3 +328,19 @@ const initialValue = {
   link: '',
   date: new Date(),
 };
+
+async function fillItems(newMeeting, cloneMeeting) {
+  if (cloneMeeting === null) return;
+  const response = await server.get(
+    `/meeting/${cloneMeeting.id}`,
+    defaultHeaders,
+  );
+  if (response.status !== 200) return;
+  const result = response.data;
+  if (result.agendaItems.length > 0) {
+    newMeeting.agendaItems = result.agendaItems;
+  }
+  if (result.participants.length > 0) {
+    newMeeting.participants = result.participants;
+  }
+}
