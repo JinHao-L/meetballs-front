@@ -18,6 +18,7 @@ import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import ConfirmInviteModel from '../OngoingMeetingAdmin/ConfirmInviteModel';
 import { toast } from 'react-toastify';
+import { extractError } from '../../utils/extractError';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -28,7 +29,6 @@ export default function UpcomingMeetingScreen() {
   const [inviteList, setInviteList] = useState([]);
   const [inviteLoading, setInviteLoading] = useState(false);
   const [isReordering, setReordering] = useState(false);
-  const [error, setError] = useState(false); // todo: add error toast
   const history = useHistory();
 
   const { id } = useParams();
@@ -74,8 +74,7 @@ export default function UpcomingMeetingScreen() {
       setMeeting((prev) => ({ ...prev, participants: res.data }));
       toast.success('Invitations sent!');
     } catch (err) {
-      toast.error(err.response?.data?.message);
-      setError(true);
+      toast.error(extractError(err));
     } finally {
       setInviteLoading(false);
     }

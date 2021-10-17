@@ -5,6 +5,7 @@ import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import { toast } from 'react-toastify';
 import { SmallLoadingIndicator } from '../../components/SmallLoadingIndicator';
+import { extractError } from '../../utils/extractError';
 
 export default function ParticipantItem({ setMeeting, meeting, position }) {
   const [removing, setRemoving] = useState(false);
@@ -21,12 +22,12 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
       const newMeeting = Object.assign({}, meeting);
       const newParticipants = newMeeting.participants;
       const email = newParticipants[position].userEmail;
+      await removeFromDatabase(email, meeting.id);
       newParticipants.splice(position, 1);
       newMeeting.participants = newParticipants;
-      await removeFromDatabase(email, meeting.id);
       setMeeting(newMeeting);
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(extractError(err));
     } finally {
       setRemoving(false);
     }
@@ -53,11 +54,11 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
         <Card>
           <Card.Body>
             <Card.Title>
-              {participant.userName != null && participant.userName.length > 0
-                ? participant.userName
+              {participant?.userName != null && participant?.userName.length > 0
+                ? participant?.userName
                 : 'Guest'}
             </Card.Title>
-            <Card.Text>{participant.userEmail}</Card.Text>
+            <Card.Text>{participant?.userEmail}</Card.Text>
             <Row>
               <Col>
                 <div className="d-grid gap-2">

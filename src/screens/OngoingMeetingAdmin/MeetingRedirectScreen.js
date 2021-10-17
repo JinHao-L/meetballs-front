@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
+import { toast } from 'react-toastify';
 import RedirectionScreen from '../../components/RedirectionScreen';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import { extractError } from '../../utils/extractError';
 
 const TOKEN_KEY = 'token';
 
@@ -37,9 +39,10 @@ export default function RedirectScreen() {
       setLoading(false);
       history.push(`/ongoing/${id}`);
     } catch (error) {
-      console.error(error);
-      setLoading(false);
+      toast.error(extractError(error));
       setError(true);
+    } finally {
+      setLoading(false);
     }
   }, []);
 

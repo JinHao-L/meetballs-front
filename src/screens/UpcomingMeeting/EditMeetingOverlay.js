@@ -5,6 +5,7 @@ import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import { toast } from 'react-toastify';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
+import { extractError } from '../../utils/extractError';
 
 export default function EditMeetingOverlay({
   show,
@@ -27,7 +28,7 @@ export default function EditMeetingOverlay({
       setShow(false);
       updateDatabase(newMeeting);
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(extractError(err));
     } finally {
       setLoading(false);
     }
@@ -44,7 +45,7 @@ export default function EditMeetingOverlay({
         history.goBack();
       }
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(extractError(err));
     } finally {
       setLoading(false);
     }

@@ -12,6 +12,7 @@ import { getFormattedDuration, isValidUrl } from '../../common/CommonFunctions';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import { toast } from 'react-toastify';
+import { extractError } from '../../utils/extractError';
 
 export default function EditAgendaItem({
   setLoading,
@@ -66,7 +67,7 @@ export default function EditAgendaItem({
       meeting.agendaItems[position].speakerMaterials = materials;
       setEditing(false);
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(extractError(err));
     } finally {
       setLoading(false);
     }

@@ -12,6 +12,7 @@ import {
 import { toast } from 'react-toastify';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import { extractError } from '../../utils/extractError';
 
 export default function EditParticipantItem({
   setEditing,
@@ -51,7 +52,7 @@ export default function EditParticipantItem({
       meeting.participants[position].userEmail = email;
       setEditing(false);
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(extractError(err));
     } finally {
       setLoading(false);
     }

@@ -9,6 +9,7 @@ import server from '../../services/server';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import CompletedMeetingItem from './CompletedMeetingItem';
 import { toast } from 'react-toastify';
+import { extractError } from '../../utils/extractError';
 
 export default function DashboardScreen() {
   const [upcoming, setUpcoming] = useState([]);
@@ -28,7 +29,7 @@ export default function DashboardScreen() {
       await pullPastMeetings();
       await pullUpcomingMeetings();
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(extractError(err));
     }
   }
 
@@ -76,7 +77,9 @@ export default function DashboardScreen() {
         const pastMeetings = res.data.sort(sortMeetings);
         setHistory(pastMeetings);
       })
-      .catch(console.error)
+      .catch((err) => {
+        toast.error(extractError(err));
+      })
       .finally(() => setLoadingPast(false));
   }
 

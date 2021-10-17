@@ -15,6 +15,7 @@ import {
   MaterialsSection,
   SpeakerSection,
 } from '../../components/AgendaItemComponents';
+import { extractError } from '../../utils/extractError';
 
 export default function AgendaItem({
   meeting,
@@ -40,7 +41,7 @@ export default function AgendaItem({
       await removeFromDatabase(meeting.id, actualPosition);
       setMeeting(newMeeting);
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(extractError(err));
     } finally {
       setLoading(false);
     }

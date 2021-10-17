@@ -14,6 +14,7 @@ import {
 } from '../../common/CommonFunctions';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import { toast } from 'react-toastify';
+import { extractError } from '../../utils/extractError';
 
 export default function AddMeetingOverlay({
   show,
@@ -48,7 +49,7 @@ export default function AddMeetingOverlay({
       });
       setZoomMeetingList(filteredList);
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(extractError(err));
     } finally {
       setLoading(false);
     }
@@ -108,7 +109,7 @@ export default function AddMeetingOverlay({
       setIsZoomMeeting(true);
       setShowZoomList(false);
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(extractError(err));
     } finally {
       setLoading(false);
     }
