@@ -63,7 +63,6 @@ export default function AddMeetingOverlay({
     meetingPassword,
     link,
   }) {
-    console.log(server.defaults.headers.common['Authorization']);
     const newMeeting = {
       name: name,
       description: desc,

@@ -55,7 +55,7 @@ function AwaitItem({ meeting, setMeeting, position, showButton }) {
             {displayName}
           </Card.Title>
           <Card.Text>{participant.userEmail}</Card.Text>
-          {showButton && (
+          {showButton && participant.role !== 2 && (
             <div className="d-grid gap-2">
               <Button
                 variant={showButton ? 'outline-primary' : 'outline-light'}

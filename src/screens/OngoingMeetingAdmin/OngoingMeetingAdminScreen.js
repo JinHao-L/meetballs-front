@@ -168,9 +168,7 @@ export default function OngoingMeetingAdminScreen() {
     return (
       <Button
         variant="outline-primary"
-        onclick={() => {
-          history.push('/meeting/' + id);
-        }}
+        href={`/meeting/${id}`}
       >
         Back to Editing
       </Button>
