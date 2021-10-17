@@ -22,15 +22,29 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
       const newMeeting = Object.assign({}, meeting);
       const newParticipants = newMeeting.participants;
       const email = newParticipants[position].userEmail;
+      const id = newParticipants[position].id;
       await removeFromDatabase(email, meeting.id);
       newParticipants.splice(position, 1);
       newMeeting.participants = newParticipants;
       setMeeting(newMeeting);
+      syncAgenda(id);
     } catch (err) {
       toast.error(extractError(err));
     } finally {
       setRemoving(false);
     }
+  }
+
+  function syncAgenda(prevParticipantId) {
+    setMeeting((meeting) => ({
+      ...meeting,
+      agendaItems: meeting.agendaItems.map((item) => {
+        if (item?.speaker?.id === prevParticipantId) {
+          item.speaker = null;
+        }
+        return item;
+      }),
+    }));
   }
 
   if (editing) {
