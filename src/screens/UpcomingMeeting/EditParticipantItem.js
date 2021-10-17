@@ -85,14 +85,12 @@ export default function EditParticipantItem({
           <Card.Header>
             <div className="Container__row--space-between">
               <p className="Text__card-header">Editing Participant</p>
-              <Button
+              <CloseButton
                 variant="outline-primary"
                 size="sm"
                 style={{ borderRadius: 50 }}
                 onClick={close}
-              >
-                Cancel Edit
-              </Button>
+              />
             </div>
           </Card.Header>
           <Card.Body>

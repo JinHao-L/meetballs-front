@@ -56,10 +56,14 @@ export default function EditAgendaItem({
         name,
         duration,
         description,
+        speaker,
+        materials,
       );
       meeting.agendaItems[position].name = name;
       meeting.agendaItems[position].expectedDuration = duration;
       meeting.agendaItems[position].description = description;
+      meeting.agendaItems[position].speakerName = speaker;
+      meeting.agendaItems[position].speakerMaterials = materials;
       setEditing(false);
     } catch (err) {
       toast.error(err.response?.data?.message);

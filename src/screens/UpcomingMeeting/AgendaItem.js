@@ -1,12 +1,16 @@
 import { Button, Row, Col, Card } from 'react-bootstrap';
 import { Draggable } from 'react-beautiful-dnd';
 import { useState } from 'react';
-import { getFormattedDuration } from '../../common/CommonFunctions';
+import {
+  getFormattedDuration,
+  openLinkInNewTab,
+} from '../../common/CommonFunctions';
 import EditAgendaItem from './EditAgendaItem';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import { SmallLoadingIndicator } from '../../components/SmallLoadingIndicator';
 import { toast } from 'react-toastify';
+import { Link45deg } from 'react-bootstrap-icons';
 import {
   MaterialsSection,
   SpeakerSection,
@@ -78,28 +82,6 @@ export default function AgendaItem({
     );
   }
 
-  function AgendaButtons() {
-    if (isReordering) return null;
-    return (
-      <Row>
-        <Col>
-          <div className="d-grid gap-2">
-            <Button variant="danger" onClick={removeAgendaItem}>
-              Remove
-            </Button>
-          </div>
-        </Col>
-        <Col>
-          <div className="d-grid gap-2">
-            <Button variant="primary" onClick={() => setEditing(true)}>
-              Edit
-            </Button>
-          </div>
-        </Col>
-      </Row>
-    );
-  }
-
   // Not editing
   return (
     <>
@@ -119,11 +101,22 @@ export default function AgendaItem({
             >
               <Col className="Container__padding--vertical-small">
                 <Card>
-                  <Card.Header>
+                  <Card.Header className="Container__row--space-between">
                     {getFormattedDuration(item.expectedDuration)}
+                    {item.speakerMaterials ? (
+                      <Link45deg
+                        size={24}
+                        className="Clickable"
+                        onClick={() => openLinkInNewTab(item.speakerMaterials)}
+                      />
+                    ) : null}
                   </Card.Header>
                   <Card.Body>
                     <Card.Title>{item.name}</Card.Title>
+                    <Card.Subtitle>
+                      Presented by {item.speakerName}
+                    </Card.Subtitle>
+                    <div className="Buffer--10px" />
                     <Card.Text>{item.description}</Card.Text>
                     {isReordering || (
                       <Row>
