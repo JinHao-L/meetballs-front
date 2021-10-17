@@ -37,7 +37,7 @@ export default function EditParticipantItem({
 
   async function updateChanges() {
     if (email.length === 0) {
-      setShowModal(true);
+      toast.error('Email must not be empty.');
       return;
     }
     if (participant.userName === username && checkForDuplicate()) {
@@ -66,10 +66,8 @@ export default function EditParticipantItem({
       newParticipants.splice(position, 1);
       newMeeting.participants = newParticipants;
       setMeeting(newMeeting);
-    } else if (oldEmail.length > 0) {
-      setEditing(false);
     } else {
-      removeParticipant(setMeeting, meeting, position);
+      setEditing(false);
     }
   }
 
@@ -108,7 +106,7 @@ export default function EditParticipantItem({
               />
               <div className="Buffer--20px" />
               <div className="d-grid gap-2">
-                <Button variant="primary" onClick={() => updateChanges()}>
+                <Button variant="primary" onClick={updateChanges}>
                   Confirm
                 </Button>
               </div>
@@ -116,28 +114,6 @@ export default function EditParticipantItem({
           </Card.Body>
         </Card>
       )}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header>
-          <Modal.Title>Confirm?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p className="Text__paragraph">
-            You have not specified an email, so this participant will be deleted
-            if you choose to close. Would you still like to close?
-          </p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="outline-primary" onClick={() => setShowModal(false)}>
-            Cancel
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => removeParticipant(setMeeting, meeting, position)}
-          >
-            Confirm
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </Col>
   );
 }

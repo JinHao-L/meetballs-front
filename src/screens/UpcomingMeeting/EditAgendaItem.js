@@ -19,6 +19,7 @@ export default function EditAgendaItem({
   setEditing,
   meeting,
   position,
+  setMeeting,
 }) {
   const item = meeting.agendaItems[position];
   const [duration, setDuration] = useState(item.expectedDuration);
@@ -41,6 +42,10 @@ export default function EditAgendaItem({
   }
 
   async function updateChanges() {
+    if (name.length === 0) {
+      toast.error('Name must not be empty.');
+      return;
+    }
     const linkSubmitted = materials !== '';
     if (linkSubmitted && !isValidUrl(materials)) {
       console.log('Attempted to submit an invalid URL');
@@ -52,6 +57,7 @@ export default function EditAgendaItem({
       setLoading(true);
       const actualPosition = meeting.agendaItems[position].position;
       await updateDatabase(
+        meeting.agendaItems[position].name,
         meeting.id,
         actualPosition,
         name,
@@ -98,13 +104,26 @@ export default function EditAgendaItem({
     return choices;
   }
 
+  function close() {
+    const oldName = item.name;
+    if (oldName === '') {
+      const newMeeting = Object.assign({}, meeting);
+      const newAgenda = newMeeting.agendaItems;
+      newAgenda.splice(position, 1);
+      newMeeting.agendaItems = newAgenda;
+      setMeeting(newMeeting);
+    } else {
+      setEditing(false);
+    }
+  }
+
   return (
     <Col className="Container__padding--vertical-small">
       <Card>
         <Card.Header>
           <div className="Container__row--space-between">
             <p className="Text__card-header">Editing Agenda Item</p>
-            <CloseButton onClick={() => setEditing(false)} />
+            <CloseButton onClick={close} />
           </div>
         </Card.Header>
         <Card.Body>
@@ -156,6 +175,7 @@ export default function EditAgendaItem({
 }
 
 async function updateDatabase(
+  oldName,
   meetingId,
   position,
   name,
@@ -171,15 +191,21 @@ async function updateDatabase(
     expectedDuration: duration,
     actualDuration: null,
     isCurrent: false,
+    meetingId: meetingId,
+    position: position,
   };
   if (speaker !== '') data.speakerName = speaker;
   if (materials !== '') data.speakerMaterials = materials;
-  console.log(data);
-  await server.put(
-    `/agenda-item/${meetingId}/${position}`,
-    data,
-    defaultHeaders,
-  );
+
+  if (oldName.length === 0) {
+    await server.post(`/agenda-item`, data, defaultHeaders);
+  } else {
+    await server.put(
+      `/agenda-item/${meetingId}/${position}`,
+      data,
+      defaultHeaders,
+    );
+  }
 }
 
 const durationMinutes = [
