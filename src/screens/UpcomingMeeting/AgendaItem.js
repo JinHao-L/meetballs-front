@@ -1,21 +1,15 @@
 import { Button, Row, Col, Card } from 'react-bootstrap';
 import { Draggable } from 'react-beautiful-dnd';
 import { useState } from 'react';
-import {
-  getFormattedDuration,
-  openLinkInNewTab,
-} from '../../common/CommonFunctions';
+import { getFormattedDuration } from '../../common/CommonFunctions';
 import EditAgendaItem from './EditAgendaItem';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import { SmallLoadingIndicator } from '../../components/SmallLoadingIndicator';
 import { toast } from 'react-toastify';
 import { Link45deg } from 'react-bootstrap-icons';
-import {
-  MaterialsSection,
-  SpeakerSection,
-} from '../../components/AgendaItemComponents';
 import { extractError } from '../../utils/extractError';
+import { openFile } from '../../services/files';
 
 export default function AgendaItem({
   meeting,
@@ -113,7 +107,13 @@ export default function AgendaItem({
                       <Link45deg
                         size={24}
                         className="Clickable"
-                        onClick={() => openLinkInNewTab(item.speakerMaterials)}
+                        onClick={() =>
+                          openFile(
+                            item.speakerMaterials,
+                            meeting.id,
+                            item.speakerId,
+                          )
+                        }
                       />
                     ) : null}
                   </Card.Header>
