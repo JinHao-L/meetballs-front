@@ -1,9 +1,13 @@
 import { Card, Col, Row } from 'react-bootstrap';
 import { getDateInfo } from '../../common/CommonFunctions';
 import { useHistory } from 'react-router';
-import { Eye } from 'react-bootstrap-icons';
+import { Eye, Front } from 'react-bootstrap-icons';
 
-export default function CompletedMeetingItem({ meeting }) {
+export default function CompletedMeetingItem({
+  meeting,
+  setCloneMeeting,
+  setShowOverlay,
+}) {
   const dateInfo = getDateInfo(meeting.startedAt, meeting.duration);
   const history = useHistory();
 
@@ -37,12 +41,28 @@ export default function CompletedMeetingItem({ meeting }) {
           <Eye />
           View
         </Col>
+        <Col
+          onClick={() => {
+            setCloneMeeting(meeting);
+            setShowOverlay(true);
+          }}
+          className="Toggle-card"
+        >
+          <Front />
+          Clone
+        </Col>
       </Row>
     );
   }
 
   return (
-    <Col lg={4} md={6} sm={12} className="Container__padding--vertical-small">
+    <Col
+      xl={4}
+      lg={6}
+      md={6}
+      sm={12}
+      className="Container__padding--vertical-small"
+    >
       <Card style={{ height: 300, backgroundColor: '#e5e5e5' }}>
         <Card.Body>
           <Details />

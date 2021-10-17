@@ -11,8 +11,15 @@ import { useState } from 'react';
 import { getFormattedDuration, isValidUrl } from '../../common/CommonFunctions';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import { toast } from 'react-toastify';
+import { extractError } from '../../utils/extractError';
 
-export default function EditAgendaItem({ setEditing, meeting, position }) {
+export default function EditAgendaItem({
+  setLoading,
+  setEditing,
+  meeting,
+  position,
+}) {
   const item = meeting.agendaItems[position];
   const [duration, setDuration] = useState(item.expectedDuration);
   const [name, setName] = useState(item.name);
@@ -37,27 +44,33 @@ export default function EditAgendaItem({ setEditing, meeting, position }) {
     const linkSubmitted = materials !== '';
     if (linkSubmitted && !isValidUrl(materials)) {
       console.log('Attempted to submit an invalid URL');
-      // Try to give them a warning
+      toast.error('Attempted to submit an invalid URL');
       setMaterials('');
       return;
     }
-
-    const actualPosition = meeting.agendaItems[position].position;
-    await updateDatabase(
-      meeting.id,
-      actualPosition,
-      name,
-      duration,
-      description,
-      speaker,
-      materials,
-    );
-    meeting.agendaItems[position].name = name;
-    meeting.agendaItems[position].expectedDuration = duration;
-    meeting.agendaItems[position].description = description;
-    meeting.agendaItems[position].speakerName = speaker;
-    meeting.agendaItems[position].speakerMaterials = materials;
-    setEditing(false);
+    try {
+      setLoading(true);
+      const actualPosition = meeting.agendaItems[position].position;
+      await updateDatabase(
+        meeting.id,
+        actualPosition,
+        name,
+        duration,
+        description,
+        speaker,
+        materials,
+      );
+      meeting.agendaItems[position].name = name;
+      meeting.agendaItems[position].expectedDuration = duration;
+      meeting.agendaItems[position].description = description;
+      meeting.agendaItems[position].speakerName = speaker;
+      meeting.agendaItems[position].speakerMaterials = materials;
+      setEditing(false);
+    } catch (err) {
+      toast.error(extractError(err));
+    } finally {
+      setLoading(false);
+    }
   }
 
   function SpeakerItems() {

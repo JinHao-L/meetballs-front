@@ -34,7 +34,7 @@ export default function AppFooter() {
             <div className="Buffer--20px" />
             <div className="Line--vertical" />
             <div className="Buffer--20px" />
-            <Nav>
+            <Nav variant="footer">
               <Nav.Link onClick={() => history.push('/documentation')}>
                 Documentations
               </Nav.Link>

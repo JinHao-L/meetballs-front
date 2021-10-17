@@ -1,35 +1,55 @@
 import { Button, Row, Col, Card } from 'react-bootstrap';
 import { Draggable } from 'react-beautiful-dnd';
 import { useState } from 'react';
-import { getFormattedDuration } from '../../common/CommonFunctions';
+import {
+  getFormattedDuration,
+  openLinkInNewTab,
+} from '../../common/CommonFunctions';
 import EditAgendaItem from './EditAgendaItem';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import { SmallLoadingIndicator } from '../../components/SmallLoadingIndicator';
+import { toast } from 'react-toastify';
+import { Link45deg } from 'react-bootstrap-icons';
 import {
   MaterialsSection,
   SpeakerSection,
 } from '../../components/AgendaItemComponents';
+import { extractError } from '../../utils/extractError';
 
 export default function AgendaItem({
   meeting,
   setMeeting,
   position,
   isReordering,
+  isDeleting,
+  setDeleting,
 }) {
+  const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const item = meeting.agendaItems[position];
 
-  function removeAgendaItem() {
-    const newMeeting = Object.assign({}, meeting);
-    const newAgenda = newMeeting.agendaItems;
-    const actualPosition = newAgenda[position].position;
-    newAgenda.splice(position, 1);
-    for (let i = 0; i < newAgenda.length; i++) {
-      newAgenda[i].position = i;
+  async function removeAgendaItem() {
+    if (isDeleting) return;
+    try {
+      setDeleting(true);
+      setLoading(true);
+      const newMeeting = Object.assign({}, meeting);
+      const newAgenda = newMeeting.agendaItems;
+      const actualPosition = newAgenda[position].position;
+      newAgenda.splice(position, 1);
+      for (let i = 0; i < newAgenda.length; i++) {
+        newAgenda[i].position = i;
+      }
+      newMeeting.agendaItems = newAgenda;
+      await removeFromDatabase(meeting.id, actualPosition);
+      setMeeting(newMeeting);
+    } catch (err) {
+      toast.error(extractError(err));
+    } finally {
+      setLoading(false);
     }
-    newMeeting.agendaItems = newAgenda;
-    removeFromDatabase(meeting.id, actualPosition);
-    setMeeting(newMeeting);
+    setDeleting(false);
   }
 
   if (isReordering && editing) {
@@ -39,81 +59,102 @@ export default function AgendaItem({
   if (editing) {
     // Editing
     return (
-      <Draggable
-        draggableId={'Draggable' + item.position}
-        index={position}
-        isDragDisabled={true}
-      >
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
+      <>
+        {loading ? (
+          <SmallLoadingIndicator />
+        ) : (
+          <Draggable
+            draggableId={'Draggable' + item.position}
+            index={position}
+            isDragDisabled={true}
           >
-            <EditAgendaItem
-              setEditing={setEditing}
-              setMeeting={setMeeting}
-              meeting={meeting}
-              position={position}
-            />
-          </div>
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+              >
+                <EditAgendaItem
+                  setLoading={setLoading}
+                  setEditing={setEditing}
+                  meeting={meeting}
+                  position={position}
+                />
+              </div>
+            )}
+          </Draggable>
         )}
-      </Draggable>
-    );
-  }
-
-  function AgendaButtons() {
-    if (isReordering) return null;
-    return (
-      <Row>
-        <Col>
-          <div className="d-grid gap-2">
-            <Button variant="danger" onClick={removeAgendaItem}>
-              Remove
-            </Button>
-          </div>
-        </Col>
-        <Col>
-          <div className="d-grid gap-2">
-            <Button variant="primary" onClick={() => setEditing(true)}>
-              Edit
-            </Button>
-          </div>
-        </Col>
-      </Row>
+      </>
     );
   }
 
   // Not editing
   return (
-    <Draggable
-      draggableId={'Draggable' + item.position}
-      index={position}
-      isDragDisabled={!isReordering}
-    >
-      {(provided) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
+    <>
+      {loading ? (
+        <SmallLoadingIndicator />
+      ) : (
+        <Draggable
+          draggableId={'Draggable' + item.position}
+          index={position}
+          isDragDisabled={!isReordering}
         >
-          <Col className="Container__padding--vertical-small">
-            <Card>
-              <Card.Header>
-                {getFormattedDuration(item.expectedDuration)}
-              </Card.Header>
-              <Card.Body>
-                <Card.Title>{item.name}</Card.Title>
-                <Card.Text>{item.description}</Card.Text>
-                <SpeakerSection item={item} />
-                <MaterialsSection item={item} />
-                <AgendaButtons />
-              </Card.Body>
-            </Card>
-          </Col>
-        </div>
+          {(provided) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+            >
+              <Col className="Container__padding--vertical-small">
+                <Card>
+                  <Card.Header className="Container__row--space-between">
+                    {getFormattedDuration(item.expectedDuration)}
+                    {item.speakerMaterials ? (
+                      <Link45deg
+                        size={24}
+                        className="Clickable"
+                        onClick={() => openLinkInNewTab(item.speakerMaterials)}
+                      />
+                    ) : null}
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Title>{item.name}</Card.Title>
+                    <Card.Subtitle>
+                      {item.speakerName
+                        ? 'Presented by ' + item.speakerName
+                        : ''}
+                    </Card.Subtitle>
+                    <div className="Buffer--10px" />
+                    <Card.Text>{item.description}</Card.Text>
+                    {isReordering || (
+                      <Row>
+                        <Col>
+                          <div className="d-grid gap-2">
+                            <Button variant="danger" onClick={removeAgendaItem}>
+                              Remove
+                            </Button>
+                          </div>
+                        </Col>
+                        <Col>
+                          <div className="d-grid gap-2">
+                            <Button
+                              variant="primary"
+                              onClick={() => setEditing(true)}
+                            >
+                              Edit
+                            </Button>
+                          </div>
+                        </Col>
+                      </Row>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+            </div>
+          )}
+        </Draggable>
       )}
-    </Draggable>
+    </>
   );
 }
 

@@ -8,6 +8,8 @@ import AddMeetingOverlay from './AddMeetingOverlay';
 import server from '../../services/server';
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import CompletedMeetingItem from './CompletedMeetingItem';
+import { toast } from 'react-toastify';
+import { extractError } from '../../utils/extractError';
 
 export default function DashboardScreen() {
   const [upcoming, setUpcoming] = useState([]);
@@ -15,18 +17,23 @@ export default function DashboardScreen() {
   const [loadingUpcoming, setLoadingUpcoming] = useState(true);
   const [loadingPast, setLoadingPast] = useState(true);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [cloneMeeting, setCloneMeeting] = useState(null);
 
   useEffect(() => {
     getBanner();
     return pullMeetings();
   }, []);
 
-  function pullMeetings() {
-    pullPastMeetings();
-    pullUpcomingMeetings();
+  async function pullMeetings() {
+    try {
+      await pullPastMeetings();
+      await pullUpcomingMeetings();
+    } catch (err) {
+      toast.error(extractError(err));
+    }
   }
 
-  function pullUpcomingMeetings() {
+  async function pullUpcomingMeetings() {
     function sortMeetings(meetingA, meetingB) {
       const startA = meetingA.startedAt;
       const startB = meetingB.startedAt;
@@ -50,7 +57,7 @@ export default function DashboardScreen() {
       .finally(() => setLoadingUpcoming(false));
   }
 
-  function pullPastMeetings() {
+  async function pullPastMeetings() {
     function sortMeetings(meetingA, meetingB) {
       const startA = meetingA.startedAt;
       const startB = meetingB.startedAt;
@@ -70,7 +77,9 @@ export default function DashboardScreen() {
         const pastMeetings = res.data.sort(sortMeetings);
         setHistory(pastMeetings);
       })
-      .catch(console.error)
+      .catch((err) => {
+        toast.error(extractError(err));
+      })
       .finally(() => setLoadingPast(false));
   }
 
@@ -94,6 +103,8 @@ export default function DashboardScreen() {
         key={idx}
         meeting={meeting}
         pullMeeting={pullMeetings}
+        setCloneMeeting={setCloneMeeting}
+        setShowOverlay={setShowOverlay}
       />
     ) : (
       <OngoingMeetingItem key={idx} meeting={meeting} />
@@ -101,7 +112,12 @@ export default function DashboardScreen() {
   );
 
   const historyList = meetingHistory.map((meeting, idx) => (
-    <CompletedMeetingItem key={idx} meeting={meeting} />
+    <CompletedMeetingItem
+      key={idx}
+      meeting={meeting}
+      setCloneMeeting={setCloneMeeting}
+      setShowOverlay={setShowOverlay}
+    />
   ));
 
   if (loadingUpcoming || loadingPast) {
@@ -147,14 +163,22 @@ export default function DashboardScreen() {
           {upcomingList}
           {historyList}
         </Row>
+        <div className="Buffer--100px" />
       </Container>
       <AddMeetingOverlay
         show={showOverlay}
         setShow={setShowOverlay}
         onUpdate={pullMeetings}
         checkIfExist={checkIfExist}
+        cloneMeeting={cloneMeeting}
       />
-      <div className="Fab" onClick={() => setShowOverlay(true)}>
+      <div
+        className="Fab"
+        onClick={() => {
+          setCloneMeeting(null);
+          setShowOverlay(true);
+        }}
+      >
         <CalendarPlusFill size={22} color="white" />
       </div>
     </>

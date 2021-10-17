@@ -1,11 +1,11 @@
 import { Image, Row, Col } from 'react-bootstrap';
 import Banner from '../../assets/banner_privacy.jpg';
-import AddAgendaImage from '../../assets/guide_add_agenda.png';
-import AgendaListImage from '../../assets/guide_agenda_list.png';
-import DashboardImage from '../../assets/guide_dashboard.png';
-import OngoingMeetingImage from '../../assets/guide_ongoing_meeting.png';
-import MeetingReportImage from '../../assets/guide_report.png';
-import SampleEmailImage from '../../assets/guide_sample_email.png';
+import AddAgendaImage from '../../assets/guide_add_agenda.jpg';
+import AgendaListImage from '../../assets/guide_agenda_list.jpg';
+import DashboardImage from '../../assets/guide_dashboard.jpg';
+import OngoingMeetingImage from '../../assets/guide_ongoing_meeting.jpg';
+import MeetingReportImage from '../../assets/guide_report.jpg';
+import SampleEmailImage from '../../assets/guide_sample_email.jpg';
 import AppFooter from '../../components/AppFooter';
 
 export default function DocumentationScreen() {

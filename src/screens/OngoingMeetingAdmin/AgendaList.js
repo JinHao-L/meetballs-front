@@ -33,8 +33,9 @@ function NotStartedItem({ item }) {
       <Card>
         <Card.Body>
           <Card.Title>{item.name}</Card.Title>
-          <Card.Text>{item.description}</Card.Text>
           <SpeakerSection item={item} />
+          <div className="Buffer--10px" />
+          <Card.Text>{item.description}</Card.Text>
           <MaterialsSection item={item} />
         </Card.Body>
         <Card.Footer>

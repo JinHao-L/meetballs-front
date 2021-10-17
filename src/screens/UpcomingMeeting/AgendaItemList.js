@@ -3,6 +3,7 @@ import AgendaItem from './AgendaItem';
 import { Button } from 'react-bootstrap';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import { useState } from 'react';
 
 export default function AgendaItemList({
   meeting,
@@ -10,7 +11,9 @@ export default function AgendaItemList({
   isReordering,
   setReordering,
 }) {
+  const [isDeleting, setDeleting] = useState(false);
   const items = [];
+
   if (!isReordering) {
     items.push(
       <div className="d-grid gap-2" key={'Button'}>
@@ -53,6 +56,8 @@ export default function AgendaItemList({
         setMeeting={setMeeting}
         position={i}
         isReordering={isReordering}
+        isDeleting={isDeleting}
+        setDeleting={setDeleting}
       />,
     );
   }

@@ -17,6 +17,8 @@ import { useHistory, Redirect, useParams } from 'react-router';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import ConfirmInviteModel from '../OngoingMeetingAdmin/ConfirmInviteModel';
+import { toast } from 'react-toastify';
+import { extractError } from '../../utils/extractError';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -27,7 +29,6 @@ export default function UpcomingMeetingScreen() {
   const [inviteList, setInviteList] = useState([]);
   const [inviteLoading, setInviteLoading] = useState(false);
   const [isReordering, setReordering] = useState(false);
-  const [error, setError] = useState(false); // todo: add error toast
   const history = useHistory();
 
   const { id } = useParams();
@@ -38,8 +39,8 @@ export default function UpcomingMeetingScreen() {
 
   async function pullMeeting() {
     const response = await server.get(`/meeting/${id}`, defaultHeaders);
-    const result = response.data;
     if (response.status !== 200) return;
+    const result = response.data;
     if (result.agendaItems && result.agendaItems.length > 1) {
       result.agendaItems.sort((p1, p2) => {
         return p1.position - p2.position;
@@ -62,8 +63,8 @@ export default function UpcomingMeetingScreen() {
   }
 
   async function sendInvitationToAll(participants) {
-    setInviteLoading(true);
     try {
+      setInviteLoading(true);
       await server.post(
         `/participant/send-multiple-invites`,
         { participants },
@@ -71,8 +72,9 @@ export default function UpcomingMeetingScreen() {
       );
       const res = await server.get(`/participant/${meeting.id}`);
       setMeeting((prev) => ({ ...prev, participants: res.data }));
-    } catch (error) {
-      setError(true);
+      toast.success('Invitations sent!');
+    } catch (err) {
+      toast.error(extractError(err));
     } finally {
       setInviteLoading(false);
     }
