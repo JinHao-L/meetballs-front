@@ -22,13 +22,17 @@ export default function AgendaItem({
   setMeeting,
   position,
   isReordering,
+  isDeleting,
+  setDeleting,
 }) {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const item = meeting.agendaItems[position];
 
   async function removeAgendaItem() {
+    if (isDeleting) return;
     try {
+      setDeleting(true);
       setLoading(true);
       const newMeeting = Object.assign({}, meeting);
       const newAgenda = newMeeting.agendaItems;
@@ -45,6 +49,7 @@ export default function AgendaItem({
     } finally {
       setLoading(false);
     }
+    setDeleting(false);
   }
 
   if (isReordering && editing) {
@@ -115,7 +120,9 @@ export default function AgendaItem({
                   <Card.Body>
                     <Card.Title>{item.name}</Card.Title>
                     <Card.Subtitle>
-                      Presented by {item.speakerName}
+                      {item.speakerName
+                        ? 'Presented by ' + item.speakerName
+                        : ''}
                     </Card.Subtitle>
                     <div className="Buffer--10px" />
                     <Card.Text>{item.description}</Card.Text>
