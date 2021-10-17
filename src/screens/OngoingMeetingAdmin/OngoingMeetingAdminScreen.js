@@ -34,13 +34,8 @@ export default function OngoingMeetingAdminScreen() {
   const user = useContext(UserContext);
   const { id } = useParams();
   const isHost = useMemo(() => {
-    console.log(user);
     return meeting?.hostId === user?.uuid;
   }, [meeting.hostId, user]);
-
-  useEffect(() => {
-    console.log(meeting);
-  }, [meeting]);
 
   useEffect(() => {
     pullMeeting();
@@ -52,12 +47,10 @@ export default function OngoingMeetingAdminScreen() {
   useEffect(() => {
     if (socket) {
       socket.on('meetingUpdated', function (data) {
-        console.log('meetingUpdated', data);
         const newMeeting = JSON.parse(data, agendaReviver);
         setMeeting((meeting) => updateMeeting({ ...meeting, ...newMeeting }));
       });
       socket.on('participantUpdated', function (data) {
-        console.log('participantUpdated', data);
         const update = JSON.parse(data);
         setMeeting((meeting) => ({
           ...meeting,
@@ -65,7 +58,6 @@ export default function OngoingMeetingAdminScreen() {
         }));
       });
       socket.on('agendaUpdated', function (data) {
-        console.log('agendaUpdated', data);
         pullMeeting();
       });
       socket.on('userConnected', function (msg) {
@@ -89,7 +81,6 @@ export default function OngoingMeetingAdminScreen() {
       return p1.position - p2.position;
     });
     setShowError(meetingObj.agendaItems.length === 0);
-    console.log(meetingObj);
     syncMeeting(meetingObj, time);
     return meetingObj;
   };

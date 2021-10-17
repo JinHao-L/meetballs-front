@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { apiUrl, loginTypeKey, refreshTokenKey } from '../common/CommonValues';
 import setAuthToken from '../utils/setAuthToken';
 
@@ -37,6 +38,14 @@ server.interceptors.response.use(
             setAuthToken(tokenObj.access_token || null, type);
             localStorage.setItem(refreshTokenKey, tokenObj.refresh_token);
             return server(originalRequest);
+          }
+        })
+        .catch((err) => {
+          if (err?.response?.status === 401) {
+            localStorage.setItem(refreshTokenKey, null);
+            setAuthToken(null);
+            toast.error('Not logged in');
+            return Promise.reject();
           }
         });
     }
