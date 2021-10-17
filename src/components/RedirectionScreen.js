@@ -1,6 +1,8 @@
 import { Container, Image } from 'react-bootstrap';
 import ImageRedirect from '../assets/redirecting.jpg';
 
+export const MEETING_NOT_FOUND_ERR = "The meeting requested was not found!";
+
 export default function RedirectionScreen({ message }) {
   const containerStyle = {
     paddingLeft: 30,

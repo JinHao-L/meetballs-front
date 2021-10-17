@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Redirect, useParams } from 'react-router';
 import { blankMeeting } from '../../common/ObjectTemplates';
-import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import server from '../../services/server';
 import AttendanceList from './AttendanceList';
 import CompletedAgendaCard from './CompletedAgendaCard';
 import { Col, Nav, Row, Button, Container } from 'react-bootstrap';
 import { getDateInfo, getFormattedDate } from '../../common/CommonFunctions';
 import Statistics from './Statistics';
-import { toast } from 'react-toastify';
-import { extractError } from '../../utils/extractError';
+import RedirectionScreen, { MEETING_NOT_FOUND_ERR } from '../../components/RedirectionScreen';
 
 export default function CompletedMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -17,21 +15,23 @@ export default function CompletedMeetingScreen() {
   const [restrictDescription, setRestrictDescription] = useState(false);
   const [currentTab, setCurrentTab] = useState('statistics');
 
+  const [validId, setValidId] = useState(false);
+
   const { id } = useParams();
 
   useEffect(() => {
     return server
       .get(`/meeting/${id}`)
-      .then((res) => setMeeting(res.data))
-      .catch((err) => {
-        toast.error(extractError(err));
+      .then((res) => {
+        setMeeting(res.data);
+        setValidId(true);
       })
+      .catch((_) => setValidId(false))
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <FullLoadingIndicator />;
-
-  console.log(meeting);
+  if (!loading && !validId)
+    return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
 
   const type = meeting.type;
   if (type === 0) {

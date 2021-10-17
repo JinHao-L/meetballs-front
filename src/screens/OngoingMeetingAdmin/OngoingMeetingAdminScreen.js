@@ -1,5 +1,5 @@
 import { Container, Row, Col, Button, Nav, Toast } from 'react-bootstrap';
-import { useHistory, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { useState, useEffect, useContext, useMemo } from 'react';
 import {
   getFormattedDateTime,
@@ -17,6 +17,7 @@ import {
 } from '../../services/meeting';
 import { useSocket } from '../../hooks/useSocket';
 import { UserContext } from '../../context/UserContext';
+import RedirectionScreen, { MEETING_NOT_FOUND_ERR } from '../../components/RedirectionScreen';
 
 export default function OngoingMeetingAdminScreen() {
   const [position, setPosition] = useState(-1);
@@ -26,6 +27,9 @@ export default function OngoingMeetingAdminScreen() {
   const [showError, setShowError] = useState(false);
   const [hasLaunched, setHasLaunched] = useState(false);
 
+  const [loading, setLoading] = useState(true);
+  const [validId, setIsValidId] = useState(false);
+
   const { socket } = useSocket(meeting.id);
   const user = useContext(UserContext);
   const { id } = useParams();
@@ -33,7 +37,6 @@ export default function OngoingMeetingAdminScreen() {
     console.log(user);
     return meeting?.hostId === user?.uuid;
   }, [meeting.hostId, user]);
-  const history = useHistory();
 
   useEffect(() => {
     console.log(meeting);
@@ -95,8 +98,11 @@ export default function OngoingMeetingAdminScreen() {
     try {
       const res = await getMeeting(id);
       setMeeting(() => updateMeeting(res.data));
+      setIsValidId(true);
     } catch (err) {
-      history.replace('/');
+      setIsValidId(false);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -174,6 +180,9 @@ export default function OngoingMeetingAdminScreen() {
       </Button>
     );
   }
+
+  if (!loading && !validId)
+    return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
 
   updateDelay(meeting.agendaItems, time, position);
 
