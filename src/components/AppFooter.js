@@ -1,6 +1,6 @@
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import { Facebook } from 'react-bootstrap-icons';
+import { Facebook, Instagram } from 'react-bootstrap-icons';
 
 export default function AppFooter() {
   const history = useHistory();
@@ -29,6 +29,14 @@ export default function AppFooter() {
               style={{ color: '8F6B58', cursor: 'pointer' }}
               onClick={() => {
                 window.open('https://www.facebook.com/MeetBallsApp/');
+              }}
+            />
+            <div className="Buffer--10px" />
+            <Instagram
+              size={24}
+              style={{ color: '8F6B58', cursor: 'pointer' }}
+              onClick={() => {
+                window.open('https://www.instagram.com/meetballsapp/');
               }}
             />
             <div className="Buffer--20px" />
