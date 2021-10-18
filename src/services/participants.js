@@ -39,3 +39,10 @@ export const markParticipantAbsent = (meetingId, userEmail) => {
   };
   return server.put(`participant/${meetingId}/absent`, body);
 };
+
+export const markParticipantDuplicate = (meetingId, userEmail) => {
+  const body = {
+    email: userEmail,
+  };
+  return server.put(`participant/${meetingId}/duplicate`, body);
+};
