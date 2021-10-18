@@ -67,7 +67,7 @@ export default function OngoingMeetingAdminScreen() {
           participants: updateParticipants(meeting.participants, update),
         }));
       });
-      socket.on('agendaUpdated', function (data) {
+      socket.on('agendaUpdated', function (_) {
         console.log('agendaUpdated');
         pullMeeting();
       });
@@ -176,6 +176,7 @@ export default function OngoingMeetingAdminScreen() {
   }, [meetingStatus, hasLaunched, meeting]);
 
   const ReturnToEditPageButton = useCallback(() => {
+    console.log(`User ID is ${user?.uuid}, host is ${meeting.hostId}`);
     if (user?.uuid !== meeting.hostId) return null;
 
     return (
@@ -412,7 +413,8 @@ function updateParticipants(participants, update) {
   if (!hasUpdate) {
     return [update, ...participants].sort((p1, p2) => {
       return (' ' + p1.userName).localeCompare(p2.userName);
-    });
+    })
+    .filter((p) => !(p.isDuplicate));
   } else {
     return participants;
   }
