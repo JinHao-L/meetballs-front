@@ -19,7 +19,9 @@ import { defaultHeaders } from '../../utils/axiosConfig';
 import ConfirmInviteModel from './ConfirmInviteModel';
 import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
-import RedirectionScreen, { MEETING_NOT_FOUND_ERR } from '../../components/RedirectionScreen';
+import RedirectionScreen, {
+  MEETING_NOT_FOUND_ERR,
+} from '../../components/RedirectionScreen';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
