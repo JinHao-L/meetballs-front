@@ -153,7 +153,7 @@ async function updateDatabase(meetingId, newEmail, newUsername, oldEmail) {
     '/participant',
     {
       meetingId: meetingId,
-      userEmail: newEmail,
+      userEmail: newEmail.toLowerCase(),
       userName: newUsername,
     },
     defaultHeaders,
