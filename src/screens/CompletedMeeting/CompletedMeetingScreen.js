@@ -105,6 +105,7 @@ export default function CompletedMeetingScreen() {
         }}
       >
         <Row>
+          <Col lg={1} md={12} sm={12} />
           <Col
             lg={4}
             md={12}
@@ -143,12 +144,12 @@ export default function CompletedMeetingScreen() {
             </p>
             <div className="Buffer--20px" />
           </Col>
-          <Col lg={1} md={12} sm={12} />
           <Col lg={6} md={12} sm={12}>
             <Nav
               variant="tabs"
               defaultActiveKey="statistics"
               onSelect={(selectedKey) => setCurrentTab(selectedKey)}
+              style={{ marginLeft: 20, marginRight: 20 }}
             >
               <Nav.Item>
                 <Nav.Link eventKey="statistics">Statistics</Nav.Link>

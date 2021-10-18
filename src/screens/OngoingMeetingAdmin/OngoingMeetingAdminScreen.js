@@ -205,6 +205,7 @@ export default function OngoingMeetingAdminScreen() {
         }}
       >
         <Row>
+          <Col lg={1} md={12} sm={12} />
           <Col
             lg={4}
             md={12}
@@ -260,12 +261,12 @@ export default function OngoingMeetingAdminScreen() {
             </Card>
             <div className="Buffer--20px" />
           </Col>
-          <Col lg={1} md={12} sm={12} />
           <Col lg={6} md={12} sm={12}>
             <Nav
               variant="tabs"
               defaultActiveKey="agenda"
               onSelect={(selectedKey) => setCurrentTab(selectedKey)}
+              style={{ marginLeft: 20, marginRight: 20 }}
             >
               <Nav.Item>
                 <Nav.Link eventKey="agenda">Agenda</Nav.Link>
@@ -275,20 +276,22 @@ export default function OngoingMeetingAdminScreen() {
               </Nav.Item>
             </Nav>
             <div className="Buffer--20px" />
-            {currentTab === 'agenda' ? (
-              <AgendaList
-                time={time}
-                agenda={meeting.agendaItems}
-                position={position}
-              />
-            ) : (
-              <ParticipantList
-                meeting={meeting}
-                setMeeting={setMeeting}
-                position={position}
-                shouldShowButton={isHost}
-              />
-            )}
+            <div className="Container__padding--horizontal">
+              {currentTab === 'agenda' ? (
+                <AgendaList
+                  time={time}
+                  agenda={meeting.agendaItems}
+                  position={position}
+                />
+              ) : (
+                <ParticipantList
+                  meeting={meeting}
+                  setMeeting={setMeeting}
+                  position={position}
+                  shouldShowButton={isHost}
+                />
+              )}
+            </div>
             <div className="Buffer--100px" />
           </Col>
         </Row>
