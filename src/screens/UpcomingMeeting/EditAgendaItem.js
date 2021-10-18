@@ -51,7 +51,7 @@ export default function EditAgendaItem({
     }
     const linkSubmitted = materials !== '';
     let speakerMaterials = materials;
-    if (speaker && isUpload) {
+    if (speaker && isUpload && file) {
       try {
         const fileName = await uploadFile(file, meeting.id, speaker.id);
         setMaterials(fileName);

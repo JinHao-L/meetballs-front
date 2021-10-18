@@ -66,6 +66,7 @@ export default function AddMeetingOverlay({
     meetingId,
     meetingPassword,
     link,
+    zoomUuid,
   }) {
     const newMeeting = {
       name: name,
@@ -76,12 +77,12 @@ export default function AddMeetingOverlay({
       meetingPassword: meetingPassword,
       joinUrl: link,
       enableTranscription: true,
+      zoomUuid: zoomUuid,
     };
     await fillItems(newMeeting, cloneMeeting);
-    const key = isZoomMeeting ? `/zoom/meetings/${meetingId}` : '/meeting';
     setLoading(true);
     return server
-      .post(key, newMeeting, defaultHeaders)
+      .post('/meeting', newMeeting, defaultHeaders)
       .then((res) => {
         onUpdate();
         const id = res.data.id;
@@ -95,18 +96,22 @@ export default function AddMeetingOverlay({
       });
   }
 
-  async function selectMeeting(id, setFieldValue) {
+  async function selectMeeting(meeting, setFieldValue) {
     try {
       setLoading(true);
-      const response = await server.get('/zoom/meetings/' + id, defaultHeaders);
-      const meeting = response.data;
+      const response = await server.get(
+        '/zoom/meetings/' + meeting.id,
+        defaultHeaders,
+      );
+      const zoomMeeting = response.data;
       if (response.status !== 200) return;
       setFieldValue('name', meeting.topic);
       setFieldValue('desc', meeting.agenda);
-      setFieldValue('meetingId', id);
-      setFieldValue('meetingPassword', meeting.password);
+      setFieldValue('meetingId', meeting.id);
+      setFieldValue('meetingPassword', zoomMeeting.password);
       setFieldValue('link', meeting.join_url);
       setFieldValue('date', new Date(meeting.start_time));
+      setFieldValue('zoomUuid', meeting.uuid);
       setIsZoomMeeting(true);
       setShowZoomList(false);
     } catch (err) {
@@ -211,7 +216,7 @@ export default function AddMeetingOverlay({
           <Card
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              selectMeeting(meeting.id, setFieldValue);
+              selectMeeting(meeting, setFieldValue);
             }}
           >
             <Card.Body>
@@ -321,6 +326,7 @@ const schema = yup.object().shape({
   meetingPassword: yup.string().required(),
   link: yup.string().url('Must be a valid URL!').required(),
   date: yup.date().required(),
+  zoomUuid: yup.string().required(),
 });
 
 const initialValue = {
@@ -330,6 +336,7 @@ const initialValue = {
   meetingPassword: '',
   link: '',
   date: new Date(),
+  zoomUuid: null,
 };
 
 async function fillItems(newMeeting, cloneMeeting) {
