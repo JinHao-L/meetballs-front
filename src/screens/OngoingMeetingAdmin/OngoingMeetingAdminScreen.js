@@ -200,7 +200,7 @@ export default function OngoingMeetingAdminScreen() {
             </p>
             <div className="d-grid gap-2">
               <LaunchZoomButton />
-              {meeting.type === 2 ? null : <ReturnToEditPageButton />}
+              {meeting.type === 1 ? <ReturnToEditPageButton /> : null}
             </div>
             <div className="Buffer--20px" />
             <div className="Line--horizontal" />

@@ -24,6 +24,7 @@ import SupportPage from './screens/LandingPage/SupportPage';
 import { ToastContainer } from 'react-toastify';
 import DocumentationScreen from './screens/LandingPage/DocumentationScreen';
 import ScrollToTop from './ScrollToTop';
+import { Helmet } from 'react-helmet';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -43,6 +44,10 @@ export default function App() {
 
   return (
     <Router>
+      <Helmet>
+        <title>MeetBalls</title>
+        <meta name="description" content="Get the ball rolling" />
+      </Helmet>
       <ScrollToTop />
       <AppNavbar />
       <CustomBootstrapStyle />

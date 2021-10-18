@@ -6,3 +6,4 @@ PROJECT MEETBALLS - GET THE BALL ROLLING
 1. npm install react-datepicker --save
 1. npm i react-google-charts
 1. npm install use-sound
+1. npm i react-helmet
