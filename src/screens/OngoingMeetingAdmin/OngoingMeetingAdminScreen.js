@@ -176,6 +176,8 @@ export default function OngoingMeetingAdminScreen() {
   }, [meetingStatus, hasLaunched, meeting]);
 
   const ReturnToEditPageButton = useCallback(() => {
+    if (user?.uuid !== meeting.hostId) return null;
+
     return (
       <Button variant="outline-primary" href={`/meeting/${id}`}>
         Back to Editing

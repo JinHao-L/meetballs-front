@@ -2,6 +2,11 @@ import { Card, Col, Row } from 'react-bootstrap';
 import { getDateInfo } from '../../common/CommonFunctions';
 import { useHistory } from 'react-router';
 import { Eye, Front } from 'react-bootstrap-icons';
+import { useContext } from 'react';
+import { UserContext } from '../../context/UserContext';
+import RedirectionScreen, {
+  BAD_MEETING_PERMS_MSG,
+} from '../../components/RedirectionScreen';
 
 export default function CompletedMeetingItem({
   meeting,
@@ -10,6 +15,7 @@ export default function CompletedMeetingItem({
 }) {
   const dateInfo = getDateInfo(meeting.startedAt, meeting.duration);
   const history = useHistory();
+  const user = useContext(UserContext);
 
   function viewMeeting() {
     console.log(`Viewing meeting of ID = ${meeting.id}`);
@@ -54,6 +60,9 @@ export default function CompletedMeetingItem({
       </Row>
     );
   }
+
+  if (user?.uuid !== meeting.hostId)
+    return <RedirectionScreen message={BAD_MEETING_PERMS_MSG} />;
 
   return (
     <Col
