@@ -5,6 +5,8 @@ export const LOADING_MSG = 'Please hold on while we verify your link.';
 export const ERROR_MSG =
   'Error! Your link is invalid! Please contact your meeting host for a new link.';
 export const WAIT_MSG = 'Please hold on while we log you in.';
+export const BAD_MEETING_PERMS_MSG =
+  'You do not have authorization to view this page.';
 
 export default function RedirectionScreen({ message }) {
   const containerStyle = {

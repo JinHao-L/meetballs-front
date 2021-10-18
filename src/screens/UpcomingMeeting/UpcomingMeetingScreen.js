@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Button, Row, Col, Container, Nav, Spinner } from 'react-bootstrap';
 import {
   getFormattedDateTime,
@@ -20,9 +20,14 @@ import ConfirmInviteModel from './ConfirmInviteModel';
 import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
 import RedirectionScreen, {
+  BAD_MEETING_PERMS_MSG,
   MEETING_NOT_FOUND_ERR,
 } from '../../components/RedirectionScreen';
+import { UserContext } from '../../context/UserContext';
 import BackgroundPattern from '../../assets/background_pattern2.jpg';
+
+const INVITE_SUCCESS = 'Invitations sent!';
+const INVITE_SOME_FAIL = 'Not all invitations sent! Check your invitation list.';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -38,6 +43,7 @@ export default function UpcomingMeetingScreen() {
   const [validId, setValidId] = useState(true);
 
   const history = useHistory();
+  const user = useContext(UserContext);
 
   const { id } = useParams();
 
@@ -76,14 +82,19 @@ export default function UpcomingMeetingScreen() {
   async function sendInvitationToAll(participants) {
     try {
       setInviteLoading(true);
-      await server.post(
+      const inviteResponse = await server.post(
         `/participant/send-multiple-invites`,
         { participants },
         defaultHeaders,
       );
+      const inviteData = inviteResponse.data.data;
+      const successes = inviteData.filter(status => status.success);
+
       const res = await server.get(`/participant/${meeting.id}`);
       setMeeting((prev) => ({ ...prev, participants: res.data }));
-      toast.success('Invitations sent!');
+
+      if (successes === participants.length) toast.success(INVITE_SUCCESS);
+      else toast.warn(INVITE_SOME_FAIL);
     } catch (err) {
       toast.error(extractError(err));
     } finally {
@@ -126,6 +137,9 @@ export default function UpcomingMeetingScreen() {
 
   if (!loading && !validId)
     return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
+
+  if (user?.uuid !== meeting.hostId)
+    return <RedirectionScreen message={BAD_MEETING_PERMS_MSG} />;
 
   if (meeting.type !== undefined && meeting.type !== 1) {
     return <Redirect to={'/ongoing/' + id} />;

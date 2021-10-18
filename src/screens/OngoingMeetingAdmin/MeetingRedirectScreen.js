@@ -34,13 +34,12 @@ export default function RedirectScreen() {
         defaultHeaders,
       );
       setError(false);
-      const id = response.data?.meeting?.id;
       setLoading(false);
+      const id = response.data?.meeting?.id;
       history.push(`/ongoing/${id}`);
     } catch (error) {
       toast.error(extractError(error));
       setError(true);
-    } finally {
       setLoading(false);
     }
   }, []);

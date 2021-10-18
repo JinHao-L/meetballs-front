@@ -118,7 +118,7 @@ export default function AgendaItem({
                             meeting.id,
                             item.speaker.id,
                           ).catch((err) => {
-                            toast.error('File not found')
+                            toast.error('File not found');
                           })
                         }
                       />
