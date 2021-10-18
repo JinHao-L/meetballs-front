@@ -30,7 +30,8 @@ export default function CompletedMeetingScreen() {
     return server
       .get(`/meeting/${id}`)
       .then((res) => {
-        setMeeting(res.data);
+        const participants = res.data?.participants?.filter(x => !x.isDuplicate);
+        setMeeting({...res.data, participants});
         setValidId(true);
       })
       .catch((_) => setValidId(false))
@@ -96,14 +97,16 @@ export default function CompletedMeetingScreen() {
         backgroundImage: `url(${BackgroundPattern})`,
       }}
     >
+      <div className="Buffer--50px" />
       <Container
         className="Container__padding--vertical"
         style={{
           backgroundColor: 'white',
-          minHeight: 'calc(100vh - 56px)',
+          minHeight: 'calc(100vh - 56px - 100px)',
           boxShadow: '0 8px 8px 0 rgba(0, 0, 0, 0.2)',
         }}
       >
+        <div className="Buffer--50px" />
         <Row>
           <Col lg={1} md={12} sm={12} />
           <Col
@@ -165,10 +168,11 @@ export default function CompletedMeetingScreen() {
             <div className="Container__padding--horizontal">
               <Content />
             </div>
-            <div className="Buffer--100px" />
+            <div className="Buffer--50px" />
           </Col>
         </Row>
       </Container>
+      <div className="Buffer--50px" />
     </div>
   );
 }

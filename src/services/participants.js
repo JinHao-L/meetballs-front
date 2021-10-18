@@ -10,7 +10,11 @@ export const deleteParticipants = (meetingId, userEmail) => {
       },
     ],
   };
-  return server.delete(`participant`, body);
+  console.log(body);
+  return server.delete(`participant`, {
+    ...defaultHeaders,
+    data: body,
+  });
 };
 
 export const createParticipant = (meetingId, userEmail, userName) => {
@@ -34,4 +38,11 @@ export const markParticipantAbsent = (meetingId, userEmail) => {
     email: userEmail,
   };
   return server.put(`participant/${meetingId}/absent`, body);
+};
+
+export const markParticipantDuplicate = (meetingId, userEmail) => {
+  const body = {
+    email: userEmail,
+  };
+  return server.put(`participant/${meetingId}/duplicate`, body);
 };

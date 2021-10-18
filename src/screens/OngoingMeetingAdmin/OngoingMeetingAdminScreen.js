@@ -24,6 +24,7 @@ import RedirectionScreen, {
 import useSound from 'use-sound';
 import Bell from '../../assets/Bell.mp3';
 import BackgroundPattern from '../../assets/background_pattern2.jpg';
+import FeedbackOverlay from './FeedbackOverlay';
 
 export default function OngoingMeetingAdminScreen() {
   const [position, setPosition] = useState(-1);
@@ -33,6 +34,7 @@ export default function OngoingMeetingAdminScreen() {
   const [showError, setShowError] = useState(false);
   const [hasLaunched, setHasLaunched] = useState(false);
   const [meetingStatus, setMeetingStatus] = useState(1);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [validId, setIsValidId] = useState(false);
@@ -67,7 +69,7 @@ export default function OngoingMeetingAdminScreen() {
           participants: updateParticipants(meeting.participants, update),
         }));
       });
-      socket.on('agendaUpdated', function (data) {
+      socket.on('agendaUpdated', function (_) {
         console.log('agendaUpdated');
         pullMeeting();
       });
@@ -85,10 +87,12 @@ export default function OngoingMeetingAdminScreen() {
   }
 
   const updateMeeting = (meetingObj) => {
-    meetingObj.participants.sort((p1, p2) => {
-      return (' ' + p1.userName).localeCompare(p2.userName);
-    });
-    meetingObj.agendaItems.sort((p1, p2) => {
+    meetingObj.participants = meetingObj.participants
+      .filter((x) => !x.isDuplicate)
+      .sort((p1, p2) => {
+        return (' ' + p1.userName).localeCompare(p2.userName);
+      });
+    meetingObj.agendaItems = meetingObj.agendaItems.sort((p1, p2) => {
       return p1.position - p2.position;
     });
     setShowError(meetingObj.agendaItems.length === 0);
@@ -124,12 +128,17 @@ export default function OngoingMeetingAdminScreen() {
   }
 
   async function nextItem(time, agenda, id) {
-    const isLastItem = position + 1 < agenda.length;
-    const apiCall = isLastItem ? callNextMeeting : callEndMeeting;
+    const isLastItem = position + 1 >= agenda.length;
+    const apiCall = isLastItem ? callEndMeeting : callNextMeeting;
     try {
       await apiCall(id);
       agenda[position].actualDuration = time - agenda[position].startTime;
-      if (isLastItem) setMeetingStatus(3);
+      if (isLastItem) {
+        console.log('position: ' + position);
+        console.log(agenda[position]);
+        setMeetingStatus(3);
+        setShowFeedback(true);
+      }
       const newPosition = position + 1;
       setPosition(newPosition);
       if (newPosition < agenda.length) {
@@ -176,6 +185,7 @@ export default function OngoingMeetingAdminScreen() {
   }, [meetingStatus, hasLaunched, meeting]);
 
   const ReturnToEditPageButton = useCallback(() => {
+    // console.log(`User ID is ${user?.uuid}, host is ${meeting.hostId}`);
     if (user?.uuid !== meeting.hostId) return null;
 
     return (
@@ -183,7 +193,7 @@ export default function OngoingMeetingAdminScreen() {
         Back to Editing
       </Button>
     );
-  }, [id]);
+  }, [id, meeting]);
 
   if (!loading && !validId)
     return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
@@ -198,14 +208,16 @@ export default function OngoingMeetingAdminScreen() {
         backgroundImage: `url(${BackgroundPattern})`,
       }}
     >
+      <div className="Buffer--50px" />
       <Container
         className="Container__padding--vertical"
         style={{
           backgroundColor: 'white',
-          minHeight: 'calc(100vh - 56px)',
+          minHeight: 'calc(100vh - 56px - 100px)',
           boxShadow: '0 8px 8px 0 rgba(0, 0, 0, 0.2)',
         }}
       >
+        <div className="Buffer--50px" />
         <Row>
           <Col lg={1} md={12} sm={12} />
           <Col
@@ -294,10 +306,16 @@ export default function OngoingMeetingAdminScreen() {
                 />
               )}
             </div>
-            <div className="Buffer--100px" />
+            <div className="Buffer--50px" />
           </Col>
         </Row>
       </Container>
+      <div className="Buffer--50px" />
+      <FeedbackOverlay
+        setShowModal={setShowFeedback}
+        showModal={showFeedback}
+        meetingId={meeting.id}
+      />
     </div>
   );
 }
@@ -408,12 +426,13 @@ function updateParticipants(participants, update) {
       return ppl;
     }
   });
-
   if (!hasUpdate) {
-    return [update, ...participants].sort((p1, p2) => {
-      return (' ' + p1.userName).localeCompare(p2.userName);
-    });
+    return [update, ...participants]
+      .filter((x) => !x.isDuplicate)
+      .sort((p1, p2) => {
+        return (' ' + p1.userName).localeCompare(p2.userName);
+      });
   } else {
-    return participants;
+    return participants.filter((x) => !x.isDuplicate);
   }
 }

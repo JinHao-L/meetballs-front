@@ -13,6 +13,6 @@ export const extractError = (error) => {
       return error.message;
     }
   } else {
-    console.log(error)
+    console.log(error);
   }
 };

@@ -20,6 +20,7 @@ export default function Statistics({ meeting }) {
       ['Absent', 0],
     ];
     meeting.participants.forEach((participant) => {
+      if (participant.isDuplicate) return;
       if (participant.timeJoined === null) {
         newAttendance[2][1]++;
       } else {
@@ -62,7 +63,7 @@ export default function Statistics({ meeting }) {
               options={{
                 legend: 'none',
                 pieSliceText: 'label',
-                colors: ['509950', 'f65454'],
+                colors: ['4CA982', 'f65454'],
                 pieSliceTextStyle: {
                   fontSize: 13,
                 },

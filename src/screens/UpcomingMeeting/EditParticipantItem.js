@@ -42,6 +42,16 @@ export default function EditParticipantItem({
       toast.error('Email must not be empty.');
       return;
     }
+    if (username.length === 0) {
+      toast.error('Name must not be empty.');
+      return;
+    }
+
+    if (participant.userName === username && participant.userEmail === email) {
+      setEditing(false);
+      return;
+    }
+
     if (participant.userName === username && checkForDuplicate()) {
       toast.error(`Participant with email ${email} already exist`);
       return;
@@ -143,7 +153,7 @@ async function updateDatabase(meetingId, newEmail, newUsername, oldEmail) {
     '/participant',
     {
       meetingId: meetingId,
-      userEmail: newEmail,
+      userEmail: newEmail.toLowerCase(),
       userName: newUsername,
     },
     defaultHeaders,

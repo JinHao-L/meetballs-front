@@ -42,9 +42,10 @@ export const AppNavbar = () => {
       <Container>
         <Navbar.Brand
           style={{ alignItems: 'center', display: 'flex', cursor: 'pointer' }}
-          onClick={() => history.push(option.home)}
         >
-          <Image src={Logo} style={{ height: 30 }} />
+          <a href={option.home}>
+            <Image src={Logo} style={{ height: 30 }} />
+          </a>
         </Navbar.Brand>
         {option.button === TOGGLES.CHOOSE && !user ? (
           <Button
