@@ -23,6 +23,7 @@ import RedirectionScreen, {
 } from '../../components/RedirectionScreen';
 import useSound from 'use-sound';
 import Bell from '../../assets/Bell.mp3';
+import BackgroundPattern from '../../assets/background_pattern2.jpg';
 
 export default function OngoingMeetingAdminScreen() {
   const [position, setPosition] = useState(-1);
@@ -54,12 +55,12 @@ export default function OngoingMeetingAdminScreen() {
   useEffect(() => {
     if (socket) {
       socket.on('meetingUpdated', function (data) {
-        console.log('meetingUpdated')
+        console.log('meetingUpdated');
         const newMeeting = JSON.parse(data, agendaReviver);
         setMeeting((meeting) => updateMeeting({ ...meeting, ...newMeeting }));
       });
       socket.on('participantUpdated', function (data) {
-        console.log('participantUpdated')
+        console.log('participantUpdated');
         const update = JSON.parse(data);
         setMeeting((meeting) => ({
           ...meeting,
@@ -67,7 +68,7 @@ export default function OngoingMeetingAdminScreen() {
         }));
       });
       socket.on('agendaUpdated', function (data) {
-        console.log('agendaUpdated')
+        console.log('agendaUpdated');
         pullMeeting();
       });
       socket.on('userConnected', function (msg) {
@@ -188,14 +189,27 @@ export default function OngoingMeetingAdminScreen() {
   updateDelay(meeting.agendaItems, time, position, play);
 
   return (
-    <>
-      <Container className="Container__padding--vertical">
+    <div
+      style={{
+        minHeight: 'calc(100vh - 56px)',
+        backgroundColor: 'gray',
+        backgroundImage: `url(${BackgroundPattern})`,
+      }}
+    >
+      <Container
+        className="Container__padding--vertical"
+        style={{
+          backgroundColor: 'white',
+          minHeight: 'calc(100vh - 56px)',
+          boxShadow: '0 8px 8px 0 rgba(0, 0, 0, 0.2)',
+        }}
+      >
         <Row>
           <Col
             lg={4}
             md={12}
             sm={12}
-            className="Container__padding--horizontal"
+            style={{ paddingLeft: 30, paddingRight: 30 }}
           >
             <p className="Text__header">{meeting.name}</p>
             <p className="Text__subheader">
@@ -247,12 +261,7 @@ export default function OngoingMeetingAdminScreen() {
             <div className="Buffer--20px" />
           </Col>
           <Col lg={1} md={12} sm={12} />
-          <Col
-            lg={6}
-            md={12}
-            sm={12}
-            className="Container__padding--horizontal"
-          >
+          <Col lg={6} md={12} sm={12}>
             <Nav
               variant="tabs"
               defaultActiveKey="agenda"
@@ -284,7 +293,7 @@ export default function OngoingMeetingAdminScreen() {
           </Col>
         </Row>
       </Container>
-    </>
+    </div>
   );
 }
 

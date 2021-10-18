@@ -24,7 +24,6 @@ import SupportPage from './screens/LandingPage/SupportPage';
 import { toast, ToastContainer } from 'react-toastify';
 import DocumentationScreen from './screens/LandingPage/DocumentationScreen';
 import ScrollToTop from './ScrollToTop';
-import { Helmet } from 'react-helmet';
 import server from './services/server';
 import { extractError } from './utils/extractError';
 
@@ -53,10 +52,6 @@ export default function App() {
 
   return (
     <Router>
-      <Helmet>
-        <title>MeetBalls</title>
-        <meta name="description" content="Get the ball rolling" />
-      </Helmet>
       <ScrollToTop />
       <AppNavbar />
       <CustomBootstrapStyle />
