@@ -1,4 +1,4 @@
-import { Container, Row, Col, Button, Nav, Toast } from 'react-bootstrap';
+import { Container, Row, Col, Button, Nav, Card } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router';
 import { useState, useEffect, useContext, useMemo } from 'react';
 import {
@@ -171,7 +171,7 @@ export default function OngoingMeetingAdminScreen() {
                 onClick={startZoom}
                 enabled={meeting.type === 1 || meeting.type === 2}
               >
-                Relaunch Zoom
+                Launch Zoom
               </Button>
             </div>
             <div className="Buffer--20px" />
@@ -204,15 +204,16 @@ export default function OngoingMeetingAdminScreen() {
               )}
             </div>
             <div className="Buffer--20px" />
-            <Toast show={showError}>
-              <Toast.Header closeButton={false}>No Agenda Found</Toast.Header>
-              <Toast.Body>
-                Please add an agenda item to the meeting first before starting.
-              </Toast.Body>
-              <Toast.Body>
+            <Card bg="primary" show={showError}>
+              <Card.Header>No Agenda Found</Card.Header>
+              <Card.Body>
+                <Card.Text>
+                  Please add an agenda item to the meeting first before
+                  starting.
+                </Card.Text>
                 <div className="d-grid gap-2">
                   <Button
-                    variant="outline-primary"
+                    variant="secondary  "
                     onClick={() => {
                       history.push('/meeting/' + id);
                     }}
@@ -220,8 +221,8 @@ export default function OngoingMeetingAdminScreen() {
                     Back to Editing
                   </Button>
                 </div>
-              </Toast.Body>
-            </Toast>
+              </Card.Body>
+            </Card>
             <div className="Buffer--20px" />
           </Col>
           <Col lg={1} md={12} sm={12} />
