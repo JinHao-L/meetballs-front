@@ -47,8 +47,8 @@ export default function AttendanceList({ participants, date }) {
       </div>
       <div className="Buffer--20px" />
       <div>
-        <div>
-          <p className="Text__subheader">
+        <div className="Container__row--space-between">
+          <p className="Text__subheader" style={{ marginBottom: 10 }}>
             Present: {numPresent}/{numTotal}
           </p>
           <CollapseToggle show={showPresent} setShow={setShowPresent} />
@@ -59,8 +59,8 @@ export default function AttendanceList({ participants, date }) {
       </div>
       <div className="Buffer--20px" />
       <div>
-        <div>
-          <p className="Text__subheader">
+        <div className="Container__row--space-between">
+          <p className="Text__subheader" style={{ marginBottom: 10 }}>
             Absent: {numAbsent}/{numTotal}
           </p>
           <CollapseToggle show={showAbsent} setShow={setShowAbsent} />

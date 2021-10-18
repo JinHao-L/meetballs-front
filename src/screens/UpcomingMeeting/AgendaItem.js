@@ -11,10 +11,6 @@ import { defaultHeaders } from '../../utils/axiosConfig';
 import { SmallLoadingIndicator } from '../../components/SmallLoadingIndicator';
 import { toast } from 'react-toastify';
 import { Link45deg } from 'react-bootstrap-icons';
-import {
-  MaterialsSection,
-  SpeakerSection,
-} from '../../components/AgendaItemComponents';
 import { extractError } from '../../utils/extractError';
 
 export default function AgendaItem({
@@ -28,6 +24,10 @@ export default function AgendaItem({
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const item = meeting.agendaItems[position];
+
+  if (!editing && item?.name?.length === 0) {
+    setEditing(true);
+  }
 
   async function removeAgendaItem() {
     if (isDeleting) return;
@@ -77,6 +77,7 @@ export default function AgendaItem({
                 <EditAgendaItem
                   setLoading={setLoading}
                   setEditing={setEditing}
+                  setMeeting={setMeeting}
                   meeting={meeting}
                   position={position}
                 />

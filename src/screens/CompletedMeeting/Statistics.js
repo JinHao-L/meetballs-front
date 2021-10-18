@@ -86,12 +86,18 @@ export default function Statistics({ meeting }) {
               }}
             >
               <p className="Text__header" style={{ color: '#725546' }}>
-                {getFormattedDuration(totalDuration[0])}
+                {getFormattedDuration(
+                  Math.floor(totalDuration[0] / 60000) * 60000,
+                )}
               </p>
               <p style={{ color: '#999999', fontSize: 17 }}>
                 {totalDuration[0] > totalDuration[1]
                   ? 'Exceeeded by ' +
-                    getFormattedDuration(totalDuration[0] - totalDuration[1])
+                    getFormattedDuration(
+                      Math.floor(
+                        (totalDuration[0] - totalDuration[1]) / 60000,
+                      ) * 60000,
+                    )
                   : ''}
               </p>
             </div>

@@ -16,7 +16,7 @@ export default function RedirectionScreen({ message }) {
   return (
     <Container style={containerStyle}>
       <Image src={ImageRedirect} style={{ width: '100%', maxWidth: 600 }} />
-      <p style={{ fontSize: 25, fontWeight: 500 }}>{message}</p>
+      <p style={{ fontSize: 25 }}>{message}</p>
     </Container>
   );
 }

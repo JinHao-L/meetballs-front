@@ -1,10 +1,10 @@
 import {
+  Row,
   Col,
   Card,
   DropdownButton,
   Dropdown,
   Form,
-  CloseButton,
   Button,
 } from 'react-bootstrap';
 import { useState } from 'react';
@@ -19,6 +19,7 @@ export default function EditAgendaItem({
   setEditing,
   meeting,
   position,
+  setMeeting,
 }) {
   const item = meeting.agendaItems[position];
   const [duration, setDuration] = useState(item.expectedDuration);
@@ -41,6 +42,10 @@ export default function EditAgendaItem({
   }
 
   async function updateChanges() {
+    if (name.length === 0) {
+      toast.error('Name must not be empty.');
+      return;
+    }
     const linkSubmitted = materials !== '';
     if (linkSubmitted && !isValidUrl(materials)) {
       console.log('Attempted to submit an invalid URL');
@@ -52,6 +57,7 @@ export default function EditAgendaItem({
       setLoading(true);
       const actualPosition = meeting.agendaItems[position].position;
       await updateDatabase(
+        meeting.agendaItems[position].name,
         meeting.id,
         actualPosition,
         name,
@@ -98,14 +104,24 @@ export default function EditAgendaItem({
     return choices;
   }
 
+  function close() {
+    const oldName = item.name;
+    if (oldName === '') {
+      const newMeeting = Object.assign({}, meeting);
+      const newAgenda = newMeeting.agendaItems;
+      newAgenda.splice(position, 1);
+      newMeeting.agendaItems = newAgenda;
+      setMeeting(newMeeting);
+    } else {
+      setEditing(false);
+    }
+  }
+
   return (
     <Col className="Container__padding--vertical-small">
       <Card>
         <Card.Header>
-          <div className="Container__row--space-between">
-            <p className="Text__card-header">Editing Agenda Item</p>
-            <CloseButton onClick={() => setEditing(false)} />
-          </div>
+          <p className="Text__card-header">Editing Agenda Item</p>
         </Card.Header>
         <Card.Body>
           <Form.Group>
@@ -143,11 +159,22 @@ export default function EditAgendaItem({
               onChange={(event) => setMaterials(event.target.value)}
             />
             <div className="Buffer--20px" />
-            <div className="d-grid gap-2">
-              <Button variant="primary" onClick={() => updateChanges()}>
-                Confirm
-              </Button>
-            </div>
+            <Row>
+              <Col>
+                <div className="d-grid gap-2">
+                  <Button variant="outline-primary" onClick={close}>
+                    Cancel
+                  </Button>
+                </div>
+              </Col>
+              <Col>
+                <div className="d-grid gap-2">
+                  <Button variant="primary" onClick={() => updateChanges()}>
+                    Confirm
+                  </Button>
+                </div>
+              </Col>
+            </Row>
           </Form.Group>
         </Card.Body>
       </Card>
@@ -156,6 +183,7 @@ export default function EditAgendaItem({
 }
 
 async function updateDatabase(
+  oldName,
   meetingId,
   position,
   name,
@@ -171,28 +199,34 @@ async function updateDatabase(
     expectedDuration: duration,
     actualDuration: null,
     isCurrent: false,
+    meetingId: meetingId,
+    position: position,
   };
   if (speaker !== '') data.speakerName = speaker;
   if (materials !== '') data.speakerMaterials = materials;
-  console.log(data);
-  await server.put(
-    `/agenda-item/${meetingId}/${position}`,
-    data,
-    defaultHeaders,
-  );
+
+  if (oldName.length === 0) {
+    await server.post(`/agenda-item`, data, defaultHeaders);
+  } else {
+    await server.put(
+      `/agenda-item/${meetingId}/${position}`,
+      data,
+      defaultHeaders,
+    );
+  }
 }
 
 const durationMinutes = [
-  { mils: 300000, display: '5m' },
-  { mils: 600000, display: '10m' },
-  { mils: 900000, display: '15m' },
-  { mils: 1200000, display: '20m' },
-  { mils: 1500000, display: '25m' },
-  { mils: 1800000, display: '30m' },
-  { mils: 2100000, display: '35m' },
-  { mils: 2400000, display: '40m' },
-  { mils: 2700000, display: '45m' },
-  { mils: 3000000, display: '50m' },
-  { mils: 3300000, display: '55m' },
-  { mils: 3600000, display: '1h 0m' },
+  { mils: 300000, display: '5min' },
+  { mils: 600000, display: '10min' },
+  { mils: 900000, display: '15min' },
+  { mils: 1200000, display: '20min' },
+  { mils: 1500000, display: '25min' },
+  { mils: 1800000, display: '30min' },
+  { mils: 2100000, display: '35min' },
+  { mils: 2400000, display: '40min' },
+  { mils: 2700000, display: '45min' },
+  { mils: 3000000, display: '50min' },
+  { mils: 3300000, display: '55min' },
+  { mils: 3600000, display: '1h' },
 ];
