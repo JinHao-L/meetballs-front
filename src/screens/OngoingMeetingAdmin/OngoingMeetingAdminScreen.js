@@ -45,10 +45,6 @@ export default function OngoingMeetingAdminScreen() {
   const [play] = useSound(Bell);
 
   useEffect(() => {
-    console.log(meeting);
-  }, [meeting]);
-
-  useEffect(() => {
     pullMeeting();
     setInterval(() => {
       setTime(new Date().getTime());
@@ -56,7 +52,6 @@ export default function OngoingMeetingAdminScreen() {
   }, []);
 
   useEffect(() => {
-    console.log(socket)
     if (socket) {
       socket.on('meetingUpdated', function (data) {
         console.log('meetingUpdated')
@@ -76,7 +71,6 @@ export default function OngoingMeetingAdminScreen() {
         pullMeeting();
       });
       socket.on('userConnected', function (msg) {
-        console.log('userConnected')
         console.log(msg);
       });
     } else {
