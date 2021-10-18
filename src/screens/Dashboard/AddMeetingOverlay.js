@@ -147,7 +147,11 @@ export default function AddMeetingOverlay({
             onChange={handleChange}
             value={values.name}
             isValid={touched.name && !errors.name}
+            isInvalid={touched.name && errors.name}
           />
+          <Form.Control.Feedback type="invalid">
+            {touched.name && errors.name}
+          </Form.Control.Feedback>
           <Form.Label column>Description</Form.Label>
           <Form.Control
             as="textarea"
@@ -157,7 +161,11 @@ export default function AddMeetingOverlay({
             onChange={handleChange}
             value={values.desc}
             isValid={touched.desc && !errors.desc}
+            isInvalid={touched.desc && errors.desc}
           />
+          <Form.Control.Feedback type="invalid">
+            {touched.desc && errors.desc}
+          </Form.Control.Feedback>
           <Form.Label column>Meeting ID</Form.Label>
           <Form.Control
             required
@@ -166,8 +174,12 @@ export default function AddMeetingOverlay({
             onChange={handleChange}
             value={values.meetingId}
             isValid={touched.meetingId && !errors.meetingId}
+            isInvalid={touched.meetingId && errors.meetingId}
             disabled={isZoomMeeting}
           />
+          <Form.Control.Feedback type="invalid">
+            {touched.meetingId && errors.meetingId}
+          </Form.Control.Feedback>
           <Form.Label column>Meeting Password</Form.Label>
           <Form.Control
             required
@@ -175,9 +187,13 @@ export default function AddMeetingOverlay({
             placeholder="Please enter meeting password"
             onChange={handleChange}
             value={values.meetingPassword}
-            isValid={touched.meetingPassword && !errors.meetingId}
+            isValid={touched.meetingPassword && !errors.meetingPassword}
+            isInvalid={touched.meetingPassword && errors.meetingPassword}
             disabled={isZoomMeeting}
           />
+          <Form.Control.Feedback type="invalid">
+            {touched.meetingPassword && errors.meetingPassword}
+          </Form.Control.Feedback>
           <Form.Label column>Meeting link</Form.Label>
           <Form.Control
             required
@@ -186,8 +202,12 @@ export default function AddMeetingOverlay({
             onChange={handleChange}
             value={values.link}
             isValid={touched.link && !errors.link}
+            isInvalid={touched.link && errors.link}
             disabled={isZoomMeeting}
           />
+          <Form.Control.Feedback type="invalid">
+            {touched.link && errors.link}
+          </Form.Control.Feedback>
           <Form.Label column>Start Date</Form.Label>
           <DatePicker
             name="date"
@@ -195,13 +215,21 @@ export default function AddMeetingOverlay({
             showTimeSelect
             onChange={(date) => setFieldValue('date', date)}
             dateFormat="Pp"
-            customInput={<Form.Control />}
+            customInput={
+              <Form.Control
+                isValid={touched.date && !errors.date}
+                isInvalid={touched.date && errors.date}
+              />
+            }
             disabled={isZoomMeeting}
           />
+          <Form.Control.Feedback type="invalid">
+            {touched.date && errors.date}
+          </Form.Control.Feedback>
         </Form.Group>
         <div className="Buffer--20px" />
         <div className="d-grid gap-2">
-          <Button variant="primary" onClick={handleSubmit} disabled={!isValid}>
+          <Button variant="primary" onClick={handleSubmit}>
             Add new Meeting
           </Button>
         </div>
@@ -326,13 +354,18 @@ export default function AddMeetingOverlay({
 }
 
 const schema = yup.object().shape({
-  name: yup.string().required(),
-  desc: yup.string().required(),
-  meetingId: yup.number().required(),
-  meetingPassword: yup.string().required(),
-  link: yup.string().url('Must be a valid URL!').required(),
-  date: yup.date().required(),
-  zoomUuid: yup.string().required(),
+  name: yup.string().required('Meeting name is required'),
+  desc: yup.string().required('Meeting description is required'),
+  meetingId: yup
+    .number('Meeting ID is must be a number')
+    .required('Meeting ID is required'),
+  meetingPassword: yup.string().required('Meeting password is required'),
+  link: yup
+    .string()
+    .url('Meeting link must be a valid URL')
+    .required('Meeting link is required'),
+  date: yup.date().required('Meeting time is required'),
+  zoomUuid: yup.string().nullable(),
 });
 
 const initialValue = {
