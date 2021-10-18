@@ -88,7 +88,7 @@ export default function UpcomingMeetingScreen() {
         defaultHeaders,
       );
       const inviteData = inviteResponse.data.data;
-      const successes = inviteData.filter(status => status.success);
+      const successes = inviteData.filter(status => status.success).length;
 
       const res = await server.get(`/participant/${meeting.id}`);
       setMeeting((prev) => ({ ...prev, participants: res.data }));
