@@ -36,7 +36,13 @@ export default function OngoingMeetingItem({ meeting }) {
   }
 
   return (
-    <Col lg={4} md={6} sm={12} className="Container__padding--vertical-small">
+    <Col
+      xl={4}
+      lg={6}
+      md={6}
+      sm={12}
+      className="Container__padding--vertical-small"
+    >
       <Card style={{ height: 300 }} bg="primary" text="white">
         <Card.Body>
           <Details />

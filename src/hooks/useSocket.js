@@ -16,10 +16,10 @@ export const useSocket = (meetingId) => {
         },
       });
       newSocket.on('connect', function () {
-        console.log('Connected');
+        console.log('Socket Connected');
       });
-      newSocket.on('disconnect', function () {
-        console.log('Disconnected');
+      newSocket.on('disconnect', function (reason) {
+        console.log('Socket disconnected because of ' + reason);
       });
       setSocket(newSocket);
 

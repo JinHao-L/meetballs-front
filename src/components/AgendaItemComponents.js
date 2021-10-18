@@ -1,6 +1,7 @@
 import { Card, Button } from 'react-bootstrap';
 import { openFile } from '../services/files';
 import { toast } from 'react-toastify';
+import { isValidUrl } from '../common/CommonFunctions';
 
 export function SpeakerSection({ item }) {
   const speaker = item?.speaker?.userName;
@@ -14,7 +15,7 @@ export function SpeakerSection({ item }) {
 
 export function MaterialsSection({ item, variant = 'primary' }) {
   const materials = item.speakerMaterials;
-  if (!materials) return null;
+  if (!materials || (!isValidUrl(materials) && !item.speaker)) return null;
   return (
     <div className="d-grid gap-2">
       <Button
@@ -23,7 +24,7 @@ export function MaterialsSection({ item, variant = 'primary' }) {
           openFile(
             item.speakerMaterials,
             item.meetingId,
-            item.speaker.id,
+            item.speaker?.id,
           ).catch((_err) => {
             toast.error('File not found');
           })
