@@ -44,6 +44,8 @@ export default function OngoingMeetingAdminScreen() {
   }, [meeting.hostId, user]);
   const [play] = useSound(Bell);
 
+  const user = useContext(UserContext);
+
   useEffect(() => {
     pullMeeting();
     setInterval(() => {
@@ -54,12 +56,12 @@ export default function OngoingMeetingAdminScreen() {
   useEffect(() => {
     if (socket) {
       socket.on('meetingUpdated', function (data) {
-        console.log('meetingUpdated')
+        console.log('meetingUpdated');
         const newMeeting = JSON.parse(data, agendaReviver);
         setMeeting((meeting) => updateMeeting({ ...meeting, ...newMeeting }));
       });
       socket.on('participantUpdated', function (data) {
-        console.log('participantUpdated')
+        console.log('participantUpdated');
         const update = JSON.parse(data);
         setMeeting((meeting) => ({
           ...meeting,
@@ -67,7 +69,7 @@ export default function OngoingMeetingAdminScreen() {
         }));
       });
       socket.on('agendaUpdated', function (data) {
-        console.log('agendaUpdated')
+        console.log('agendaUpdated');
         pullMeeting();
       });
       socket.on('userConnected', function (msg) {
@@ -175,6 +177,8 @@ export default function OngoingMeetingAdminScreen() {
   }, [meetingStatus, hasLaunched, meeting]);
 
   const ReturnToEditPageButton = useCallback(() => {
+    if (user?.uuid !== meeting.hostId) return null;
+
     return (
       <Button variant="outline-primary" href={`/meeting/${id}`}>
         Back to Editing

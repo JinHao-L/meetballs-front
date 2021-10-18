@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Button, Row, Col, Container, Nav, Spinner } from 'react-bootstrap';
 import {
   getFormattedDateTime,
@@ -20,8 +20,10 @@ import ConfirmInviteModel from './ConfirmInviteModel';
 import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
 import RedirectionScreen, {
+  BAD_MEETING_PERMS_MSG,
   MEETING_NOT_FOUND_ERR,
 } from '../../components/RedirectionScreen';
+import { UserContext } from '../../context/UserContext';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -37,6 +39,7 @@ export default function UpcomingMeetingScreen() {
   const [validId, setValidId] = useState(true);
 
   const history = useHistory();
+  const user = useContext(UserContext);
 
   const { id } = useParams();
 
@@ -125,6 +128,9 @@ export default function UpcomingMeetingScreen() {
 
   if (!loading && !validId)
     return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
+
+  if (user?.uuid !== meeting.hostId)
+    return <RedirectionScreen message={BAD_MEETING_PERMS_MSG} />;
 
   if (meeting.type !== undefined && meeting.type !== 1) {
     return <Redirect to={'/ongoing/' + id} />;
