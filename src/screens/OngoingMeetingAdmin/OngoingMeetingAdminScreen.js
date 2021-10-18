@@ -239,9 +239,6 @@ export default function OngoingMeetingAdminScreen() {
                   Please add an agenda item to the meeting first before
                   starting.
                 </Card.Text>
-                <div className="d-grid gap-2">
-                  <ReturnToEditPageButton />
-                </div>
               </Card.Body>
             </Card>
             <div className="Buffer--20px" />
