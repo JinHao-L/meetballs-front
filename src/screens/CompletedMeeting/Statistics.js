@@ -20,6 +20,7 @@ export default function Statistics({ meeting }) {
       ['Absent', 0],
     ];
     meeting.participants.forEach((participant) => {
+      if (participant.isDuplicate) return;
       if (participant.timeJoined === null) {
         newAttendance[2][1]++;
       } else {

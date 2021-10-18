@@ -2,11 +2,11 @@ import { Card, Col, Button, Row } from 'react-bootstrap';
 import {
   markParticipantPresent,
   markParticipantAbsent,
-  deleteParticipants as deleteParticipant,
+  markParticipantDuplicate,
 } from '../../services/participants';
 import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ConfirmDupeModal from './ConfirmDupeModal';
 
 export default function ParticipantList({
@@ -15,34 +15,44 @@ export default function ParticipantList({
   position,
   shouldShowButton,
 }) {
-  const items = [];
-  const participants = meeting.participants;
-  const ended = position >= meeting.agendaItems.length;
-  for (let i = 0; i < participants.length; i++) {
-    if (participants[i].timeJoined != null) {
-      items.push(
-        <PresentItem
-          meeting={meeting}
-          position={i}
-          showButton={!ended && shouldShowButton}
-          key={'Participant' + i}
-        />,
-      );
-    } else {
-      items.push(
-        <AwaitItem
-          meeting={meeting}
-          position={i}
-          showButton={!ended && shouldShowButton}
-          key={'Participant' + i}
-        />,
-      );
-    }
-  }
-  return <Row>{items}</Row>;
+  const participants = useMemo(() => {
+    console.log(meeting.participants);
+    return meeting.participants;
+  }, [meeting]);
+  const ended = useMemo(
+    () => position >= meeting.agendaItems.length,
+    [position, meeting],
+  );
+  return (
+    <Row>
+      {participants.map((participant, i) => {
+        if (participant.timeJoined != null) {
+          return (
+            <PresentItem
+              meeting={meeting}
+              setMeeting={setMeeting}
+              position={i}
+              showButton={!ended && shouldShowButton}
+              key={'Participant' + i}
+            />
+          );
+        } else {
+          return (
+            <AwaitItem
+              meeting={meeting}
+              setMeeting={setMeeting}
+              position={i}
+              showButton={!ended && shouldShowButton}
+              key={'Participant' + i}
+            />
+          );
+        }
+      })}
+    </Row>
+  );
 }
 
-function AwaitItem({ meeting, position, showButton }) {
+function AwaitItem({ meeting, setMeeting, position, showButton }) {
   const participant = meeting.participants[position];
   const displayName =
     participant.userName && participant.userName.length > 0
@@ -65,14 +75,15 @@ function AwaitItem({ meeting, position, showButton }) {
             <div className="d-grid gap-2">
               <Button
                 variant={showButton ? 'outline-primary' : 'outline-light'}
-                onClick={() => markPresent(meeting, position)}
+                onClick={() => markPresent(meeting, setMeeting, position)}
               >
                 Mark as Present
               </Button>
               <MarkDuplicateButton
+                setMeeting={setMeeting}
                 meeting={meeting}
                 position={position}
-                showButton={showButton}
+                variant={showButton ? 'outline-primary' : 'outline-light'}
               />
             </div>
           )}
@@ -82,7 +93,7 @@ function AwaitItem({ meeting, position, showButton }) {
   );
 }
 
-function PresentItem({ meeting, position, showButton }) {
+function PresentItem({ meeting, setMeeting, position, showButton }) {
   const participant = meeting.participants[position];
   return (
     <Col className="Container__padding--vertical-small" sm={12} md={6} lg={6}>
@@ -101,14 +112,15 @@ function PresentItem({ meeting, position, showButton }) {
             <div className="d-grid gap-2">
               <Button
                 variant="outline-light"
-                onClick={() => unmarkPresent(meeting, position)}
+                onClick={() => unmarkPresent(meeting, setMeeting, position)}
               >
                 Mark as Absent
               </Button>
               <MarkDuplicateButton
+                setMeeting={setMeeting}
                 meeting={meeting}
                 position={position}
-                showButton={showButton}
+                variant={'outline-light'}
               />
             </div>
           )}
@@ -118,16 +130,13 @@ function PresentItem({ meeting, position, showButton }) {
   );
 }
 
-function MarkDuplicateButton({ meeting, position, showButton }) {
+function MarkDuplicateButton({ meeting, setMeeting, position, variant }) {
   const participant = meeting.participants[position];
   const [showModal, setShowModal] = useState(false);
-  const markDupe = () => markDuplicate(meeting, position);
+  const markDupe = () => markDuplicate(meeting, setMeeting, position);
   return (
     <>
-      <Button
-        variant={showButton ? 'outline-primary' : 'outline-light'}
-        onClick={() => setShowModal(true)}
-      >
+      <Button variant={variant} onClick={() => setShowModal(true)}>
         Mark Participant As Duplicate
       </Button>
       <ConfirmDupeModal
@@ -140,34 +149,40 @@ function MarkDuplicateButton({ meeting, position, showButton }) {
   );
 }
 
-async function markPresent(meeting, position) {
+async function markPresent(meeting, setMeeting, position) {
   try {
     await markParticipantPresent(
       meeting.id,
       meeting.participants[position].userEmail,
     );
+    meeting.participants[position].timeJoined = new Date().toISOString();
+    setMeeting(meeting);
   } catch (error) {
     toast.error(extractError(error));
   }
 }
 
-async function unmarkPresent(meeting, position) {
+async function unmarkPresent(meeting, setMeeting, position) {
   try {
     await markParticipantAbsent(
       meeting.id,
       meeting.participants[position].userEmail,
     );
+    meeting.participants[position].timeJoined = null;
+    setMeeting(meeting);
   } catch (error) {
     toast.error(extractError(error));
   }
 }
 
-async function markDuplicate(meeting, position) {
+async function markDuplicate(meeting, setMeeting, position) {
   try {
-    await deleteParticipant(
+    await markParticipantDuplicate(
       meeting.id,
       meeting.participants[position].userEmail,
     );
+    delete meeting.participants[position];
+    setMeeting(meeting);
   } catch (error) {
     toast.error(extractError(error));
   }

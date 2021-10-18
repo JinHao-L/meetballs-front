@@ -9,15 +9,15 @@ import { useState } from 'react';
 export default function AttendanceList({ participants, date }) {
   const [showPresent, setShowPresent] = useState(true);
   const [showAbsent, setShowAbsent] = useState(true);
+  const filteredParticipants = participants.filter((x) => !x.isDuplicate);
+  const numTotal = filteredParticipants.length;
 
-  const numTotal = participants.length;
-
-  const attendees = participants
+  const attendees = filteredParticipants
     .filter((person) => person.timeJoined)
     .map((person, idx) => <ParticipantItem person={person} key={idx} />);
   const numPresent = attendees.length;
 
-  const absentees = participants
+  const absentees = filteredParticipants
     .filter((person) => !person.timeJoined)
     .map((person, idx) => <ParticipantItem person={person} key={idx} />);
   const numAbsent = absentees.length;
@@ -28,7 +28,7 @@ export default function AttendanceList({ participants, date }) {
   function DownloadButton() {
     return (
       <a
-        href={exportToCsv(participants)}
+        href={exportToCsv(filteredParticipants)}
         style={{ textDecoration: 'none' }}
         className="d-grid gap-2"
         download={fileName}

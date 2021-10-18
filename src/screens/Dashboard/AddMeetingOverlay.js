@@ -351,6 +351,6 @@ async function fillItems(newMeeting, cloneMeeting) {
     newMeeting.agendaItems = result.agendaItems;
   }
   if (result.participants.length > 0) {
-    newMeeting.participants = result.participants;
+    newMeeting.participants = result.participants.filter(x => !x.isDuplicate);
   }
 }

@@ -85,10 +85,12 @@ export default function OngoingMeetingAdminScreen() {
   }
 
   const updateMeeting = (meetingObj) => {
-    meetingObj.participants.sort((p1, p2) => {
-      return (' ' + p1.userName).localeCompare(p2.userName);
-    });
-    meetingObj.agendaItems.sort((p1, p2) => {
+    meetingObj.participants = meetingObj.participants
+      .filter((x) => !x.isDuplicate)
+      .sort((p1, p2) => {
+        return (' ' + p1.userName).localeCompare(p2.userName);
+      });
+    meetingObj.agendaItems = meetingObj.agendaItems.sort((p1, p2) => {
       return p1.position - p2.position;
     });
     setShowError(meetingObj.agendaItems.length === 0);
@@ -176,7 +178,7 @@ export default function OngoingMeetingAdminScreen() {
   }, [meetingStatus, hasLaunched, meeting]);
 
   const ReturnToEditPageButton = useCallback(() => {
-    console.log(`User ID is ${user?.uuid}, host is ${meeting.hostId}`);
+    // console.log(`User ID is ${user?.uuid}, host is ${meeting.hostId}`);
     if (user?.uuid !== meeting.hostId) return null;
 
     return (
@@ -184,7 +186,7 @@ export default function OngoingMeetingAdminScreen() {
         Back to Editing
       </Button>
     );
-  }, [id]);
+  }, [id, meeting]);
 
   if (!loading && !validId)
     return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
@@ -412,14 +414,13 @@ function updateParticipants(participants, update) {
       return ppl;
     }
   });
-
   if (!hasUpdate) {
     return [update, ...participants]
+      .filter((x) => !x.isDuplicate)
       .sort((p1, p2) => {
         return (' ' + p1.userName).localeCompare(p2.userName);
-      })
-      .filter((p) => !p.isDuplicate);
+      });
   } else {
-    return participants;
+    return participants.filter((x) => !x.isDuplicate);
   }
 }
