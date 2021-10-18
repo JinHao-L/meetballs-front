@@ -53,10 +53,6 @@ export default function App() {
 
   return (
     <Router>
-      <Helmet>
-        <title>MeetBalls</title>
-        <meta name="description" content="Get the ball rolling" />
-      </Helmet>
       <ScrollToTop />
       <AppNavbar />
       <CustomBootstrapStyle />
