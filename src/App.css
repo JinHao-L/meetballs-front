@@ -141,10 +141,14 @@
 
 .Text__toggle {
   color: #858585;
-  margin-top: 20px;
   font-size: 15px;
+  margin: 0px;
   text-decoration: none;
   cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  display: flex;
 }
 
 /* Toggles */

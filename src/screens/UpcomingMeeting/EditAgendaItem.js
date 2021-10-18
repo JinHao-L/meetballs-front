@@ -217,16 +217,16 @@ async function updateDatabase(
 }
 
 const durationMinutes = [
-  { mils: 300000, display: '5m' },
-  { mils: 600000, display: '10m' },
-  { mils: 900000, display: '15m' },
-  { mils: 1200000, display: '20m' },
-  { mils: 1500000, display: '25m' },
-  { mils: 1800000, display: '30m' },
-  { mils: 2100000, display: '35m' },
-  { mils: 2400000, display: '40m' },
-  { mils: 2700000, display: '45m' },
-  { mils: 3000000, display: '50m' },
-  { mils: 3300000, display: '55m' },
-  { mils: 3600000, display: '1h 0m' },
+  { mils: 300000, display: '5min' },
+  { mils: 600000, display: '10min' },
+  { mils: 900000, display: '15min' },
+  { mils: 1200000, display: '20min' },
+  { mils: 1500000, display: '25min' },
+  { mils: 1800000, display: '30min' },
+  { mils: 2100000, display: '35min' },
+  { mils: 2400000, display: '40min' },
+  { mils: 2700000, display: '45min' },
+  { mils: 3000000, display: '50min' },
+  { mils: 3300000, display: '55min' },
+  { mils: 3600000, display: '1h' },
 ];
