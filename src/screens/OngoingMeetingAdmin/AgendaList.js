@@ -51,6 +51,14 @@ function NotStartedItem({ item }) {
 function CurrentItem({ item, time }) {
   const currentDuration = time - item.startTime;
   const timeRemaining = item.actualDuration - currentDuration;
+  const exceeded = currentDuration - item.expectedDuration;
+  var timeRemainingText =
+    'Time Remaining: ' +
+    getFormattedDuration(timeRemaining - (timeRemaining % 1000));
+  if (exceeded > 0) {
+    timeRemainingText +=
+      ' ( Exceed ' + getFormattedDuration(exceeded - (exceeded % 60000)) + ')';
+  }
   return (
     <Col className="Container__padding--vertical-small">
       <Card bg={timeRemaining > 0 ? 'primary' : 'danger'} text="light">
@@ -61,10 +69,7 @@ function CurrentItem({ item, time }) {
           <MaterialsSection item={item} variant={'secondary'} />
         </Card.Body>
         <Card.Footer>
-          <Card.Text>
-            Time Remaining:{' '}
-            {getFormattedDuration(timeRemaining - (timeRemaining % 1000))}
-          </Card.Text>
+          <Card.Text>{timeRemainingText}</Card.Text>
         </Card.Footer>
       </Card>
     </Col>

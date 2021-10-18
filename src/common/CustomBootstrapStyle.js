@@ -128,7 +128,7 @@ export default function CustomBootstrapStyle() {
     }
 
     .bg-success {
-      background-color: #509950!important;
+      background-color: #4CA982!important;
       color: white;
     }
 
