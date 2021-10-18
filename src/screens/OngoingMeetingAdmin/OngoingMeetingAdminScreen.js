@@ -24,6 +24,7 @@ import RedirectionScreen, {
 import useSound from 'use-sound';
 import Bell from '../../assets/Bell.mp3';
 import BackgroundPattern from '../../assets/background_pattern2.jpg';
+import FeedbackOverlay from './FeedbackOverlay';
 
 export default function OngoingMeetingAdminScreen() {
   const [position, setPosition] = useState(-1);
@@ -33,6 +34,7 @@ export default function OngoingMeetingAdminScreen() {
   const [showError, setShowError] = useState(false);
   const [hasLaunched, setHasLaunched] = useState(false);
   const [meetingStatus, setMeetingStatus] = useState(1);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [validId, setIsValidId] = useState(false);
@@ -124,12 +126,17 @@ export default function OngoingMeetingAdminScreen() {
   }
 
   async function nextItem(time, agenda, id) {
-    const isLastItem = position + 1 < agenda.length;
-    const apiCall = isLastItem ? callNextMeeting : callEndMeeting;
+    const isLastItem = position + 1 >= agenda.length;
+    const apiCall = isLastItem ? callEndMeeting : callNextMeeting;
     try {
       await apiCall(id);
       agenda[position].actualDuration = time - agenda[position].startTime;
-      if (isLastItem) setMeetingStatus(3);
+      if (isLastItem) {
+        console.log('position: ' + position);
+        console.log(agenda[position]);
+        setMeetingStatus(3);
+        setShowFeedback(true);
+      }
       const newPosition = position + 1;
       setPosition(newPosition);
       if (newPosition < agenda.length) {
@@ -301,6 +308,11 @@ export default function OngoingMeetingAdminScreen() {
         </Row>
       </Container>
       <div className="Buffer--50px" />
+      <FeedbackOverlay
+        setShowModal={setShowFeedback}
+        showModal={showFeedback}
+        meetingId={meeting.id}
+      />
     </div>
   );
 }
