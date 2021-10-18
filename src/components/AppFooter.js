@@ -71,11 +71,9 @@ export default function AppFooter() {
               fontSize: '14px',
             }}
           >
-            <footer>
-              <small>
-                &copy; Copyright {new Date().getFullYear()}, MeetBalls
-              </small>
-            </footer>
+            <p style={{ color: '#8F6B58' }}>
+              &copy; Copyright {new Date().getFullYear()}, MeetBalls
+            </p>
           </Col>
         </Row>
       </Container>

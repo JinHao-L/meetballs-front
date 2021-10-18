@@ -14,6 +14,7 @@ import Statistics from './Statistics';
 import RedirectionScreen, {
   MEETING_NOT_FOUND_ERR,
 } from '../../components/RedirectionScreen';
+import BackgroundPattern from '../../assets/background_pattern2.jpg';
 
 export default function CompletedMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -40,12 +41,14 @@ export default function CompletedMeetingScreen() {
     return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
 
   const type = meeting.type;
-  if (type === 0) {
-    console.log('Meeting has not started yet');
-    return <Redirect to={`/meeting/${id}`} />;
-  } else if (type === 1 || type === 2) {
-    console.log('Meeting is ongoing');
-    return <Redirect to={`/ongoing/${id}`} />;
+  if (!loading) {
+    if (type === 0) {
+      console.log('Meeting has not started yet');
+      return <Redirect to={`/meeting/${id}`} />;
+    } else if (type === 1 || type === 2) {
+      console.log('Meeting is ongoing');
+      return <Redirect to={`/ongoing/${id}`} />;
+    }
   }
 
   function Content() {
@@ -86,14 +89,28 @@ export default function CompletedMeetingScreen() {
     meeting.duration,
   );
   return (
-    <>
-      <Container className="Container__padding--vertical">
+    <div
+      style={{
+        minHeight: 'calc(100vh - 56px)',
+        backgroundColor: 'gray',
+        backgroundImage: `url(${BackgroundPattern})`,
+      }}
+    >
+      <Container
+        className="Container__padding--vertical"
+        style={{
+          backgroundColor: 'white',
+          minHeight: 'calc(100vh - 56px)',
+          boxShadow: '0 8px 8px 0 rgba(0, 0, 0, 0.2)',
+        }}
+      >
         <Row>
+          <Col lg={1} md={12} sm={12} />
           <Col
             lg={4}
             md={12}
             sm={12}
-            className="Container__padding--horizontal"
+            style={{ paddingLeft: 30, paddingRight: 30 }}
           >
             <p className="Text__header">{meeting.name}</p>
             <p className="Text__subheader">
@@ -127,12 +144,12 @@ export default function CompletedMeetingScreen() {
             </p>
             <div className="Buffer--20px" />
           </Col>
-          <Col lg={1} md={12} sm={12} />
           <Col lg={6} md={12} sm={12}>
             <Nav
               variant="tabs"
               defaultActiveKey="statistics"
               onSelect={(selectedKey) => setCurrentTab(selectedKey)}
+              style={{ marginLeft: 20, marginRight: 20 }}
             >
               <Nav.Item>
                 <Nav.Link eventKey="statistics">Statistics</Nav.Link>
@@ -152,6 +169,6 @@ export default function CompletedMeetingScreen() {
           </Col>
         </Row>
       </Container>
-    </>
+    </div>
   );
 }

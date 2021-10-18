@@ -22,6 +22,7 @@ import { extractError } from '../../utils/extractError';
 import RedirectionScreen, {
   MEETING_NOT_FOUND_ERR,
 } from '../../components/RedirectionScreen';
+import BackgroundPattern from '../../assets/background_pattern2.jpg';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -131,14 +132,28 @@ export default function UpcomingMeetingScreen() {
   }
 
   return (
-    <>
-      <Container className="Container__padding--vertical">
+    <div
+      style={{
+        minHeight: 'calc(100vh - 56px)',
+        backgroundColor: 'gray',
+        backgroundImage: `url(${BackgroundPattern})`,
+      }}
+    >
+      <Container
+        className="Container__padding--vertical"
+        style={{
+          backgroundColor: 'white',
+          minHeight: 'calc(100vh - 56px)',
+          boxShadow: '0 8px 8px 0 rgba(0, 0, 0, 0.2)',
+        }}
+      >
         <Row>
+          <Col lg={1} md={12} sm={12} />
           <Col
             lg={4}
             md={12}
             sm={12}
-            className="Container__padding--horizontal"
+            style={{ paddingLeft: 30, paddingRight: 30 }}
           >
             <p className="Text__header">{meeting.name}</p>
             <p className="Text__subheader">
@@ -191,12 +206,12 @@ export default function UpcomingMeetingScreen() {
             </p>
             <div className="Buffer--20px" />
           </Col>
-          <Col lg={1} md={12} sm={12} />
           <Col lg={6} md={12} sm={12}>
             <Nav
               variant="tabs"
               defaultActiveKey="participants"
               onSelect={(selectedKey) => setCurrentTab(selectedKey)}
+              style={{ marginLeft: 20, marginRight: 20 }}
             >
               <Nav.Item>
                 <Nav.Link eventKey="participants">Participants</Nav.Link>
@@ -227,7 +242,7 @@ export default function UpcomingMeetingScreen() {
         sendInvitation={(participant) => sendInvitationToAll(participant)}
       />
       <AddToggle />
-    </>
+    </div>
   );
 }
 

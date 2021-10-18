@@ -32,7 +32,11 @@ export default function SupportPage() {
       </div>
       <Row
         className="Container__padding--vertical Container__padding--horizontal"
-        style={{ marginLeft: 0, marginRight: 0 }}
+        style={{
+          marginLeft: 0,
+          marginRight: 0,
+          minHeight: 'calc(100vh - 56px - 121px - 300px)',
+        }}
       >
         <Col
           sm={12}
