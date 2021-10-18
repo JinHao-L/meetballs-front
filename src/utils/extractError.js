@@ -13,6 +13,6 @@ export const extractError = (error) => {
       return error.message;
     }
   } else {
-    return 'Network error';
+    console.log(error)
   }
 };
