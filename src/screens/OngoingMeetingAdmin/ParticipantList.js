@@ -2,7 +2,12 @@ import { Card, Col, Button, Row } from 'react-bootstrap';
 import {
   markParticipantPresent,
   markParticipantAbsent,
+  deleteParticipants as deleteParticipant,
 } from '../../services/participants';
+import { toast } from "react-toastify";
+import { extractError } from '../../utils/extractError';
+import { useState } from 'react';
+import ConfirmDupeModal from './ConfirmDupeModal';
 
 export default function ParticipantList({
   meeting,
@@ -18,7 +23,6 @@ export default function ParticipantList({
       items.push(
         <PresentItem
           meeting={meeting}
-          setMeeting={setMeeting}
           position={i}
           showButton={!ended && shouldShowButton}
           key={'Participant' + i}
@@ -28,7 +32,6 @@ export default function ParticipantList({
       items.push(
         <AwaitItem
           meeting={meeting}
-          setMeeting={setMeeting}
           position={i}
           showButton={!ended && shouldShowButton}
           key={'Participant' + i}
@@ -39,7 +42,7 @@ export default function ParticipantList({
   return <Row>{items}</Row>;
 }
 
-function AwaitItem({ meeting, setMeeting, position, showButton }) {
+function AwaitItem({ meeting, position, showButton }) {
   const participant = meeting.participants[position];
   const displayName =
     participant.userName && participant.userName.length > 0
@@ -62,10 +65,15 @@ function AwaitItem({ meeting, setMeeting, position, showButton }) {
             <div className="d-grid gap-2">
               <Button
                 variant={showButton ? 'outline-primary' : 'outline-light'}
-                onClick={() => markPresent(meeting, setMeeting, position)}
+                onClick={() => markPresent(meeting, position)}
               >
                 Mark as Present
               </Button>
+              <MarkDuplicateButton
+                meeting={meeting}
+                position={position}
+                showButton={showButton}
+              />
             </div>
           )}
         </Card.Body>
@@ -74,7 +82,7 @@ function AwaitItem({ meeting, setMeeting, position, showButton }) {
   );
 }
 
-function PresentItem({ meeting, setMeeting, position, showButton }) {
+function PresentItem({ meeting, position, showButton }) {
   const participant = meeting.participants[position];
   return (
     <Col className="Container__padding--vertical-small" sm={12} md={6} lg={6}>
@@ -93,10 +101,15 @@ function PresentItem({ meeting, setMeeting, position, showButton }) {
             <div className="d-grid gap-2">
               <Button
                 variant="outline-light"
-                onClick={() => unmarkPresent(meeting, setMeeting, position)}
+                onClick={() => unmarkPresent(meeting, position)}
               >
                 Mark as Absent
               </Button>
+              <MarkDuplicateButton
+                meeting={meeting}
+                position={position}
+                showButton={showButton}
+              />
             </div>
           )}
         </Card.Body>
@@ -105,34 +118,57 @@ function PresentItem({ meeting, setMeeting, position, showButton }) {
   );
 }
 
-async function markPresent(meeting, setMeeting, position) {
+function MarkDuplicateButton({ meeting, position, showButton }) {
+  const participant = meeting.participants[position];
+  const [showModal, setShowModal] = useState(false);
+  const markDupe = () => markDuplicate(meeting, position);
+  return (
+    <>
+      <Button
+        variant={showButton ? 'outline-primary' : 'outline-light'}
+        onClick={() => setShowModal(true)}
+      >
+        Mark Participant As Duplicate
+      </Button>
+      <ConfirmDupeModal
+        participant={participant}
+        showModal={showModal}
+        setShowModal={setShowModal}
+        onMarkDuplicate={markDupe}
+      />
+    </>
+  );
+}
+
+async function markPresent(meeting, position) {
   try {
     await markParticipantPresent(
       meeting.id,
       meeting.participants[position].userEmail,
     );
-    const newMeeting = Object.assign({}, meeting);
-    newMeeting.participants[position].timeJoined = new Date().toISOString();
-    setMeeting(meeting);
-    updateStatus(meeting, position, true);
   } catch (error) {
-    console.log(error);
+    toast.error(extractError(error));
   }
 }
 
-async function unmarkPresent(meeting, setMeeting, position) {
+async function unmarkPresent(meeting, position) {
   try {
     await markParticipantAbsent(
       meeting.id,
       meeting.participants[position].userEmail,
     );
-    const newMeeting = Object.assign({}, meeting);
-    newMeeting.participants[position].timeJoined = null;
-    setMeeting(meeting);
-    updateStatus(meeting, position, false);
   } catch (error) {
-    console.log(error);
+    toast.error(extractError(error));
   }
 }
 
-function updateStatus(meeting, position, isPresent) {}
+async function markDuplicate(meeting, position) {
+  try {
+    await deleteParticipant(
+      meeting.id,
+      meeting.participants[position].userEmail,
+    );
+  } catch (error) {
+    toast.error(extractError(error));
+  }
+}

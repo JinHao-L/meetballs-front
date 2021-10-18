@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import { getDateInfo, openLinkInNewTab } from '../../common/CommonFunctions';
 import { useHistory } from 'react-router';
-import ConfirmDeleteModel from './ConfirmDeleteModel';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
 import server from '../../services/server';
 import PropTypes from 'prop-types';
 import { Trash, CameraVideo, Pen, Front } from 'react-bootstrap-icons';
@@ -113,7 +113,7 @@ export default function UpcomingMeetingItem({
           </Card.Body>
         )}
       </Card>
-      <ConfirmDeleteModel
+      <ConfirmDeleteModal
         showModal={showConfirmDelete}
         setShowModal={setShowConfirmDelete}
         meeting={meeting}
