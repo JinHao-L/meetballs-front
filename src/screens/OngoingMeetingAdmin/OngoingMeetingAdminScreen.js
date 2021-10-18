@@ -1,5 +1,5 @@
 import { Container, Row, Col, Button, Nav, Card } from 'react-bootstrap';
-import { useHistory, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { useState, useEffect, useContext, useMemo } from 'react';
 import {
   getFormattedDateTime,
@@ -18,6 +18,9 @@ import {
 } from '../../services/meeting';
 import { useSocket } from '../../hooks/useSocket';
 import { UserContext } from '../../context/UserContext';
+import RedirectionScreen, {
+  MEETING_NOT_FOUND_ERR,
+} from '../../components/RedirectionScreen';
 import useSound from 'use-sound';
 import Bell from '../../assets/Bell.mp3';
 
@@ -26,17 +29,19 @@ export default function OngoingMeetingAdminScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
   const [currentTab, setCurrentTab] = useState('agenda');
   const [time, setTime] = useState(new Date().getTime());
+  const [showError, setShowError] = useState(false);
+  const [hasLaunched, setHasLaunched] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+  const [validId, setIsValidId] = useState(false);
+
   const { socket } = useSocket(meeting.id);
   const user = useContext(UserContext);
   const { id } = useParams();
   const isHost = useMemo(() => {
-    console.log(user);
     return meeting?.hostId === user?.uuid;
   }, [meeting.hostId, user]);
-  const history = useHistory();
-  const [showError, setShowError] = useState(false);
-
-  const [play, { stop }] = useSound(Bell);
+  const [play] = useSound(Bell);
 
   useEffect(() => {
     console.log(meeting);
@@ -52,12 +57,10 @@ export default function OngoingMeetingAdminScreen() {
   useEffect(() => {
     if (socket) {
       socket.on('meetingUpdated', function (data) {
-        console.log('meetingUpdated', data);
         const newMeeting = JSON.parse(data, agendaReviver);
         setMeeting((meeting) => updateMeeting({ ...meeting, ...newMeeting }));
       });
       socket.on('participantUpdated', function (data) {
-        console.log('participantUpdated', data);
         const update = JSON.parse(data);
         setMeeting((meeting) => ({
           ...meeting,
@@ -65,7 +68,6 @@ export default function OngoingMeetingAdminScreen() {
         }));
       });
       socket.on('agendaUpdated', function (data) {
-        console.log('agendaUpdated', data);
         pullMeeting();
       });
       socket.on('userConnected', function (msg) {
@@ -77,6 +79,7 @@ export default function OngoingMeetingAdminScreen() {
   }, [socket]);
 
   function startZoom() {
+    if (!hasLaunched) setHasLaunched(true);
     openLinkInNewTab(meeting.joinUrl);
   }
 
@@ -88,7 +91,6 @@ export default function OngoingMeetingAdminScreen() {
       return p1.position - p2.position;
     });
     setShowError(meetingObj.agendaItems.length === 0);
-    console.log(meetingObj);
     syncMeeting(meetingObj, time);
     return meetingObj;
   };
@@ -97,8 +99,11 @@ export default function OngoingMeetingAdminScreen() {
     try {
       const res = await getMeeting(id);
       setMeeting(() => updateMeeting(res.data));
+      setIsValidId(true);
     } catch (err) {
-      history.replace('/');
+      setIsValidId(false);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -154,6 +159,29 @@ export default function OngoingMeetingAdminScreen() {
     }
   }
 
+  function LaunchZoomButton() {
+    return (
+      <Button
+        variant="outline-primary"
+        onClick={startZoom}
+        enabled={meeting.type === 1 || meeting.type === 2}
+      >
+        {hasLaunched ? 'Relaunch' : 'Launch'} Zoom
+      </Button>
+    );
+  }
+
+  function ReturnToEditPageButton() {
+    return (
+      <Button variant="outline-primary" href={`/meeting/${id}`}>
+        Back to Editing
+      </Button>
+    );
+  }
+
+  if (!loading && !validId)
+    return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
+
   updateDelay(meeting.agendaItems, time, position, play);
 
   return (
@@ -171,13 +199,8 @@ export default function OngoingMeetingAdminScreen() {
               {getFormattedDateTime(meeting.startedAt)}
             </p>
             <div className="d-grid gap-2">
-              <Button
-                variant="outline-primary"
-                onClick={startZoom}
-                enabled={meeting.type === 1 || meeting.type === 2}
-              >
-                Launch Zoom
-              </Button>
+              <LaunchZoomButton />
+              {meeting.type === 1 ? <ReturnToEditPageButton /> : null}
             </div>
             <div className="Buffer--20px" />
             <div className="Line--horizontal" />
@@ -216,16 +239,6 @@ export default function OngoingMeetingAdminScreen() {
                   Please add an agenda item to the meeting first before
                   starting.
                 </Card.Text>
-                <div className="d-grid gap-2">
-                  <Button
-                    variant="secondary  "
-                    onClick={() => {
-                      history.push('/meeting/' + id);
-                    }}
-                  >
-                    Back to Editing
-                  </Button>
-                </div>
               </Card.Body>
             </Card>
             <div className="Buffer--20px" />

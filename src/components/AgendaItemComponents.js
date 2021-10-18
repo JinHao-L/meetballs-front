@@ -1,18 +1,34 @@
 import { Card, Button } from 'react-bootstrap';
-import { openLinkInNewTab } from '../common/CommonFunctions';
+import { openFile } from '../services/files';
+import { toast } from 'react-toastify';
 
 export function SpeakerSection({ item }) {
-  const speaker = item.speakerName;
+  const speaker = item?.speaker?.userName;
   if (!speaker) return null;
-  return <Card.Subtitle>Presented by {speaker}</Card.Subtitle>;
+  return (
+    <Card.Subtitle style={{ marginBottom: '0.5rem' }}>
+      Presented by {speaker}
+    </Card.Subtitle>
+  );
 }
 
-export function MaterialsSection({ item }) {
+export function MaterialsSection({ item, variant = 'primary' }) {
   const materials = item.speakerMaterials;
   if (!materials) return null;
   return (
     <div className="d-grid gap-2">
-      <Button onClick={() => openLinkInNewTab(materials)}>
+      <Button
+        variant={variant}
+        onClick={() =>
+          openFile(
+            item.speakerMaterials,
+            item.meetingId,
+            item.speaker.id,
+          ).catch((_err) => {
+            toast.error('File not found');
+          })
+        }
+      >
         View Materials
       </Button>
     </div>

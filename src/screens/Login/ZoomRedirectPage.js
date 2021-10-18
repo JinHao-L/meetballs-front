@@ -1,12 +1,12 @@
 import { useEffect, useContext } from 'react';
 import { useHistory, useLocation } from 'react-router';
-import RedirectionScreen from '../../components/RedirectionScreen';
+import RedirectionScreen, {
+  WAIT_MSG,
+} from '../../components/RedirectionScreen';
 import { UserContext } from '../../context/UserContext';
 import { zoomLogin } from '../../services/auth';
 
 const CODE_PARAM_KEY = 'code';
-
-const MESSAGE = 'Please hold on while we log you in.';
 
 export default function ZoomRedirectPage() {
   const { search } = useLocation();
@@ -36,5 +36,5 @@ export default function ZoomRedirectPage() {
     }
   }, [user]);
 
-  return <RedirectionScreen message={MESSAGE} />;
+  return <RedirectionScreen message={WAIT_MSG} />;
 }

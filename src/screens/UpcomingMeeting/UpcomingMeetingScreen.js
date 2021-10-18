@@ -16,9 +16,12 @@ import EditMeetingOverlay from './EditMeetingOverlay';
 import { useHistory, Redirect, useParams } from 'react-router';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
-import ConfirmInviteModel from '../OngoingMeetingAdmin/ConfirmInviteModel';
+import ConfirmInviteModel from './ConfirmInviteModel';
 import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
+import RedirectionScreen, {
+  MEETING_NOT_FOUND_ERR,
+} from '../../components/RedirectionScreen';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -29,12 +32,19 @@ export default function UpcomingMeetingScreen() {
   const [inviteList, setInviteList] = useState([]);
   const [inviteLoading, setInviteLoading] = useState(false);
   const [isReordering, setReordering] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [validId, setValidId] = useState(true);
+
   const history = useHistory();
 
   const { id } = useParams();
 
   useEffect(() => {
-    pullMeeting();
+    return pullMeeting()
+      .then(() => setValidId(true))
+      .catch((_) => setValidId(false))
+      .finally(() => setLoading(false));
   }, []);
 
   async function pullMeeting() {
@@ -112,6 +122,9 @@ export default function UpcomingMeetingScreen() {
       </div>
     );
   }
+
+  if (!loading && !validId)
+    return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
 
   if (meeting.type !== undefined && meeting.type !== 1) {
     return <Redirect to={'/ongoing/' + id} />;

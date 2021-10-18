@@ -19,11 +19,13 @@ const UserProvider = ({ children }) => {
         setLoading(false);
         return;
       }
-      try {
-        const user = await getUser();
-        setUser(user.data);
-      } catch (err) {
-        console.log('Error getting user', err);
+      if (!user) {
+        try {
+          const user = await getUser();
+          setUser(user.data);
+        } catch (err) {
+          console.log('Error getting user', err);
+        }
       }
       setLoading(false);
     };

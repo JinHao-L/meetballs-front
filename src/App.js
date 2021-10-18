@@ -21,15 +21,25 @@ import ZoomRedirectPage from './screens/Login/ZoomRedirectPage';
 import TermsNConditionScreen from './screens/LandingPage/TermsNConditionScreen';
 import MeetingRedirectScreen from './screens/OngoingMeetingAdmin/MeetingRedirectScreen';
 import SupportPage from './screens/LandingPage/SupportPage';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import DocumentationScreen from './screens/LandingPage/DocumentationScreen';
 import ScrollToTop from './ScrollToTop';
+import { Helmet } from 'react-helmet';
+import server from './services/server';
+import { extractError } from './utils/extractError';
 
 export default function App() {
   const user = useContext(UserContext);
 
   useEffect(() => {
     console.log(`User is logged in ? ${user ? 'yes' : 'no'}`);
+  }, []);
+
+  useEffect(() => {
+    server.get().catch((err) => {
+      console.log(extractError(err));
+      toast.error('Cannot connect to server');
+    });
   }, []);
 
   /**
@@ -43,6 +53,10 @@ export default function App() {
 
   return (
     <Router>
+      <Helmet>
+        <title>MeetBalls</title>
+        <meta name="description" content="Get the ball rolling" />
+      </Helmet>
       <ScrollToTop />
       <AppNavbar />
       <CustomBootstrapStyle />

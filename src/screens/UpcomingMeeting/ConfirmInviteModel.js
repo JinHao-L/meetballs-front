@@ -58,6 +58,7 @@ export default function ConfirmInviteModel({
             setShowModal(false);
             sendInvitation(inviteList);
           }}
+          disabled={inviteList.length === 0}
         >
           Confirm
         </Button>

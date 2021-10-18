@@ -15,6 +15,8 @@ import {
 import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
+import { logEvent } from '@firebase/analytics';
+import { googleAnalytics } from '../../services/firebase';
 
 export default function AddMeetingOverlay({
   show,
@@ -27,13 +29,14 @@ export default function AddMeetingOverlay({
   const [showZoomList, setShowZoomList] = useState(false);
   const [zoomMeetingList, setZoomMeetingList] = useState([]);
   const [isZoomMeeting, setIsZoomMeeting] = useState(false);
+  const [searched, setSearched] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
-    if (show) {
-      getZoomMeetingList();
+    if (showZoomList && !searched) {
+      return getZoomMeetingList();
     }
-  }, [show]);
+  }, [showZoomList]);
 
   async function getZoomMeetingList() {
     try {
@@ -52,6 +55,7 @@ export default function AddMeetingOverlay({
       toast.error(extractError(err));
     } finally {
       setLoading(false);
+      setSearched(true);
     }
   }
 
@@ -63,7 +67,6 @@ export default function AddMeetingOverlay({
     meetingPassword,
     link,
   }) {
-    console.log(server.defaults.headers.common['Authorization']);
     const newMeeting = {
       name: name,
       description: desc,
@@ -85,6 +88,7 @@ export default function AddMeetingOverlay({
         console.log('New meeting created with ID = ' + id);
         setShow(false);
         history.push('/meeting/' + id);
+        logEvent(googleAnalytics, 'created_meeting');
       })
       .catch(() => {
         toast.error('Failed to create.');
@@ -240,6 +244,7 @@ export default function AddMeetingOverlay({
           show={show}
           onHide={() => {
             setShow(false);
+            setSearched(false);
             setShowZoomList(false);
           }}
         >

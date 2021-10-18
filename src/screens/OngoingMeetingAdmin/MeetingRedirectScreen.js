@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { toast } from 'react-toastify';
-import RedirectionScreen from '../../components/RedirectionScreen';
+import RedirectionScreen, {
+  LOADING_MSG,
+  ERROR_MSG,
+} from '../../components/RedirectionScreen';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import { extractError } from '../../utils/extractError';
 
 const TOKEN_KEY = 'token';
-
-const LOADING_MSG = 'Please hold on while we verify your link.';
-const ERROR_MSG =
-  'Error! Your link is invalid! Please contact your meeting host for a new link.';
 
 export default function RedirectScreen() {
   const { search } = useLocation();

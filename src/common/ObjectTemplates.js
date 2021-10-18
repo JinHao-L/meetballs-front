@@ -30,7 +30,7 @@ export const blankAgenda = {
   position: -1,
   name: '',
   description: '',
-  speakerName: '',
+  speaker: null,
   speakerMaterials: '',
   startTime: null,
   actualDuration: null,

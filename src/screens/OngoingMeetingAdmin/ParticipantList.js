@@ -41,6 +41,10 @@ export default function ParticipantList({
 
 function AwaitItem({ meeting, setMeeting, position, showButton }) {
   const participant = meeting.participants[position];
+  const displayName =
+    participant.userName && participant.userName.length > 0
+      ? participant.userName
+      : 'Guest';
   return (
     <Col className="Container__padding--vertical-small" sm={12} md={6} lg={6}>
       <Card
@@ -49,14 +53,12 @@ function AwaitItem({ meeting, setMeeting, position, showButton }) {
       >
         <Card.Body>
           <Card.Title className="Text__elipsized--1-line">
-            {participant.userName != null && participant.userName.length > 0
-              ? participant.userName
-              : 'Guest'}
+            {displayName}
           </Card.Title>
           <Card.Text className="Text__elipsized--1-line">
             {participant.userEmail}
           </Card.Text>
-          {showButton && (
+          {showButton && participant.role !== 2 && (
             <div className="d-grid gap-2">
               <Button
                 variant={showButton ? 'outline-primary' : 'outline-light'}
@@ -83,10 +85,11 @@ function PresentItem({ meeting, setMeeting, position, showButton }) {
               ? participant.userName
               : 'Guest'}
           </Card.Title>
+
           <Card.Text className="Text__elipsized--1-line">
             {participant.userEmail}
           </Card.Text>
-          {showButton && (
+          {showButton && participant.role !== 2 && (
             <div className="d-grid gap-2">
               <Button
                 variant="outline-light"
