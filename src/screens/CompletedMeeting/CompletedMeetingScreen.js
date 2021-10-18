@@ -30,7 +30,8 @@ export default function CompletedMeetingScreen() {
     return server
       .get(`/meeting/${id}`)
       .then((res) => {
-        setMeeting(res.data);
+        const participants = res.data?.participants?.filter(x => !x.isDuplicate);
+        setMeeting({...res.data, participants});
         setValidId(true);
       })
       .catch((_) => setValidId(false))
