@@ -23,6 +23,7 @@ export default function RedirectionScreen({ message }) {
   function image() {
     switch (message) {
       case ERROR_MSG:
+      case BAD_MEETING_PERMS_MSG:
       case MEETING_NOT_FOUND_ERR:
         return require('../assets/error.jpg').default;
       default:
