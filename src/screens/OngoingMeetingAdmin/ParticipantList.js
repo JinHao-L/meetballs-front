@@ -105,12 +105,12 @@ function PresentItem({ meeting, setMeeting, position, showButton }) {
   return (
     <Col
       className="Container__padding--vertical-small"
-      style={{ flexGrow: 1 }}
+      style={{ padding: 'auto' }}
       sm={12}
       md={6}
       lg={6}
     >
-      <Card bg="success" text="light">
+      <Card bg="success" text="light" style={{ height: '100%' }}>
         <Card.Body>
           <Card.Title className="Text__elipsized--1-line">
             {participant.userName != null && participant.userName.length > 0
