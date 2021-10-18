@@ -22,7 +22,7 @@ export const AppNavbar = () => {
     };
   } else {
     for (let i = 0; i < mapping.length; i++) {
-      if (location.pathname.startsWith(mapping[i].route)) {
+      if (location.pathname?.startsWith(mapping[i].route)) {
         option = mapping[i];
         console.log(mapping[i]);
         break;

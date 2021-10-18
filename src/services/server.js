@@ -15,7 +15,7 @@ server.interceptors.response.use(
     const refreshToken = localStorage.getItem(refreshTokenKey);
     if (
       originalRequest.url !== '' &&
-      !originalRequest.url.startsWith('auth/') &&
+      !originalRequest.url?.startsWith('auth/') &&
       err?.response?.status === 401 &&
       !originalRequest._retry &&
       refreshToken
