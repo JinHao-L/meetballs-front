@@ -25,6 +25,9 @@ import RedirectionScreen, {
 } from '../../components/RedirectionScreen';
 import { UserContext } from '../../context/UserContext';
 
+const INVITE_SUCCESS = 'Invitations sent!';
+const INVITE_SOME_FAIL = 'Not all invitations sent! Check your invitation list.';
+
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
   const [restrictDescription, setRestrictDescription] = useState(true);
@@ -78,14 +81,19 @@ export default function UpcomingMeetingScreen() {
   async function sendInvitationToAll(participants) {
     try {
       setInviteLoading(true);
-      await server.post(
+      const inviteResponse = await server.post(
         `/participant/send-multiple-invites`,
         { participants },
         defaultHeaders,
       );
+      const inviteData = inviteResponse.data.data;
+      const successes = inviteData.filter(status => status.success);
+
       const res = await server.get(`/participant/${meeting.id}`);
       setMeeting((prev) => ({ ...prev, participants: res.data }));
-      toast.success('Invitations sent!');
+
+      if (successes === participants.length) toast.success(INVITE_SUCCESS);
+      else toast.warn(INVITE_SOME_FAIL);
     } catch (err) {
       toast.error(extractError(err));
     } finally {
