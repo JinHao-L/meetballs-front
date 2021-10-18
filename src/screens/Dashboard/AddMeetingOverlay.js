@@ -29,13 +29,14 @@ export default function AddMeetingOverlay({
   const [showZoomList, setShowZoomList] = useState(false);
   const [zoomMeetingList, setZoomMeetingList] = useState([]);
   const [isZoomMeeting, setIsZoomMeeting] = useState(false);
+  const [searched, setSearched] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
-    if (show) {
-      getZoomMeetingList();
+    if (showZoomList && !searched) {
+      return getZoomMeetingList();
     }
-  }, [show]);
+  }, [showZoomList]);
 
   async function getZoomMeetingList() {
     try {
@@ -54,6 +55,7 @@ export default function AddMeetingOverlay({
       toast.error(extractError(err));
     } finally {
       setLoading(false);
+      setSearched(true);
     }
   }
 
