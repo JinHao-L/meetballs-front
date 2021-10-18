@@ -247,6 +247,7 @@ export default function AddMeetingOverlay({
           show={show}
           onHide={() => {
             setShow(false);
+            setSearched(false);
             setShowZoomList(false);
           }}
         >
