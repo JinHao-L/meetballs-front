@@ -11,10 +11,6 @@ import { defaultHeaders } from '../../utils/axiosConfig';
 import { SmallLoadingIndicator } from '../../components/SmallLoadingIndicator';
 import { toast } from 'react-toastify';
 import { Link45deg } from 'react-bootstrap-icons';
-import {
-  MaterialsSection,
-  SpeakerSection,
-} from '../../components/AgendaItemComponents';
 import { extractError } from '../../utils/extractError';
 
 export default function AgendaItem({

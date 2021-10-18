@@ -5,6 +5,7 @@ import {
   getFormattedDateTime,
   getFormattedTime,
   agendaReviver,
+  openLinkInNewTab,
 } from '../../common/CommonFunctions';
 import AgendaList from './AgendaList';
 import { blankMeeting } from '../../common/ObjectTemplates';
@@ -17,6 +18,8 @@ import {
 } from '../../services/meeting';
 import { useSocket } from '../../hooks/useSocket';
 import { UserContext } from '../../context/UserContext';
+import useSound from 'use-sound';
+import Bell from '../../assets/Bell.mp3';
 
 export default function OngoingMeetingAdminScreen() {
   const [position, setPosition] = useState(-1);
@@ -32,6 +35,8 @@ export default function OngoingMeetingAdminScreen() {
   }, [meeting.hostId, user]);
   const history = useHistory();
   const [showError, setShowError] = useState(false);
+
+  const [play, { stop }] = useSound(Bell);
 
   useEffect(() => {
     console.log(meeting);
@@ -72,7 +77,7 @@ export default function OngoingMeetingAdminScreen() {
   }, [socket]);
 
   function startZoom() {
-    window.open(meeting.joinUrl, '_blank');
+    openLinkInNewTab(meeting.joinUrl);
   }
 
   const updateMeeting = (meetingObj) => {
@@ -149,7 +154,7 @@ export default function OngoingMeetingAdminScreen() {
     }
   }
 
-  updateDelay(meeting.agendaItems, time, position);
+  updateDelay(meeting.agendaItems, time, position, play);
 
   return (
     <>
@@ -204,7 +209,7 @@ export default function OngoingMeetingAdminScreen() {
               )}
             </div>
             <div className="Buffer--20px" />
-            <Card bg="primary" show={showError}>
+            <Card bg="primary" hidden={!showError || !user}>
               <Card.Header>No Agenda Found</Card.Header>
               <Card.Body>
                 <Card.Text>
@@ -308,12 +313,20 @@ function initializeAgenda(time, agenda) {
   }
 }
 
-function updateDelay(agenda, time, position) {
+function updateDelay(agenda, time, position, play) {
   if (position < 0 || position >= agenda.length) return;
   const delay = Math.max(
     0,
     time - agenda[position].startTime - agenda[position].actualDuration,
   );
+  if (
+    agenda[position].actualDuration === agenda[position].expectedDuration &&
+    delay > 0 &&
+    delay < 1000
+  ) {
+    console.log('Play');
+    play();
+  }
   agenda[position].actualDuration += delay;
   updateAgenda(agenda, position);
 }
