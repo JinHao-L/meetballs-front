@@ -24,7 +24,8 @@ import { UserContext } from '../../context/UserContext';
 import BackgroundPattern from '../../assets/background_pattern2.jpg';
 
 const INVITE_SUCCESS = 'Invitations sent!';
-const INVITE_SOME_FAIL = 'Not all invitations sent! Check your invitation list.';
+const INVITE_SOME_FAIL =
+  'Not all invitations sent! Check your invitation list.';
 
 export default function UpcomingMeetingScreen() {
   const [meeting, setMeeting] = useState(blankMeeting);
@@ -84,7 +85,7 @@ export default function UpcomingMeetingScreen() {
         defaultHeaders,
       );
       const inviteData = inviteResponse.data.data;
-      const successes = inviteData.filter(status => status.success).length;
+      const successes = inviteData.filter((status) => status.success).length;
 
       const res = await server.get(`/participant/${meeting.id}`);
       setMeeting((prev) => ({ ...prev, participants: res.data }));

@@ -4,7 +4,7 @@ import {
   markParticipantAbsent,
   deleteParticipants as deleteParticipant,
 } from '../../services/participants';
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
 import { useState } from 'react';
 import ConfirmDupeModal from './ConfirmDupeModal';

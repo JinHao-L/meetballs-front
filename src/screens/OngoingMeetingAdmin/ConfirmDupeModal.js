@@ -14,8 +14,8 @@ export default function ConfirmDupeModal({
       <Modal.Body>
         <p className="Text__paragraph">
           <b>{participant.userName}</b> ({participant.userEmail}) will be marked
-          as a duplicate and cannot be recovered.
-          Are you sure you want to continue?
+          as a duplicate and cannot be recovered. Are you sure you want to
+          continue?
         </p>
       </Modal.Body>
       <Modal.Footer>

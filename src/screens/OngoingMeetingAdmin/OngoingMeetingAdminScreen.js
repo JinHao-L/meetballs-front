@@ -414,10 +414,11 @@ function updateParticipants(participants, update) {
   });
 
   if (!hasUpdate) {
-    return [update, ...participants].sort((p1, p2) => {
-      return (' ' + p1.userName).localeCompare(p2.userName);
-    })
-    .filter((p) => !(p.isDuplicate));
+    return [update, ...participants]
+      .sort((p1, p2) => {
+        return (' ' + p1.userName).localeCompare(p2.userName);
+      })
+      .filter((p) => !p.isDuplicate);
   } else {
     return participants;
   }
