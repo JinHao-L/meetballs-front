@@ -1,14 +1,6 @@
 import { useState } from 'react';
 import { isNil } from 'lodash';
-import {
-  Button,
-  Row,
-  Col,
-  Card,
-  CloseButton,
-  Form,
-  Spinner,
-} from 'react-bootstrap';
+import { Button, Row, Col, Card, Form, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
@@ -19,9 +11,7 @@ export default function EditParticipantItem({
   setMeeting,
   meeting,
   position,
-  removeParticipant,
 }) {
-  const [showModal, setShowModal] = useState(false);
   const participant = meeting.participants[position];
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState(participant.userEmail);
