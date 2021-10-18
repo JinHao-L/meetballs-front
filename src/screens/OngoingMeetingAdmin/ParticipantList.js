@@ -59,10 +59,17 @@ function AwaitItem({ meeting, setMeeting, position, showButton }) {
       ? participant.userName
       : 'Guest';
   return (
-    <Col className="Container__padding--vertical-small" sm={12} md={6} lg={6}>
+    <Col
+      className="Container__padding--vertical-small"
+      sm={12}
+      md={6}
+      lg={6}
+      style={{ padding: 'auto' }}
+    >
       <Card
         bg={showButton ? null : 'danger'}
         text={showButton ? 'dark' : 'light'}
+        style={{ height: '100%' }}
       >
         <Card.Body>
           <Card.Title className="Text__elipsized--1-line">
@@ -96,7 +103,13 @@ function AwaitItem({ meeting, setMeeting, position, showButton }) {
 function PresentItem({ meeting, setMeeting, position, showButton }) {
   const participant = meeting.participants[position];
   return (
-    <Col className="Container__padding--vertical-small" sm={12} md={6} lg={6}>
+    <Col
+      className="Container__padding--vertical-small"
+      style={{ flexGrow: 1 }}
+      sm={12}
+      md={6}
+      lg={6}
+    >
       <Card bg="success" text="light">
         <Card.Body>
           <Card.Title className="Text__elipsized--1-line">
