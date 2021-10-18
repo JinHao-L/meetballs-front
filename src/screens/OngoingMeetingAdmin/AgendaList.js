@@ -64,9 +64,12 @@ function CurrentItem({ item, time }) {
       <Card bg={timeRemaining > 0 ? 'primary' : 'danger'} text="light">
         <Card.Body>
           <Card.Title>{item.name}</Card.Title>
-          <Card.Text>{item.description}</Card.Text>
           <SpeakerSection item={item} />
-          <MaterialsSection item={item} variant={'secondary'} />
+          <Card.Text>{item.description}</Card.Text>
+          <MaterialsSection
+            item={item}
+            variant={timeRemaining > 0 ? 'secondary' : 'outline-danger'}
+          />
         </Card.Body>
         <Card.Footer>
           <Card.Text>{timeRemainingText}</Card.Text>
@@ -82,8 +85,8 @@ function ActiveItem({ item }) {
       <Card>
         <Card.Body>
           <Card.Title>{item.name}</Card.Title>
-          <Card.Text>{item.description}</Card.Text>
           <SpeakerSection item={item} />
+          <Card.Text>{item.description}</Card.Text>
           <MaterialsSection item={item} variant={'outline-primary'} />
         </Card.Body>
         <Card.Footer>

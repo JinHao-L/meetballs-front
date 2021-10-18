@@ -17,21 +17,17 @@ export function MaterialsSection({ item, variant = 'primary' }) {
   const materials = item.speakerMaterials;
   if (!materials || (!isValidUrl(materials) && !item.speaker)) return null;
   return (
-    <div className="d-grid gap-2">
-      <Button
-        variant={variant}
-        onClick={() =>
-          openFile(
-            item.speakerMaterials,
-            item.meetingId,
-            item.speaker?.id,
-          ).catch((_err) => {
+    <Button
+      variant={variant}
+      onClick={() =>
+        openFile(item.speakerMaterials, item.meetingId, item.speaker?.id).catch(
+          (_err) => {
             toast.error('File not found');
-          })
-        }
-      >
-        View Materials
-      </Button>
-    </div>
+          },
+        )
+      }
+    >
+      View Materials
+    </Button>
   );
 }
