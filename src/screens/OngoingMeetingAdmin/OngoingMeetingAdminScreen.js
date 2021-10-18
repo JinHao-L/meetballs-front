@@ -44,8 +44,6 @@ export default function OngoingMeetingAdminScreen() {
   }, [meeting.hostId, user]);
   const [play] = useSound(Bell);
 
-  const user = useContext(UserContext);
-
   useEffect(() => {
     pullMeeting();
     setInterval(() => {
