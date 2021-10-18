@@ -1,10 +1,10 @@
 import { Modal, Button } from 'react-bootstrap';
 
-export default function ConfirmDeleteModel({
+export default function ConfirmDupeModal({
   showModal,
   setShowModal,
-  meeting,
-  deleteMeeting,
+  participant,
+  onMarkDuplicate,
 }) {
   return (
     <Modal show={showModal} onHide={() => setShowModal(false)} centered>
@@ -13,8 +13,9 @@ export default function ConfirmDeleteModel({
       </Modal.Header>
       <Modal.Body>
         <p className="Text__paragraph">
-          Meeting <b>{meeting.name}</b> will be deleted and cannot be recovered.
-          Are you sure you want to continue?
+          <b>{participant.userName}</b> ({participant.userEmail}) will be marked
+          as a duplicate and cannot be recovered. Are you sure you want to
+          continue?
         </p>
       </Modal.Body>
       <Modal.Footer>
@@ -25,7 +26,7 @@ export default function ConfirmDeleteModel({
           variant="danger"
           onClick={() => {
             setShowModal(false);
-            deleteMeeting();
+            onMarkDuplicate();
           }}
         >
           Confirm
