@@ -46,7 +46,10 @@ export default function AddMeetingOverlay({
       if (response.status !== 200) return;
       const filteredList = [];
       result.forEach((meeting) => {
-        if (!checkIfExist(meeting.uuid)) {
+        if (
+          !filteredList.find((added) => added.uuid === meeting.uuid) &&
+          !checkIfExist(meeting.uuid)
+        ) {
           filteredList.push(meeting);
         }
       });
@@ -351,6 +354,6 @@ async function fillItems(newMeeting, cloneMeeting) {
     newMeeting.agendaItems = result.agendaItems;
   }
   if (result.participants.length > 0) {
-    newMeeting.participants = result.participants.filter(x => !x.isDuplicate);
+    newMeeting.participants = result.participants.filter((x) => !x.isDuplicate);
   }
 }
