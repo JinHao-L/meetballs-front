@@ -28,8 +28,8 @@
 }
 
 .Container__padding--vertical-small {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .Container__row--space-between {
@@ -141,10 +141,14 @@
 
 .Text__toggle {
   color: #858585;
-  margin-top: 20px;
   font-size: 15px;
+  margin: 0px;
   text-decoration: none;
   cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  display: flex;
 }
 
 /* Toggles */
@@ -152,8 +156,8 @@
 .Toggle-card {
   height: 60px;
   width: 100%;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 2px;
+  margin-right: 2px;
   border-radius: 10px;
   display: flex;
   justify-content: center;

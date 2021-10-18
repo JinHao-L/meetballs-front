@@ -56,7 +56,7 @@ export const AppNavbar = () => {
             Login
           </Button>
         ) : option.button === TOGGLES.CHOOSE ||
-          option.button === TOGGLES.DASHBOARD ? (
+          (option.button === TOGGLES.DASHBOARD && user) ? (
           <Button
             variant="outline-primary"
             size="sm"

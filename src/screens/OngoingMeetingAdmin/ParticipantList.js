@@ -1,4 +1,4 @@
-import { Card, Col, Button } from 'react-bootstrap';
+import { Card, Col, Button, Row } from 'react-bootstrap';
 import {
   markParticipantPresent,
   markParticipantAbsent,
@@ -36,25 +36,28 @@ export default function ParticipantList({
       );
     }
   }
-  return items;
+  return <Row>{items}</Row>;
 }
 
 function AwaitItem({ meeting, setMeeting, position, showButton }) {
   const participant = meeting.participants[position];
-  const displayName = participant.userName && participant.userName.length > 0
-    ? participant.userName
-    : 'Guest';
+  const displayName =
+    participant.userName && participant.userName.length > 0
+      ? participant.userName
+      : 'Guest';
   return (
-    <Col className="Container__padding--vertical-small">
+    <Col className="Container__padding--vertical-small" sm={12} md={6} lg={6}>
       <Card
         bg={showButton ? null : 'danger'}
         text={showButton ? 'dark' : 'light'}
       >
         <Card.Body>
-          <Card.Title>
+          <Card.Title className="Text__elipsized--1-line">
             {displayName}
           </Card.Title>
-          <Card.Text>{participant.userEmail}</Card.Text>
+          <Card.Text className="Text__elipsized--1-line">
+            {participant.userEmail}
+          </Card.Text>
           {showButton && participant.role !== 2 && (
             <div className="d-grid gap-2">
               <Button
@@ -74,15 +77,18 @@ function AwaitItem({ meeting, setMeeting, position, showButton }) {
 function PresentItem({ meeting, setMeeting, position, showButton }) {
   const participant = meeting.participants[position];
   return (
-    <Col className="Container__padding--vertical-small">
+    <Col className="Container__padding--vertical-small" sm={12} md={6} lg={6}>
       <Card bg="success" text="light">
         <Card.Body>
-          <Card.Title>
+          <Card.Title className="Text__elipsized--1-line">
             {participant.userName != null && participant.userName.length > 0
               ? participant.userName
               : 'Guest'}
           </Card.Title>
-          <Card.Text>{participant.userEmail}</Card.Text>
+
+          <Card.Text className="Text__elipsized--1-line">
+            {participant.userEmail}
+          </Card.Text>
           {showButton && participant.role !== 2 && (
             <div className="d-grid gap-2">
               <Button

@@ -92,9 +92,6 @@ export default function AddMeetingOverlay({
       })
       .catch(() => {
         toast.error('Failed to create.');
-      })
-      .finally(() => {
-        setLoading(false);
       });
   }
 

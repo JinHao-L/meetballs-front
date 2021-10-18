@@ -1,14 +1,6 @@
 import { useState } from 'react';
 import { isNil } from 'lodash';
-import {
-  Button,
-  Col,
-  Card,
-  CloseButton,
-  Form,
-  Modal,
-  Spinner,
-} from 'react-bootstrap';
+import { Button, Row, Col, Card, Form, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
@@ -19,9 +11,7 @@ export default function EditParticipantItem({
   setMeeting,
   meeting,
   position,
-  removeParticipant,
 }) {
-  const [showModal, setShowModal] = useState(false);
   const participant = meeting.participants[position];
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState(participant.userEmail);
@@ -49,7 +39,7 @@ export default function EditParticipantItem({
 
   async function updateChanges() {
     if (email.length === 0) {
-      setShowModal(true);
+      toast.error('Email must not be empty.');
       return;
     }
     if (participant.userName === username && checkForDuplicate()) {
@@ -84,10 +74,8 @@ export default function EditParticipantItem({
       newParticipants.splice(position, 1);
       newMeeting.participants = newParticipants;
       setMeeting(newMeeting);
-    } else if (oldEmail.length > 0) {
-      setEditing(false);
     } else {
-      removeParticipant(setMeeting, meeting, position);
+      setEditing(false);
     }
   }
 
@@ -102,14 +90,7 @@ export default function EditParticipantItem({
       ) : (
         <Card>
           <Card.Header>
-            <div className="Container__row--space-between">
-              <p className="Text__card-header">Editing Participant</p>
-              <CloseButton
-                size="sm"
-                style={{ borderRadius: 50 }}
-                onClick={close}
-              />
-            </div>
+            <p className="Text__card-header">Editing Participant</p>
           </Card.Header>
           <Card.Body>
             <Form.Group>
@@ -124,37 +105,26 @@ export default function EditParticipantItem({
                 onChange={(event) => setEmail(event.target.value)}
               />
               <div className="Buffer--20px" />
-              <div className="d-grid gap-2">
-                <Button variant="primary" onClick={() => updateChanges()}>
-                  Confirm
-                </Button>
-              </div>
+              <Row>
+                <Col>
+                  <div className="d-grid gap-2">
+                    <Button variant="outline-primary" onClick={close}>
+                      Cancel
+                    </Button>
+                  </div>
+                </Col>
+                <Col>
+                  <div className="d-grid gap-2">
+                    <Button variant="primary" onClick={updateChanges}>
+                      Confirm
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
             </Form.Group>
           </Card.Body>
         </Card>
       )}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header>
-          <Modal.Title>Confirm?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p className="Text__paragraph">
-            You have not specified an email, so this participant will be deleted
-            if you choose to close. Would you still like to close?
-          </p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="outline-primary" onClick={() => setShowModal(false)}>
-            Cancel
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => removeParticipant(setMeeting, meeting, position)}
-          >
-            Confirm
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </Col>
   );
 }

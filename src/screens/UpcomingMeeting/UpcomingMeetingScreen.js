@@ -240,6 +240,7 @@ function addParticipant(meeting, setMeeting) {
 }
 
 async function addAgenda(meeting, setMeeting) {
+  if (meeting.agendaItems.findIndex((item) => item.name === '') >= 0) return;
   const newMeeting = Object.assign({}, meeting);
   const newAgenda = Object.assign({}, blankAgenda);
   newAgenda.meetingId = newMeeting.id;
@@ -251,21 +252,6 @@ async function addAgenda(meeting, setMeeting) {
     newAgenda.position = 0;
   }
   newAgenda.prevPosition = newAgenda.position;
-  await addAgendaToDatabase(newAgenda);
   newMeeting.agendaItems = [...newMeeting.agendaItems, newAgenda];
   setMeeting(newMeeting);
-}
-
-async function addAgendaToDatabase(newAgenda) {
-  await server.post(
-    '/agenda-item',
-    {
-      meetingId: newAgenda.meetingId,
-      position: newAgenda.position,
-      name: newAgenda.name,
-      description: newAgenda.description,
-      expectedDuration: newAgenda.expectedDuration,
-    },
-    defaultHeaders,
-  );
 }

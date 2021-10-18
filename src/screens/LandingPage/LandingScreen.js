@@ -1,5 +1,5 @@
 import { Container, Image, Button, Row, Col, Card } from 'react-bootstrap';
-import { Facebook } from 'react-bootstrap-icons';
+import { Facebook, Instagram } from 'react-bootstrap-icons';
 import LandingImage from '../../assets/landing_image.png';
 import BackgroundImage from '../../assets/background_pattern.jpg';
 import PatternImage from '../../assets/pattern.png';
@@ -67,6 +67,16 @@ export default function LandingScreen() {
                 >
                   <Facebook size={23} style={{ marginRight: 10 }} />
                   Find Us On Facebook
+                </Button>
+                <div className="Buffer--20px" />
+                <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    window.open('https://www.instagram.com/meetballsapp/');
+                  }}
+                >
+                  <Instagram size={23} style={{ marginRight: 10 }} />
+                  Find Us On Instgram
                 </Button>
               </div>
             </div>

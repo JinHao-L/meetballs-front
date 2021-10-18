@@ -23,6 +23,10 @@ export default function AgendaItem({
   const [editing, setEditing] = useState(false);
   const item = meeting.agendaItems[position];
 
+  if (!editing && item?.name?.length === 0) {
+    setEditing(true);
+  }
+
   async function removeAgendaItem() {
     if (isDeleting) return;
     try {
@@ -71,6 +75,7 @@ export default function AgendaItem({
                 <EditAgendaItem
                   setLoading={setLoading}
                   setEditing={setEditing}
+                  setMeeting={setMeeting}
                   meeting={meeting}
                   position={position}
                 />

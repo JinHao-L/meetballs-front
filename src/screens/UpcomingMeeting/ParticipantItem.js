@@ -55,7 +55,6 @@ export default function ParticipantItem({ setMeeting, meeting, position }) {
         setMeeting={setMeeting}
         meeting={meeting}
         position={position}
-        removeParticipant={removeParticipant}
       />
     );
   }

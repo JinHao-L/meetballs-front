@@ -20,6 +20,7 @@ export default function AgendaItemList({
         <Button
           variant="outline-primary"
           onClick={() => {
+            removeEmpty(meeting, setMeeting);
             setReordering(true);
           }}
         >
@@ -116,5 +117,16 @@ async function updateDatabase(meetingId, agendaItems) {
       },
       defaultHeaders,
     );
+  }
+}
+
+function removeEmpty(meeting, setMeeting) {
+  const agenda = meeting.agendaItems;
+  if (agenda.length > 0 && agenda[agenda.length - 1]?.name?.length === 0) {
+    const newMeeting = Object.assign({}, meeting);
+    const newAgenda = newMeeting.agendaItems;
+    newAgenda.splice(agenda.length - 1, 1);
+    newMeeting.agendaItems = newAgenda;
+    setMeeting(newMeeting);
   }
 }

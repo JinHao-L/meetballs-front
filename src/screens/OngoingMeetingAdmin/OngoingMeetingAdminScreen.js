@@ -1,10 +1,11 @@
-import { Container, Row, Col, Button, Nav, Toast } from 'react-bootstrap';
+import { Container, Row, Col, Button, Nav, Card } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { useState, useEffect, useContext, useMemo } from 'react';
 import {
   getFormattedDateTime,
   getFormattedTime,
   agendaReviver,
+  openLinkInNewTab,
 } from '../../common/CommonFunctions';
 import AgendaList from './AgendaList';
 import { blankMeeting } from '../../common/ObjectTemplates';
@@ -17,7 +18,11 @@ import {
 } from '../../services/meeting';
 import { useSocket } from '../../hooks/useSocket';
 import { UserContext } from '../../context/UserContext';
-import RedirectionScreen, { MEETING_NOT_FOUND_ERR } from '../../components/RedirectionScreen';
+import RedirectionScreen, {
+  MEETING_NOT_FOUND_ERR,
+} from '../../components/RedirectionScreen';
+import useSound from 'use-sound';
+import Bell from '../../assets/Bell.mp3';
 
 export default function OngoingMeetingAdminScreen() {
   const [position, setPosition] = useState(-1);
@@ -36,6 +41,11 @@ export default function OngoingMeetingAdminScreen() {
   const isHost = useMemo(() => {
     return meeting?.hostId === user?.uuid;
   }, [meeting.hostId, user]);
+  const [play] = useSound(Bell);
+
+  useEffect(() => {
+    console.log(meeting);
+  }, [meeting]);
 
   useEffect(() => {
     pullMeeting();
@@ -70,7 +80,7 @@ export default function OngoingMeetingAdminScreen() {
 
   function startZoom() {
     if (!hasLaunched) setHasLaunched(true);
-    window.open(meeting.joinUrl, '_blank');
+    openLinkInNewTab(meeting.joinUrl);
   }
 
   const updateMeeting = (meetingObj) => {
@@ -156,17 +166,14 @@ export default function OngoingMeetingAdminScreen() {
         onClick={startZoom}
         enabled={meeting.type === 1 || meeting.type === 2}
       >
-        { hasLaunched ? "Relaunch" : "Launch" } Zoom
+        {hasLaunched ? 'Relaunch' : 'Launch'} Zoom
       </Button>
     );
   }
 
   function ReturnToEditPageButton() {
     return (
-      <Button
-        variant="outline-primary"
-        href={`/meeting/${id}`}
-      >
+      <Button variant="outline-primary" href={`/meeting/${id}`}>
         Back to Editing
       </Button>
     );
@@ -175,7 +182,7 @@ export default function OngoingMeetingAdminScreen() {
   if (!loading && !validId)
     return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
 
-  updateDelay(meeting.agendaItems, time, position);
+  updateDelay(meeting.agendaItems, time, position, play);
 
   return (
     <>
@@ -225,17 +232,18 @@ export default function OngoingMeetingAdminScreen() {
               )}
             </div>
             <div className="Buffer--20px" />
-            <Toast show={showError}>
-              <Toast.Header closeButton={false}>No Agenda Found</Toast.Header>
-              <Toast.Body>
-                Please add an agenda item to the meeting first before starting.
-              </Toast.Body>
-              <Toast.Body>
+            <Card bg="primary" hidden={!showError || !user}>
+              <Card.Header>No Agenda Found</Card.Header>
+              <Card.Body>
+                <Card.Text>
+                  Please add an agenda item to the meeting first before
+                  starting.
+                </Card.Text>
                 <div className="d-grid gap-2">
                   <ReturnToEditPageButton />
                 </div>
-              </Toast.Body>
-            </Toast>
+              </Card.Body>
+            </Card>
             <div className="Buffer--20px" />
           </Col>
           <Col lg={1} md={12} sm={12} />
@@ -321,12 +329,20 @@ function initializeAgenda(time, agenda) {
   }
 }
 
-function updateDelay(agenda, time, position) {
+function updateDelay(agenda, time, position, play) {
   if (position < 0 || position >= agenda.length) return;
   const delay = Math.max(
     0,
     time - agenda[position].startTime - agenda[position].actualDuration,
   );
+  if (
+    agenda[position].actualDuration === agenda[position].expectedDuration &&
+    delay > 0 &&
+    delay < 1000
+  ) {
+    console.log('Play');
+    play();
+  }
   agenda[position].actualDuration += delay;
   updateAgenda(agenda, position);
 }
