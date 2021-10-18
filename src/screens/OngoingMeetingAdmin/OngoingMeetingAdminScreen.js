@@ -1,6 +1,6 @@
 import { Container, Row, Col, Button, Nav, Card } from 'react-bootstrap';
 import { useParams } from 'react-router';
-import { useState, useEffect, useContext, useMemo } from 'react';
+import { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import {
   getFormattedDateTime,
   getFormattedTime,
@@ -31,13 +31,14 @@ export default function OngoingMeetingAdminScreen() {
   const [time, setTime] = useState(new Date().getTime());
   const [showError, setShowError] = useState(false);
   const [hasLaunched, setHasLaunched] = useState(false);
+  const [meetingStatus, setMeetingStatus] = useState(1);
 
   const [loading, setLoading] = useState(true);
   const [validId, setIsValidId] = useState(false);
 
-  const { socket } = useSocket(meeting.id);
-  const user = useContext(UserContext);
   const { id } = useParams();
+  const { socket } = useSocket(id);
+  const user = useContext(UserContext);
   const isHost = useMemo(() => {
     return meeting?.hostId === user?.uuid;
   }, [meeting.hostId, user]);
@@ -55,12 +56,15 @@ export default function OngoingMeetingAdminScreen() {
   }, []);
 
   useEffect(() => {
+    console.log(socket)
     if (socket) {
       socket.on('meetingUpdated', function (data) {
+        console.log('meetingUpdated')
         const newMeeting = JSON.parse(data, agendaReviver);
         setMeeting((meeting) => updateMeeting({ ...meeting, ...newMeeting }));
       });
       socket.on('participantUpdated', function (data) {
+        console.log('participantUpdated')
         const update = JSON.parse(data);
         setMeeting((meeting) => ({
           ...meeting,
@@ -68,9 +72,11 @@ export default function OngoingMeetingAdminScreen() {
         }));
       });
       socket.on('agendaUpdated', function (data) {
+        console.log('agendaUpdated')
         pullMeeting();
       });
       socket.on('userConnected', function (msg) {
+        console.log('userConnected')
         console.log(msg);
       });
     } else {
@@ -99,6 +105,7 @@ export default function OngoingMeetingAdminScreen() {
     try {
       const res = await getMeeting(id);
       setMeeting(() => updateMeeting(res.data));
+      setMeetingStatus(res.data.type);
       setIsValidId(true);
     } catch (err) {
       setIsValidId(false);
@@ -113,6 +120,7 @@ export default function OngoingMeetingAdminScreen() {
     }
     try {
       await callStartMeeting(id);
+      setMeetingStatus(2);
       setPosition(position + 1);
       initializeAgenda(time, agenda);
     } catch (err) {
@@ -121,11 +129,12 @@ export default function OngoingMeetingAdminScreen() {
   }
 
   async function nextItem(time, agenda, id) {
-    const apiCall =
-      position + 1 < agenda.length ? callNextMeeting : callEndMeeting;
+    const isLastItem = position + 1 < agenda.length;
+    const apiCall = isLastItem ? callNextMeeting : callEndMeeting;
     try {
       await apiCall(id);
       agenda[position].actualDuration = time - agenda[position].startTime;
+      if (isLastItem) setMeetingStatus(3);
       const newPosition = position + 1;
       setPosition(newPosition);
       if (newPosition < agenda.length) {
@@ -159,25 +168,25 @@ export default function OngoingMeetingAdminScreen() {
     }
   }
 
-  function LaunchZoomButton() {
+  const LaunchZoomButton = useCallback(() => {
     return (
       <Button
         variant="outline-primary"
         onClick={startZoom}
-        enabled={meeting.type === 1 || meeting.type === 2}
+        disabled={meetingStatus === 3}
       >
         {hasLaunched ? 'Relaunch' : 'Launch'} Zoom
       </Button>
     );
-  }
+  }, [meetingStatus, hasLaunched, meeting]);
 
-  function ReturnToEditPageButton() {
+  const ReturnToEditPageButton = useCallback(() => {
     return (
       <Button variant="outline-primary" href={`/meeting/${id}`}>
         Back to Editing
       </Button>
     );
-  }
+  }, [id]);
 
   if (!loading && !validId)
     return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
