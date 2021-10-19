@@ -407,7 +407,7 @@ function getEndTime(time, agenda, position, meeting) {
     agenda.forEach((item) => {
       duration += item.expectedDuration;
     });
-    const supposedStartTime = new Date(meeting.startedAt);
+    const supposedStartTime = new Date(meeting.startedAt).getTime();
     if (time > supposedStartTime) {
       return getFormattedTime(new Date(time + duration));
     } else {
