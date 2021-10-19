@@ -70,7 +70,7 @@ export default function CompletedMeetingItem({
       lg={6}
       md={6}
       sm={12}
-      className="Container__padding--vertical-small"
+      style={{ paddingTop: 10, paddingBottom: 10 }}
     >
       <Card style={{ height: 300, backgroundColor: '#e5e5e5' }}>
         <Card.Body>
