@@ -244,7 +244,7 @@ export default function OngoingMeetingAdminScreen() {
                 : 'Time Ended:'}
             </p>
             <p className="Text__header">
-              {getEndTime(time, meeting.agendaItems, position)}
+              {getEndTime(time, meeting.agendaItems, position, meeting)}
             </p>
             <div className="d-grid gap-2">
               {isHost && !showError ? (
@@ -401,13 +401,18 @@ function getCurrentPosition(meeting) {
   }
 }
 
-function getEndTime(time, agenda, position) {
+function getEndTime(time, agenda, position, meeting) {
   if (position < 0) {
     var duration = 0;
     agenda.forEach((item) => {
       duration += item.expectedDuration;
     });
-    return getFormattedTime(new Date(time + duration));
+    const supposedStartTime = new Date(meeting.startedAt);
+    if (time > supposedStartTime) {
+      return getFormattedTime(new Date(time + duration));
+    } else {
+      return getFormattedTime(new Date(supposedStartTime + duration));
+    }
   } else {
     if (agenda.length === 0) return '';
     var lastAgendaItem = agenda[agenda.length - 1];
