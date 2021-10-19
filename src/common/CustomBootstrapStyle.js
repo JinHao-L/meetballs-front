@@ -79,14 +79,15 @@ export default function CustomBootstrapStyle() {
     }
 
     .btn-outline-danger {
+      background-color: white;
       color: #f65454;
       border-color: #f65454;
     }
 
     .btn-outline-danger:hover, .btn-outline-danger:active, .btn-outline-danger:focus {
-      background-color: #f65454;
+      background-color: #d63030;
       color: white;
-      border-color: #f65454;
+      border-color: #d63030;
     }
 
     .btn-outline-danger:disabled {

@@ -1,12 +1,11 @@
 import React from 'react';
 import { Container, Spinner } from 'react-bootstrap';
+import MrMeatball from '../assets/MrMeatball.png';
 
 export const FullLoadingIndicator = () => {
   return (
     <Container className="d-flex justify-content-center align-items-center vh-100">
-      <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
+      <img src={MrMeatball} className="Spinner" />
     </Container>
   );
 };

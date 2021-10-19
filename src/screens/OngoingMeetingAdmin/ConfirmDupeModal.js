@@ -9,13 +9,12 @@ export default function ConfirmDupeModal({
   return (
     <Modal show={showModal} onHide={() => setShowModal(false)} centered>
       <Modal.Header>
-        <Modal.Title>Confirm Delete?</Modal.Title>
+        <Modal.Title>Confirm Duplicate?</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p className="Text__paragraph">
-          <b>{participant.userName}</b> ({participant.userEmail}) will be marked
-          as a duplicate and cannot be recovered. Are you sure you want to
-          continue?
+          <b>{participant.userName}</b> ({participant.userEmail}) will be
+          removed and cannot be recovered. Are you sure you want to continue?
         </p>
       </Modal.Body>
       <Modal.Footer>

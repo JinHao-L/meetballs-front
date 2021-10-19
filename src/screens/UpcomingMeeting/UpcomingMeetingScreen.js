@@ -137,7 +137,7 @@ export default function UpcomingMeetingScreen() {
   if (!loading && !validId)
     return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
 
-  if (user?.uuid !== meeting.hostId)
+  if (meeting.id !== '' && user?.uuid !== meeting.hostId)
     return <RedirectionScreen message={BAD_MEETING_PERMS_MSG} />;
 
   if (meeting.type !== undefined && meeting.type !== 1) {
@@ -148,7 +148,7 @@ export default function UpcomingMeetingScreen() {
     <div
       style={{
         minHeight: 'calc(100vh - 56px)',
-        backgroundColor: 'gray',
+        backgroundColor: '#E4D6C2',
         backgroundImage: `url(${BackgroundPattern})`,
       }}
     >
@@ -159,6 +159,7 @@ export default function UpcomingMeetingScreen() {
           backgroundColor: 'white',
           minHeight: 'calc(100vh - 56px - 100px)',
           boxShadow: '0 8px 8px 0 rgba(0, 0, 0, 0.2)',
+          borderRadius: 5,
         }}
       >
         <div className="Buffer--50px" />

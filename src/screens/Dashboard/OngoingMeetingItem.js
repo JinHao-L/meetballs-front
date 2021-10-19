@@ -41,7 +41,7 @@ export default function OngoingMeetingItem({ meeting }) {
       lg={6}
       md={6}
       sm={12}
-      className="Container__padding--vertical-small"
+      style={{ paddingTop: 10, paddingBottom: 10 }}
     >
       <Card style={{ height: 300 }} bg="primary" text="white">
         <Card.Body>

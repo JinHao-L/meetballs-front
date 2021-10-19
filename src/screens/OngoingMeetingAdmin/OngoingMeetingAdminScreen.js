@@ -204,7 +204,7 @@ export default function OngoingMeetingAdminScreen() {
     <div
       style={{
         minHeight: 'calc(100vh - 56px)',
-        backgroundColor: 'gray',
+        backgroundColor: '#E4D6C2',
         backgroundImage: `url(${BackgroundPattern})`,
       }}
     >
@@ -215,6 +215,7 @@ export default function OngoingMeetingAdminScreen() {
           backgroundColor: 'white',
           minHeight: 'calc(100vh - 56px - 100px)',
           boxShadow: '0 8px 8px 0 rgba(0, 0, 0, 0.2)',
+          borderRadius: 5,
         }}
       >
         <div className="Buffer--50px" />
@@ -243,7 +244,7 @@ export default function OngoingMeetingAdminScreen() {
                 : 'Time Ended:'}
             </p>
             <p className="Text__header">
-              {getEndTime(time, meeting.agendaItems, position)}
+              {getEndTime(time, meeting.agendaItems, position, meeting)}
             </p>
             <div className="d-grid gap-2">
               {isHost && !showError ? (
@@ -400,13 +401,18 @@ function getCurrentPosition(meeting) {
   }
 }
 
-function getEndTime(time, agenda, position) {
+function getEndTime(time, agenda, position, meeting) {
   if (position < 0) {
     var duration = 0;
     agenda.forEach((item) => {
       duration += item.expectedDuration;
     });
-    return getFormattedTime(new Date(time + duration));
+    const supposedStartTime = new Date(meeting.startedAt);
+    if (time > supposedStartTime) {
+      return getFormattedTime(new Date(time + duration));
+    } else {
+      return getFormattedTime(new Date(supposedStartTime + duration));
+    }
   } else {
     if (agenda.length === 0) return '';
     var lastAgendaItem = agenda[agenda.length - 1];

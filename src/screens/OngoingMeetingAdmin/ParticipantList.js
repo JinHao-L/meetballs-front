@@ -81,7 +81,7 @@ function AwaitItem({ meeting, setMeeting, position, showButton }) {
           {showButton && participant.role !== 2 && (
             <div className="d-grid gap-2">
               <Button
-                variant={showButton ? 'outline-primary' : 'outline-light'}
+                variant="outline-primary"
                 onClick={() => markPresent(meeting, setMeeting, position)}
               >
                 Mark as Present
@@ -90,7 +90,7 @@ function AwaitItem({ meeting, setMeeting, position, showButton }) {
                 setMeeting={setMeeting}
                 meeting={meeting}
                 position={position}
-                variant={showButton ? 'outline-primary' : 'outline-light'}
+                variant="outline-primary"
               />
             </div>
           )}
@@ -150,7 +150,7 @@ function MarkDuplicateButton({ meeting, setMeeting, position, variant }) {
   return (
     <>
       <Button variant={variant} onClick={() => setShowModal(true)}>
-        Mark Participant As Duplicate
+        Mark As Duplicate
       </Button>
       <ConfirmDupeModal
         participant={participant}
