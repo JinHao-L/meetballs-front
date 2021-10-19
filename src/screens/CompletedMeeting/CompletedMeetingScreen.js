@@ -92,21 +92,12 @@ export default function CompletedMeetingScreen() {
   return (
     <div
       style={{
-        minHeight: 'calc(100vh - 56px)',
-        backgroundColor: '#E4D6C2',
         backgroundImage: `url(${BackgroundPattern})`,
       }}
+      className="Container__background-image"
     >
       <div className="Buffer--50px" />
-      <Container
-        className="Container__padding--vertical"
-        style={{
-          backgroundColor: 'white',
-          minHeight: 'calc(100vh - 56px - 100px)',
-          boxShadow: '0 8px 8px 0 rgba(0, 0, 0, 0.2)',
-          borderRadius: 5,
-        }}
-      >
+      <Container className="Container__padding--vertical Container__foreground">
         <div className="Buffer--50px" />
         <Row>
           <Col lg={1} md={12} sm={12} />
@@ -125,7 +116,7 @@ export default function CompletedMeetingScreen() {
               <Button variant="outline-primary" onClick={emailParticipants}>
                 Email Participants
               </Button>
-              <p className="Text__hint" style={{ marginBottom: 0 }}>
+              <p className="Text__hint">
                 Make sure you have enabled mail links in your browser
               </p>
             </div>
@@ -133,7 +124,7 @@ export default function CompletedMeetingScreen() {
             <div className="Container__row--space-between">
               <p className="Text__subsubheader">Description</p>
               <p
-                className="Text__toggle Clickable"
+                className="Text__hint Clickable"
                 onClick={() => setRestrictDescription(!restrictDescription)}
               >
                 {restrictDescription ? 'Show More' : 'Show Less'}

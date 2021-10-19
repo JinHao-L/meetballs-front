@@ -40,13 +40,7 @@ export default function LandingScreen() {
                 opacity: 0.3,
               }}
             />
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
+            <div className="Container__center--vertical">
               <div className="Buffer--100px" />
               <div className="Container__padding--horizontal">
                 <p className="Text__header">Get the Ball Rolling</p>

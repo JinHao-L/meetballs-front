@@ -12,7 +12,6 @@ import {
   getFormattedDateTime,
   openLinkInNewTab,
 } from '../../common/CommonFunctions';
-import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
 import { logEvent } from '@firebase/analytics';
@@ -248,7 +247,7 @@ export default function AddMeetingOverlay({
       items.push(
         <div className="Container__padding--vertical-small Clickable" key={idx}>
           <Card
-            style={{ cursor: 'pointer' }}
+            className="Clickable"
             onClick={() => {
               selectMeeting(meeting, setFieldValue);
             }}

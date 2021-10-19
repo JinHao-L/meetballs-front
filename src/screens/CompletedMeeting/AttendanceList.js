@@ -29,8 +29,7 @@ export default function AttendanceList({ participants, date }) {
     return (
       <a
         href={exportToCsv(filteredParticipants)}
-        style={{ textDecoration: 'none' }}
-        className="d-grid gap-2"
+        className="d-grid gap-2 Text--no-decoration"
         download={fileName}
       >
         <div className="d-grid gap-2">
@@ -48,9 +47,10 @@ export default function AttendanceList({ participants, date }) {
       <div className="Buffer--20px" />
       <div>
         <div className="Container__row--space-between">
-          <p className="Text__subheader" style={{ marginBottom: 10 }}>
+          <p className="Text__subheader">
             Present: {numPresent}/{numTotal}
           </p>
+          <div className="Buffer--10px" />
           <CollapseToggle show={showPresent} setShow={setShowPresent} />
         </div>
         <Collapse in={showPresent}>
@@ -60,9 +60,10 @@ export default function AttendanceList({ participants, date }) {
       <div className="Buffer--20px" />
       <div>
         <div className="Container__row--space-between">
-          <p className="Text__subheader" style={{ marginBottom: 10 }}>
+          <p className="Text__subheader">
             Absent: {numAbsent}/{numTotal}
           </p>
+          <div className="Buffer--10px" />
           <CollapseToggle show={showAbsent} setShow={setShowAbsent} />
         </div>
         <Collapse in={showAbsent}>
@@ -132,7 +133,7 @@ function exportToCsv(participants) {
 
 function CollapseToggle({ show, setShow }) {
   return (
-    <a className="Text__toggle" onClick={() => setShow(!show)}>
+    <a className="Text__hint" onClick={() => setShow(!show)}>
       {show ? 'Collapse' : 'Expand'}
     </a>
   );

@@ -23,7 +23,7 @@ export default function CompletedMeetingItem({
 
   function Details() {
     return (
-      <div style={{ height: 210 }}>
+      <div className="Card__dashboard-content">
         <Card.Title className="Text__elipsized--1-line">
           {meeting.name}
         </Card.Title>
@@ -42,7 +42,7 @@ export default function CompletedMeetingItem({
   function Toggles() {
     return (
       <Row>
-        <Col onClick={viewMeeting} className="Toggle-card">
+        <Col onClick={viewMeeting} className="Toggle__card">
           <Eye />
           View
         </Col>
@@ -51,7 +51,7 @@ export default function CompletedMeetingItem({
             setCloneMeeting(meeting);
             setShowOverlay(true);
           }}
-          className="Toggle-card"
+          className="Toggle__card"
         >
           <Front />
           Clone
@@ -71,7 +71,7 @@ export default function CompletedMeetingItem({
       sm={12}
       style={{ paddingTop: 10, paddingBottom: 10 }}
     >
-      <Card style={{ height: 300, backgroundColor: '#e5e5e5' }}>
+      <Card style={{ backgroundColor: '#e5e5e5' }} className="Card__dashboard">
         <Card.Body>
           <Details />
           <div

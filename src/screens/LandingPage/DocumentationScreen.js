@@ -11,30 +11,10 @@ import AppFooter from '../../components/AppFooter';
 export default function DocumentationScreen() {
   return (
     <>
-      <div style={{ position: 'relative' }}>
-        <Image
-          src={Banner}
-          style={{
-            height: 300,
-            width: '100%',
-            objectFit: 'cover',
-          }}
-        />
-        <div
-          className="Container__center--vertical"
-          style={{
-            width: '100%',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            alignItems: 'center',
-          }}
-        >
-          <p
-            className="Text__header"
-            style={{ color: 'white', textAlign: 'center' }}
-          >
+      <div className="Banner">
+        <Image src={Banner} className="Banner__image" />
+        <div className="Container__center--vertical Banner__content">
+          <p className="Text__header" style={{ color: 'white' }}>
             Zoom Integration Documentation
           </p>
         </div>

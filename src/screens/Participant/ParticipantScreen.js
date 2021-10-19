@@ -69,7 +69,7 @@ export default function ParticipantScreen() {
             <div className="Container__row--space-between">
               <p className="Text__subsubheader">Description</p>
               <div
-                className="Text__toggle Clickable"
+                className="Text__hint Clickable"
                 onClick={() => setRestrictDescription(!restrictDescription)}
               >
                 {restrictDescription ? 'Show More' : 'Show Less'}
