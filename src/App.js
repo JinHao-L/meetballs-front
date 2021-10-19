@@ -31,12 +31,7 @@ export default function App() {
   const user = useContext(UserContext);
 
   useEffect(() => {
-    console.log(`User is logged in ? ${user ? 'yes' : 'no'}`);
-  }, []);
-
-  useEffect(() => {
     server.get().catch((err) => {
-      console.log(extractError(err));
       toast.error('Cannot connect to server');
     });
   }, []);
@@ -46,7 +41,6 @@ export default function App() {
    * @returns
    */
   function RouteIfLoggedIn({ path, children }) {
-    console.log(user ? 'user exists' : 'user not logged in');
     return <Route path={path}>{!user ? <Redirect to="/" /> : children}</Route>;
   }
 

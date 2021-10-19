@@ -89,7 +89,6 @@ export default function AddMeetingOverlay({
       .then((res) => {
         onUpdate();
         const id = res.data.id;
-        console.log('New meeting created with ID = ' + id);
         setShow(false);
         history.push('/meeting/' + id);
         logEvent(googleAnalytics, 'created_meeting');

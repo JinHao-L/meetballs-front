@@ -48,7 +48,6 @@ export default function DashboardScreen() {
         ...defaultHeaders,
       })
       .then((res) => {
-        console.log(res);
         const meetings = res.data;
         const upcoming = meetings.sort(sortMeetings);
         setUpcoming(upcoming);
@@ -66,14 +65,12 @@ export default function DashboardScreen() {
       else return 0;
     }
 
-    console.log('Retrieving past meetings');
     return server
       .get('/meeting', {
         params: { type: 'past' },
         ...defaultHeaders,
       })
       .then((res) => {
-        console.log(res);
         const pastMeetings = res.data.sort(sortMeetings);
         setHistory(pastMeetings);
       })

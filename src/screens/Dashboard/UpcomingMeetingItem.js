@@ -21,12 +21,10 @@ export default function UpcomingMeetingItem({
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   function editMeeting() {
-    console.log(`Editing meeting of ID = ${meeting.id}`);
     history.push(`/meeting/${meeting.id}`);
   }
 
   function startMeeting() {
-    console.log(`Starting meeting of ID = ${meeting.id}`);
     openLinkInNewTab(meeting.joinUrl);
     history.push(`/ongoing/${meeting.id}`);
   }

@@ -61,7 +61,6 @@ export default function EditAgendaItem({
           toast.error(extractError(err) || 'Failed to upload file');
         } else {
           toast.error('Failed to upload file');
-          console.log(err);
         }
         return;
       }
@@ -71,7 +70,6 @@ export default function EditAgendaItem({
       !isValidUrl(materials) &&
       materials !== item.speakerMaterials
     ) {
-      console.log('Attempted to submit an invalid URL');
       toast.error('Attempted to submit an invalid URL');
       setMaterials('');
       return;

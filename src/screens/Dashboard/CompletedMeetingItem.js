@@ -18,7 +18,6 @@ export default function CompletedMeetingItem({
   const user = useContext(UserContext);
 
   function viewMeeting() {
-    console.log(`Viewing meeting of ID = ${meeting.id}`);
     history.push(`/completed/${meeting.id}`);
   }
 

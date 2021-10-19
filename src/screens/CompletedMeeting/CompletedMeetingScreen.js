@@ -46,10 +46,8 @@ export default function CompletedMeetingScreen() {
   const type = meeting.type;
   if (!loading) {
     if (type === 0) {
-      console.log('Meeting has not started yet');
       return <Redirect to={`/meeting/${id}`} />;
     } else if (type === 1 || type === 2) {
-      console.log('Meeting is ongoing');
       return <Redirect to={`/ongoing/${id}`} />;
     }
   }
