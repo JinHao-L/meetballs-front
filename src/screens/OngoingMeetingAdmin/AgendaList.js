@@ -57,7 +57,7 @@ function CurrentItem({ item, time }) {
     getFormattedDuration(timeRemaining - (timeRemaining % 1000));
   if (exceeded > 0) {
     timeRemainingText +=
-      ' ( Exceed ' + getFormattedDuration(exceeded - (exceeded % 60000)) + ')';
+      ` ( Exceeded by ${getFormattedDuration(exceeded - (exceeded % 60000))})`;
   }
   return (
     <Col className="Container__padding--vertical-small">
