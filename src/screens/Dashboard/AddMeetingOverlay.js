@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
 import { logEvent } from '@firebase/analytics';
 import { googleAnalytics } from '../../services/firebase';
+import { SmallLoadingIndicator } from '../../components/SmallLoadingIndicator';
 
 export default function AddMeetingOverlay({
   show,
@@ -313,7 +314,10 @@ export default function AddMeetingOverlay({
               )}
             </div>
             {loading ? (
-              <FullLoadingIndicator />
+              <>
+                <div className="Buffer--100px" />
+                <SmallLoadingIndicator />
+              </>
             ) : (
               <>
                 <div className="Buffer--20px" />

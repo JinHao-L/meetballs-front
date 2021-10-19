@@ -125,10 +125,11 @@ export default function CompletedMeetingScreen() {
               <Button variant="outline-primary" onClick={emailParticipants}>
                 Email Participants
               </Button>
-              <p className="Text__hint">
+              <p className="Text__hint" style={{ marginBottom: 0 }}>
                 Make sure you have enabled mail links in your browser
               </p>
             </div>
+            <div className="Buffer--20px" />
             <div className="Container__row--space-between">
               <p className="Text__subsubheader">Description</p>
               <p
@@ -138,6 +139,7 @@ export default function CompletedMeetingScreen() {
                 {restrictDescription ? 'Show More' : 'Show Less'}
               </p>
             </div>
+            <div className="Buffer--10px" />
             <p
               className={
                 'Text__paragraph' +

@@ -80,8 +80,7 @@
 .Text__subsubheader {
   font-size: 17px;
   font-weight: 500;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   color: var(--text);
 }
 

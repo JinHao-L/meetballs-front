@@ -204,6 +204,7 @@ export default function UpcomingMeetingScreen() {
                 Edit / Delete Meeting
               </Button>
             </div>
+            <div className="Buffer--20px" />
             <div className="Container__row--space-between">
               <p className="Text__subsubheader">Description</p>
               <div
@@ -213,6 +214,7 @@ export default function UpcomingMeetingScreen() {
                 {restrictDescription ? 'Show More' : 'Show Less'}
               </div>
             </div>
+            <div className="Buffer--10px" />
             <p
               className={
                 'Text__paragraph' +
