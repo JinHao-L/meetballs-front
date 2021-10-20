@@ -60,9 +60,6 @@ export default function CompletedMeetingItem({
     );
   }
 
-  if (user?.uuid !== meeting.hostId)
-    return <RedirectionScreen message={BAD_MEETING_PERMS_MSG} />;
-
   return (
     <Col
       xl={4}
