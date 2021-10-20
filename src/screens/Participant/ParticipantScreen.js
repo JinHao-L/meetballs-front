@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { getFormattedDateTime } from '../../common/CommonFunctions';
 import { blankMeeting } from '../../common/ObjectTemplates';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import { useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import BackgroundPattern from '../../assets/background_pattern2.jpg';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import RedirectionScreen, { MEETING_NOT_FOUND_ERR } from '../../components/RedirectionScreen';
+
+const JOINER_KEY = 'joiner';
 
 export default function ParticipantScreen() {
   const { id } = useParams();
@@ -15,7 +17,17 @@ export default function ParticipantScreen() {
   const [loading, setLoading] = useState(false);
   const [restrictDescription, setRestrictDescription] = useState(true);
 
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const joinerId = params.get(JOINER_KEY);
+
   useEffect(() => {
+    if (!joinerId) {
+      setValidId(false);
+      setLoading(false);
+      return;
+    }
+
     return pullMeeting()
       .then(() => setValidId(true))
       .catch((_) => setValidId(false))
