@@ -12,11 +12,11 @@ import {
   getFormattedDateTime,
   openLinkInNewTab,
 } from '../../common/CommonFunctions';
-import { FullLoadingIndicator } from '../../components/FullLoadingIndicator';
 import { toast } from 'react-toastify';
 import { extractError } from '../../utils/extractError';
 import { logEvent } from '@firebase/analytics';
 import { googleAnalytics } from '../../services/firebase';
+import { SmallLoadingIndicator } from '../../components/SmallLoadingIndicator';
 
 export default function AddMeetingOverlay({
   show,
@@ -89,7 +89,6 @@ export default function AddMeetingOverlay({
       .then((res) => {
         onUpdate();
         const id = res.data.id;
-        console.log('New meeting created with ID = ' + id);
         setShow(false);
         history.push('/meeting/' + id);
         logEvent(googleAnalytics, 'created_meeting');
@@ -248,7 +247,7 @@ export default function AddMeetingOverlay({
       items.push(
         <div className="Container__padding--vertical-small Clickable" key={idx}>
           <Card
-            style={{ cursor: 'pointer' }}
+            className="Clickable"
             onClick={() => {
               selectMeeting(meeting, setFieldValue);
             }}
@@ -314,7 +313,10 @@ export default function AddMeetingOverlay({
               )}
             </div>
             {loading ? (
-              <FullLoadingIndicator />
+              <>
+                <div className="Buffer--100px" />
+                <SmallLoadingIndicator />
+              </>
             ) : (
               <>
                 <div className="Buffer--20px" />

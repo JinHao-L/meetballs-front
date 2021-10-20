@@ -20,14 +20,9 @@ export default function ZoomRedirectPage() {
       history.push('/login');
       return;
     }
-    zoomLogin(code)
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        console.log(code);
-        history.push('/login');
-      });
+    zoomLogin(code).catch((err) => {
+      history.push('/login');
+    });
   }, []);
 
   useEffect(() => {

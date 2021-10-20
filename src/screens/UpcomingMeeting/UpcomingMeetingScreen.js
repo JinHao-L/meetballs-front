@@ -146,22 +146,13 @@ export default function UpcomingMeetingScreen() {
 
   return (
     <div
+      className="Container__background-image"
       style={{
-        minHeight: 'calc(100vh - 56px)',
-        backgroundColor: '#E4D6C2',
         backgroundImage: `url(${BackgroundPattern})`,
       }}
     >
       <div className="Buffer--50px" />
-      <Container
-        className="Container__padding--vertical"
-        style={{
-          backgroundColor: 'white',
-          minHeight: 'calc(100vh - 56px - 100px)',
-          boxShadow: '0 8px 8px 0 rgba(0, 0, 0, 0.2)',
-          borderRadius: 5,
-        }}
-      >
+      <Container className="Container__padding--vertical Container__foreground">
         <div className="Buffer--50px" />
 
         <Row>
@@ -204,15 +195,17 @@ export default function UpcomingMeetingScreen() {
                 Edit / Delete Meeting
               </Button>
             </div>
+            <div className="Buffer--20px" />
             <div className="Container__row--space-between">
               <p className="Text__subsubheader">Description</p>
               <div
-                className="Text__toggle Clickable"
+                className="Text__hint Clickable"
                 onClick={() => setRestrictDescription(!restrictDescription)}
               >
                 {restrictDescription ? 'Show More' : 'Show Less'}
               </div>
             </div>
+            <div className="Buffer--10px" />
             <p
               className={
                 'Text__paragraph' +
