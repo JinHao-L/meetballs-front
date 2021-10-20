@@ -25,7 +25,7 @@ import ZoomLoginScreen from './screens/Login/ZoomLoginScreen';
 import PrivacyPolicyScreen from './screens/LandingPage/PrivacyPolicyScreen';
 import ZoomRedirectPage from './screens/Login/ZoomRedirectPage';
 import TermsNConditionScreen from './screens/LandingPage/TermsNConditionScreen';
-import MeetingRedirectScreen from './screens/OngoingMeetingAdmin/MeetingRedirectScreen';
+import MeetingRedirectScreen from './screens/Participant/MeetingRedirectScreen';
 import ParticipantScreen from './screens/Participant/ParticipantScreen';
 import SupportPage from './screens/LandingPage/SupportPage';
 import DocumentationScreen from './screens/LandingPage/DocumentationScreen';

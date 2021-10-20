@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import { getFormattedDateTime } from '../../common/CommonFunctions';
 import { blankMeeting } from '../../common/ObjectTemplates';
-import { Container, Row, Col, Card } from 'react-bootstrap';
-import { Redirect, useParams } from 'react-router';
+import { Container, Row, Col } from 'react-bootstrap';
+import { Redirect, useLocation, useParams } from 'react-router';
 import BackgroundPattern from '../../assets/background_pattern2.jpg';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
@@ -11,6 +11,8 @@ import UploadItem from './UploadItem';
 import RedirectionScreen, {
   MEETING_NOT_FOUND_ERR,
 } from '../../components/RedirectionScreen';
+
+const JOINER_KEY = 'joiner';
 
 export default function ParticipantScreen() {
   const { id } = useParams();
@@ -21,7 +23,17 @@ export default function ParticipantScreen() {
   const [agendaItems, setAgendaItems] = useState([]);
   const user = useContext(UserContext);
 
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const joinerId = params.get(JOINER_KEY); // do whatever you want dawg
+
   useEffect(() => {
+    if (!joinerId) {
+      setValidId(false);
+      setLoading(false);
+      return;
+    }
+
     return pullMeeting()
       .then(() => {
         setValidId(true);
