@@ -1,3 +1,20 @@
+.Container__header {
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  z-index: 100;
+  background-color: white;
+  box-shadow: 0px 0.2px gray;
+}
+
+.Container__footer {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .Container__content {
   margin-top: 56px;
 }
@@ -20,6 +37,12 @@
   flex-direction: row;
 }
 
+.Container__row--center {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
 .Container__center--vertical {
   display: flex;
   justify-content: center;
@@ -32,6 +55,11 @@
   padding-bottom: 30px;
 }
 
+.Container__padding--vertical-medium {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 .Container__padding--vertical-small {
   padding-top: 5px;
   padding-bottom: 5px;
@@ -40,6 +68,26 @@
 .Container__padding--horizontal {
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.Container__login-screen {
+  padding-left: 40px;
+  padding-right: 40px;
+  height: calc(100vh - 56px);
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.Container__redirection-screen {
+  padding-left: 30px;
+  padding-right: 30px;
+  height: calc(100vh - 56px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
 }
 
 .Card__statistics {
@@ -54,15 +102,17 @@
   height: 210px;
 }
 
-.Banner {
-  position: relative;
+.Card__invite {
+  min-height: 100px;
+  max-height: 200px;
+  margin: 0px 0px 10px 0px;
+  padding: 5px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
-.Banner__image {
-  max-height: 300px;
-  width: 100%;
-  object-fit: cover;
-  filter: brightness(70%);
+.Banner {
+  position: relative;
 }
 
 .Banner__content {
@@ -72,4 +122,5 @@
   left: 50%;
   transform: translate(-50%, -50%);
   align-items: center;
+  text-align: center;
 }

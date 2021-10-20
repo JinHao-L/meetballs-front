@@ -1,4 +1,3 @@
-import './App.css';
 import './css/Containers.css';
 import './css/Images.css';
 import './css/Toggles.css';

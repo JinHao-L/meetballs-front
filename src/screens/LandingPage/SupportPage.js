@@ -6,7 +6,7 @@ export default function SupportPage() {
   return (
     <>
       <div className="Banner">
-        <Image src={Banner} className="Banner__image" />
+        <Image src={Banner} className="Image__banner" />
         <div className="Container__center--vertical Banner__content">
           <p className="Text__header" style={{ color: 'white' }}>
             Support
@@ -21,12 +21,7 @@ export default function SupportPage() {
           minHeight: 'calc(100vh - 56px - 121px - 300px)',
         }}
       >
-        <Col
-          sm={12}
-          md={12}
-          lg={{ span: 6, offset: 3 }}
-          style={{ paddingLeft: 0, paddingRight: 0 }}
-        >
+        <Col sm={12} md={12} lg={{ span: 6, offset: 3 }}>
           <div className="Buffer--20px" />
           <p className="Text__header">Got any questions?</p>
           <p className="Text__paragraph">

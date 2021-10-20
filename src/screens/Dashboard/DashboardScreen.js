@@ -124,7 +124,7 @@ export default function DashboardScreen() {
   return (
     <>
       <div className="Banner">
-        <Image src={getBanner().default} fluid className="Banner__image" />
+        <Image src={getBanner().default} fluid className="Image__banner" />
         <div className="Container__center--vertical Banner__content">
           <p className="Text__header" style={{ color: 'white' }}>
             Welcome Back!

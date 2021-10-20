@@ -40,8 +40,9 @@
   display: flex;
 }
 
-.Text--no-decoration {
-  text-decoration: none;
+.Text__small {
+  font-size: 14px;
+  text-align: center;
 }
 
 .Text__elipsized--1-line {
@@ -67,4 +68,8 @@
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   -webkit-line-clamp: 5;
+}
+
+.Text--no-decoration {
+  text-decoration: none;
 }

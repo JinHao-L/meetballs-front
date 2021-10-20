@@ -18,16 +18,7 @@ export default function ConfirmInviteModel({
             Invitation to meeting - <b>{meetingName}</b> - will be sent to these
             participants.
           </p>
-          <Card
-            style={{
-              minHeight: '100px',
-              maxHeight: '200px',
-              margin: '0px 0px 10px 0px',
-              padding: '5px',
-              overflow: 'hidden',
-              overflowY: 'scroll',
-            }}
-          >
+          <Card className="Card__invite">
             <ListGroup variant="flush">
               {inviteList.length > 0 ? (
                 inviteList.map((ppl, idx) => {

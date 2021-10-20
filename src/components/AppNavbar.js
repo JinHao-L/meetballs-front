@@ -37,11 +37,9 @@ export const AppNavbar = () => {
   }
 
   return (
-    <Navbar expand="lg" className="Container__fixed-header .navbar-text">
+    <Navbar expand="lg" className="Container__header .navbar-text">
       <Container>
-        <Navbar.Brand
-          style={{ alignItems: 'center', display: 'flex', cursor: 'pointer' }}
-        >
+        <Navbar.Brand className="Clickable">
           <a href={option.home}>
             <Image src={Logo} style={{ height: 30 }} />
           </a>

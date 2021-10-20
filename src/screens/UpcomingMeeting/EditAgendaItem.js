@@ -148,7 +148,7 @@ export default function EditAgendaItem({
     <Col className="Container__padding--vertical-small">
       <Card>
         <Card.Header>
-          <p className="Text__card-header">Editing Agenda Item</p>
+          <p className="Text__subsubheader">Editing Agenda Item</p>
         </Card.Header>
         <Card.Body>
           <Form.Group>
@@ -159,7 +159,7 @@ export default function EditAgendaItem({
             />
             <Form.Label column>Duration</Form.Label>
             <DropdownButton
-              variant="outline-primary  "
+              variant="outline-primary"
               title={getFormattedDuration(duration)}
             >
               <DurationItems />
@@ -172,7 +172,7 @@ export default function EditAgendaItem({
             />
             <Form.Label column>Speaker (optional)</Form.Label>
             <DropdownButton
-              variant="outline-primary  "
+              variant="outline-primary"
               placeholder="Add presenter"
               title={speaker?.userName || '(No speaker assigned)'}
             >
