@@ -8,6 +8,9 @@ import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
 import { UserContext } from '../../context/UserContext';
 import UploadItem from './UploadItem';
+import RedirectionScreen, {
+  MEETING_NOT_FOUND_ERR,
+} from '../../components/RedirectionScreen';
 
 export default function ParticipantScreen() {
   const { id } = useParams();
@@ -17,8 +20,6 @@ export default function ParticipantScreen() {
   const [restrictDescription, setRestrictDescription] = useState(true);
   const [agendaItems, setAgendaItems] = useState([]);
   const user = useContext(UserContext);
-
-  console.log(user);
 
   useEffect(() => {
     return pullMeeting()
@@ -56,6 +57,8 @@ export default function ParticipantScreen() {
     return items;
   }
 
+  if (!loading && !validId)
+    return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
   if (user?.uuid === meeting?.hostId) {
     return <Redirect to={'/meeting/' + id} />;
   }
@@ -124,7 +127,7 @@ export default function ParticipantScreen() {
             <p className="Text__subheader">
               Here are the items you will be presenting:
             </p>
-            <Row>{UploadItems}</Row>
+            <Row>{UploadItems()}</Row>
           </Col>
         </Row>
 
