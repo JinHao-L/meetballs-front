@@ -30,7 +30,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import DocumentationScreen from './screens/LandingPage/DocumentationScreen';
 import ScrollToTop from './ScrollToTop';
 import server from './services/server';
-import { extractError } from './utils/extractError';
+import ParticipantScreen from './screens/Participant/ParticipantScreen';
 
 export default function App() {
   const user = useContext(UserContext);
@@ -77,6 +77,9 @@ export default function App() {
           </Route>
           <Route path="/login">
             <ZoomLoginScreen />
+          </Route>
+          <Route path="/participant/:id">
+            <ParticipantScreen />
           </Route>
           {/*
           <Route path="/confirm-email">

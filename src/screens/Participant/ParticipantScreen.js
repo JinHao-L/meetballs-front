@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getFormattedDateTime } from '../../common/CommonFunctions';
 import { blankMeeting } from '../../common/ObjectTemplates';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import { useParams } from 'react-router';
+import { Redirect, useParams } from 'react-router';
 import BackgroundPattern from '../../assets/background_pattern2.jpg';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import { UserContext } from '../../context/UserContext';
+import UploadItem from './UploadItem';
 
 export default function ParticipantScreen() {
   const { id } = useParams();
@@ -13,10 +15,17 @@ export default function ParticipantScreen() {
   const [validId, setValidId] = useState(true);
   const [loading, setLoading] = useState(false);
   const [restrictDescription, setRestrictDescription] = useState(true);
+  const [agendaItems, setAgendaItems] = useState([]);
+  const user = useContext(UserContext);
+
+  console.log(user);
 
   useEffect(() => {
     return pullMeeting()
-      .then(() => setValidId(true))
+      .then(() => {
+        setValidId(true);
+        obtainRelevantAgendaItems();
+      })
       .catch((_) => setValidId(false))
       .finally(() => setLoading(false));
   }, []);
@@ -26,6 +35,29 @@ export default function ParticipantScreen() {
     if (response.status !== 200) return;
     const result = response.data;
     setMeeting(result);
+  }
+
+  async function obtainRelevantAgendaItems() {
+    const items = [];
+    meeting.agendaItems.forEach((item) => {
+      console.log(item.speaker?.id + ' | ' + user?.uuid);
+      if (item.speaker !== null && item.speaker?.id === user?.uuid) {
+        items.push(item);
+      }
+    });
+    setAgendaItems(items);
+  }
+
+  function UploadItems() {
+    const items = [];
+    agendaItems.forEach((item) => {
+      items.push(<UploadItem agendaItem={item} />);
+    });
+    return items;
+  }
+
+  if (user?.uuid === meeting?.hostId) {
+    return <Redirect to={'/meeting/' + id} />;
   }
 
   return (
@@ -46,9 +78,10 @@ export default function ParticipantScreen() {
             sm={12}
             style={{ paddingLeft: 30, paddingRight: 30 }}
           >
-            <p className="Text__header">{meeting.name}</p>
+            <p className="Text__header">Hi {user?.name}!</p>
             <p className="Text__subheader">
-              {getFormattedDateTime(meeting.startedAt)}
+              You have a meeting <b>{meeting?.name}</b> scheduled on{' '}
+              {getFormattedDateTime(meeting?.startedAt)}.
             </p>
           </Col>
           <Col
@@ -73,7 +106,7 @@ export default function ParticipantScreen() {
                 (restrictDescription ? ' Text__elipsized--5-lines' : '')
               }
             >
-              {meeting.description}
+              {meeting?.description}
             </p>
           </Col>
         </Row>
@@ -88,31 +121,10 @@ export default function ParticipantScreen() {
             sm={12}
             style={{ paddingLeft: 30, paddingRight: 30 }}
           >
-            <p className="Text__subheader">Your Agenda Items</p>
-            <Row>
-              <Col
-                lg={6}
-                md={12}
-                sm={12}
-                style={{ paddingLeft: 10, paddingRight: 10 }}
-                className="Container__padding--vertical-small"
-              >
-                <Card>
-                  <Card.Body>Content</Card.Body>
-                </Card>
-              </Col>
-              <Col
-                lg={6}
-                md={12}
-                sm={12}
-                style={{ paddingLeft: 10, paddingRight: 10 }}
-                className="Container__padding--vertical-small"
-              >
-                <Card>
-                  <Card.Body>Content</Card.Body>
-                </Card>
-              </Col>
-            </Row>
+            <p className="Text__subheader">
+              Here are the items you will be presenting:
+            </p>
+            <Row>{UploadItems}</Row>
           </Col>
         </Row>
 
