@@ -36,7 +36,7 @@ export default function RedirectScreen() {
       setError(false);
       setLoading(false);
       const id = response.data?.meeting?.id;
-      history.push(`/ongoing/${id}`);
+      history.push(`/participant/${id}`);
     } catch (error) {
       toast.error(extractError(error));
       setError(true);

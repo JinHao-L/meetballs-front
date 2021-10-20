@@ -6,6 +6,7 @@ import { useParams } from 'react-router';
 import BackgroundPattern from '../../assets/background_pattern2.jpg';
 import server from '../../services/server';
 import { defaultHeaders } from '../../utils/axiosConfig';
+import RedirectionScreen, { MEETING_NOT_FOUND_ERR } from '../../components/RedirectionScreen';
 
 export default function ParticipantScreen() {
   const { id } = useParams();
@@ -27,6 +28,8 @@ export default function ParticipantScreen() {
     const result = response.data;
     setMeeting(result);
   }
+
+  if (!loading && !validId) return <RedirectionScreen message={MEETING_NOT_FOUND_ERR} />;
 
   return (
     <div
