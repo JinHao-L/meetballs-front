@@ -8,6 +8,7 @@ const UserContext = createContext(null);
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [joiner, setJoiner] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // init connection with background and maintain synced data
@@ -44,7 +45,11 @@ const UserProvider = ({ children }) => {
     return <FullLoadingIndicator />;
   }
 
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={(user, joiner, setJoiner)}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export { UserContext, UserProvider };
